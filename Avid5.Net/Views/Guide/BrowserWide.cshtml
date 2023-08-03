@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = Running.RunningProgram;
+}
+
+
+@if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+{
+    @Html.Partial("TopBarWide");
+}
+else
+{
+    <div id="topBarTitle" style="display:none">@ViewBag.Title</div>
+}
+
+@section scripts {
+    @if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+    {
+        @Html.Raw(Render.Script("topBar"))
+        @Html.Raw(Render.Script("homeWide"))
+    }
+    @Html.Raw(Render.Script("guide2"))
+}
+
+<div id="guidePanes">
+    <div id="guideLeftPane">
+        @Html.Partial("PaneButtons")
+        <div id="guideSelectorPane" class="guideSelectorPane">
+            <div class="guideSelectorItems" id="guideSelectorItems">
+                @Html.Partial("SelectorPane")
+            </div>
+        </div>
+    </div>
+
+    <div id="guideRightPane">
+        <div id="guideListingsPane">
+            <div class="guideBrowserItems" id="guideBrowserItems">
+                @Html.Partial("ListingsPane")
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@{
+    switch (ViewBag.Mode as string)
+    {
+        default:
+        case "GuideEmpty":
+            break;
+
+        case "GuideSelect":
+            <div class="guideItem guideHeader"><div class="guideTitle">Select a channel and date</div></div>
+            break;
+
+        case "GuideProgrammes":
+            {
+                DateTime date = new DateTime(Int64.Parse(ViewBag.Date as string));
+                string channel = ViewBag.Channel;
+                bool anyFound = false;
+
+
+                IEnumerable<VideoTV.Programme> schedule = VideoTV.GetEpgProgrammesForDay(date, VideoTV.NamedChannel(channel));
+
+                <div class="guideItem guideHeader"><div class="guideTitle">@channel @(date.ToString("ddd dd MMM"))</div></div>
+                <span id="ChannelName" style="display:none">@channel</span>
+                foreach (VideoTV.Programme programme in schedule)
+                {
+                    var displayClass = "guideEpgProgramme" + (programme.IsScheduled ? " guideEpgProgrammeScheduled" : "");
+                    <div class="@displayClass guideItem" id="@programme.Id">
+                        <div class="guideProgrammeInfo">
+                            <div>@(programme.StartTime.ToLocalTime().ToString("HH:mm")) [@JRMC.FormatDuration(programme.Duration.TotalMinutes.ToString())]</div>
+                        </div>
+
+                        <div class="guideTitle">@programme.Title</div>
+                    </div>
+
+                    anyFound = true;
+                }
+                if (!anyFound)
+                {
+                    <div class="guideItem guideHeader"><div class="guideTitle">No listings available</div></div>
+                }
+            }
+            break;
+
+        case "GuideSchedule":
+            {
+                VideoTV.LoadSchedule();
+
+                IEnumerable<VideoTV.Timer> timers = VideoTV.Schedule.Values;
+                bool anyFound = false;
+                <div class="guideItem guideHeader"><div class="guideTitle">Scheduled Recordings</div></div>
+
+                foreach (VideoTV.Timer timer in timers)
+                {
+                    var beingRecordedClass = timer.IsRecording ? "tvRecordingBeingRecorded" : "";
+                    <div class="guideScheduledRecording guideItem @beingRecordedClass" id="@timer.Id">
+                        <img class="guideEpgProgrammeCancel startHidden" id="@timer.Id" src="/Content/Buttons/SmallRound/Exit.png" />
+                        <div class="guideProgrammeInfo">
+                            <span>@(timer.StartTime.ToLocalTime().ToString("ddd dd MMM HH:mm")) [@JRMC.FormatDuration(timer.Duration.TotalMinutes.ToString())] @(timer.InSeries ? "SERIES" : "")</span>
+                            <span>@(timer.ChannelName)</span>
+                        </div>
+
+                        <div class="guideTitle">@timer.Title</div>
+                    </div>
+
+                    anyFound = true;
+                }
+
+                if (!anyFound)
+                {
+                    <div class="guideItem guideHeader"><div class="guideTitle">No recordings scheduled</div></div>
+                }
+            }
+            break;
+
+        case "GuideSeries":
+            {
+                IEnumerable<VideoTV.Series> allSeries = VideoTV.Series.All;
+                bool anyFound = false;
+                <div class="guideItem guideHeader"><div class="guideTitle">Defined Series Recordings</div></div>
+
+                foreach (VideoTV.Series series in allSeries)
+                {
+                    <div class="guideSeriesDefinitions guideItem" id="@series.Id">
+                        <img class="guideEpgSeriesCancel startHidden" id="@series.Id" src="/Content/Buttons/SmallRound/Exit.png" />
+                        <div class="guideProgrammeInfo">
+                            <span>@(series.StartTime.ToLocalTime().ToString("dddd")) starting between @(series.StartTimeLow.ToLocalTime().ToString("HH:mm")) and @(series.StartTimeHigh.ToLocalTime().ToString("HH:mm"))</span>
+                            <span>@(series.ChannelName)</span>
+                        </div>
+
+                        <div class="guideTitle">@series.Name</div>
+                    </div>
+
+                    anyFound = true;
+                }
+
+                if (!anyFound)
+                {
+                    <div class="guideItem guideHeader"><div class="guideTitle">No series defined</div></div>
+                }
+            }
+            break;
+
+    }
+}

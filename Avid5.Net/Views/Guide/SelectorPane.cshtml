@@ -1,0 +1,55 @@
+﻿@{
+    switch (ViewBag.Mode as string)
+    {
+        default:
+        case "GuideEmpty":
+            break;
+
+        case "GuideSelectTvEpg":
+        case "GuideSelectRadioEpg":
+            {
+                IEnumerable<string> channelNames = null;
+                switch (ViewBag.Mode as string)
+                {
+                    case "GuideSelectTvEpg":
+                        channelNames = VideoTV.AllTvChannelNames;
+                        break;
+                    case "GuideSelectRadioEpg":
+                        channelNames = VideoTV.AllRadioChannelNames;
+                        break;
+                }
+
+                <div class="TwoColumn">
+                    <div class="TwoColumnLeft">
+                        <div id="guideChannelsPane">
+                            <div id="guideChannels" class="guideChannels">
+                                @foreach (string channelName in channelNames)
+                                {
+                                    var parenIndex = channelName.IndexOf(" (");
+                                    var channelNameDisplay = parenIndex <= 0 ? channelName : channelName.Substring(0, parenIndex);
+                                    <div class="guideEpgChannel guideItem" id="@channelName">
+                                        <div class="guideTitle">@channelNameDisplay</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="TwoColumnRight">
+                        <div id="guideDatesPane">
+                            <div id="guideDates" class="guideDates">
+                                @for (int i = 0; i <= 14; i++)
+                                {
+                                    DateTime date = DateTime.Today.AddDays(i);
+                                    <div class="guideEpgDate guideItem" id='@(date.Ticks)'>
+                                        <div class="guideTitle">@(date.ToString("ddd dd MMM"))</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            break;
+
+    }
+}

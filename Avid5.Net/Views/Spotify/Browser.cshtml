@@ -1,0 +1,16 @@
+﻿@{
+	ViewBag.Title = "Spotify";
+}
+
+@Html.Partial("TopBar")
+@section scripts {
+    @Html.Raw(Render.Script("topBar"))
+    @Html.Raw(Render.Script("spotify"))
+}
+
+@Html.Partial("PaneButtons")
+@Html.Partial("BrowserSearchPane")
+
+<div class="spotifyBrowserItems" id="spotifyBrowserItems">
+    @Html.Partial("BrowserPane")
+</div>

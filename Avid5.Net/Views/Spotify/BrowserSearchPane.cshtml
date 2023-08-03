@@ -1,0 +1,39 @@
+﻿<div class="spotifyBrowserSearchEntry">
+    @{
+
+        string searchText = "";
+        string searchQuery = ViewBag.Query;
+
+        if (!String.IsNullOrEmpty(searchQuery))
+        {
+            searchText = System.Web.HttpUtility.UrlDecode(searchQuery);
+        }
+
+        <div class="spotifyBrowserSearchArtistsEntry">
+            <div class="spotifyBrowserItem spotifyBrowserPlaylistHeader"><div class="spotifyBrowserTitle">Search artists ...</div></div>
+            <table class="buttonRow">
+	            <tr>
+                    <td class='width90'><input class='searchText width90' id='ArtistSearchText' type='text' value='@(searchText)' /></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="spotifyBrowserSearchAlbumsEntry">
+            <div class="spotifyBrowserItem spotifyBrowserPlaylistHeader"><div class="spotifyBrowserTitle">Search albums ...</div></div>
+            <table class="buttonRow">
+	            <tr>
+                    <td class='width90'><input class='searchText width90' id='AlbumSearchText' type='text' value='@(searchText)' /></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="spotifyBrowserSearchTracksEntry">
+            <div class="spotifyBrowserItem spotifyBrowserPlaylistHeader"><div class="spotifyBrowserTitle">Search tracks ...</div></div>
+            <table class="buttonRow">
+	            <tr>
+                    <td class='width90'><input class='searchText width90' id='TrackSearchText' type='text' value='@(searchText)' /></td>
+                </tr>
+            </table>
+        </div>
+    }
+</div>

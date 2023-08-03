@@ -1,0 +1,451 @@
+﻿body {
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    color: #232323;
+    background-color: #fff;
+}
+
+header, footer, nav, section {
+    display: block;
+}
+
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+textarea {
+    min-height: 75px;
+}
+
+.editor-label {
+    margin: 1em 0 0 0;
+}
+
+.editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #f00;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #f00;
+    background-color: #fee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #f00;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Styles for ...
+-----------------------------------------------------------*/
+
+.startHidden  {
+    display: none;
+}
+
+.topBar {
+    width: 100%;
+    background-color: #ccc;
+    overflow:auto;
+}
+
+.topBarNone {
+    background-color: #ccc;
+}
+
+.topBarTv {
+    background-color: #00ffff;
+}
+
+.topBarMusic {
+    background-color: #709AC8;
+}
+
+.topBarVideo {
+    background-color: #f69e00;
+}
+
+.topBarSpotify {
+    background-color: #8abf33;
+}
+
+.topBarPhotos {
+    background-color: #FCB825;
+}
+
+.topBarRoku {
+    background-color: #592a80;
+    color: white;
+}
+
+.topBarSmartTv {
+    background-color: #2d2d2d;
+    color: white;
+}
+
+.topBarChromecast {
+    background-color: #2d2d2d;
+    color: white;
+}
+
+.buttonGrid {
+    width:100%;
+    border-spacing:25px;
+}
+
+.buttonRow {
+    width:100%;
+}
+
+.centeredButton {
+    text-align:center;
+
+}
+
+.searchText, .rokuText, .spotifyBrowserPlaylistNewName {
+    padding: 5px;
+}
+
+.musicInfoImage, .spotifyInfoImage
+{
+    border: solid 1px #6F5230;
+    position: relative;
+    float: left;
+    margin: 0 1em 1em 0;
+    width: 120px;
+    height: 120px;
+}
+
+.musicInfoAlbum, .spotifyInfoAlbum {
+    font-style: italic;
+}
+
+.musicInfoComposer {
+    font-style: italic;
+}
+
+.musicInfoTrackName, .spotifyInfoTrackName, .tvCurrentChannelName {
+    font-weight: bold;
+}
+
+.musicPlayingTrack, .spotifyPlayingTrack, .videoTitle, .tvCurrentProgramme {
+    font-size: 1.4em;
+    font-weight: normal;
+}
+
+.musicPlaybackStatus, .spotifyPlaybackStatus
+{
+    font-size:medium; 
+    height: 100%;
+    float: left;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 0 10px 0
+}
+
+.musicPlaybackControls, .spotifyPlaybackControls {
+    clear: both;
+}
+
+.musicPosSlider, .videoPosSlider {
+    width:90%;
+    margin-left:5%;
+}
+
+.musicPlaybackQueueItems, .musicBrowserItems, .guideBrowserItems, .guideChannels, .guideDates, .spotifyPlaybackQueueItems, .spotifyBrowserItems, .photosImagesGrid, .photosBrowserItems, .rokuBrowserItems, .tvButtons, .tvChannels, .videoRecordings, .videoVideos, .videoDvds, .securityProfileItems, .securityZoneItems, .securityScheduleItems {
+    position: relative;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.musicPlaybackQueueItem, .musicBrowserItem, .guideItem, .spotifyPlaybackQueueItem, .spotifyBrowserItem, .photosBrowserItem, .rokuBrowserItem, .tvChannel, .videoRecording, .videoRecordingGroup, .videoDvd, .videoRecordingAction, .actionMenuItem, .securityProfileItem, .securityZoneItem {
+    width: 100%;
+    border-width: thin;
+    border-color: #3a5069;
+    border-top-style: none;
+    border-bottom-style: solid;
+}
+
+.musicPlaybackQueueTitle, .musicBrowserTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .tvChannelName, .videoRecordingName, .videoRecordingAction, .guideTitle, .actionMenuItem, .securityProfileName, .securityZoneName {
+    color: #3a5069;
+    display: block;
+    padding-right: 0;
+    background-image: url('');
+    font-size: 1.2em;
+}
+
+.musicPlaybackQueueTitle, .musicBrowserTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .tvChannelName, .videoRecordingName, .videoRecordingAction, .actionMenuItem, .securityZoneItem {
+    clear: both;
+}
+
+.musicSelectedQueueItem, .spotifySelectedQueueItem, .guideEpgSelectedChannel, .guideEpgSelectedDate {
+    background-color:#DDD;
+}
+
+.musicPlaybackQueueTitle, .musicBrowserTitle, .guideTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .actionMenuItem, .videoDvd, .videoRecordingAction, .tvPlayingInfo, .securityProfileItem, .securityZoneName {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.musicPlaybackQueueContext, .musicBrowserDisplayContext, .spotifyPlaybackQueueContext, .spotifyBrowserDisplayContext {
+    width: 80%; 
+    margin-left: 20%; 
+    font-size: small; 
+    text-align: right;
+}
+
+.musicBrowserSearchEntry, .spotifyBrowserSearchArtistsEntry, .spotifyBrowserSearchAlbumsEntry, .spotifyBrowserSearchTracksEntry  {
+    display: none;
+}
+
+.videoTitle {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.videoOldRecording {
+    background-color: #eee;
+}
+
+.musicProgrammeInfo, .guideProgrammeInfo, .ProgrammeInfo, .tvProgrammeInfo, .videoRecordingInfo, .videoRecordingDescription, .videoTimelineInfo, securityProfileDescription {
+    font-size: small;
+}
+
+.musicProgrammeDescription, .guideEpgProgrammeDescription, .securityProfileDescription {
+    font-style: italic;
+    padding-bottom: 10px;
+}
+
+.tvControlActionLine {
+    font-size: small; 
+    position:absolute;
+    bottom:0;
+    left:0;
+    height:20px;
+    color:red;
+    width:100%;
+}
+
+.tvRecordingBeingRecorded, .guideEpgProgrammeScheduled {
+    background-color: #ff8f8f;
+}
+
+.tvProgrammeWhen, .tvControlActionL, .tvNextPrograme, .videoRecordingWhen, .videoInfoLeft, .guideProgrammeInfoL{
+    white-space: nowrap;
+    overflow: hidden;
+    width:65%;
+    float:left;
+}
+
+.tvProgrammeChannel, .tvControlActionR, .tvCurrentChannelNumber, .videoRecordingChannel, .videoInfoRight, .guideProgrammeInfoR {
+    white-space: nowrap;
+    overflow: hidden;
+    width:35%;
+    float:right;
+    text-align: right;
+}
+
+.tvRecordingDescription, .videoRecordingDescription {
+    width:90%;
+    margin-left:5%;
+    font-style: italic;
+    padding-bottom:10px;
+}
+
+.musicPlaybackQueueAlbum, .spotifyPlaybackQueueAlbum, .musicBrowserDisplayComposer, .musicBrowserDisplayAlbum, .spotifyBrowserDisplayAlbum {
+    font-style: italic;
+}
+
+.musicPlaybackQueueDuration, .spotifyPlaybackQueueDuration, .musicBrowserDuration, .spotifyBrowserDuration, .musicBrowserReleaseYear, .spotifyBrowserReleaseYear, .tvChannelNumber {
+    font-size: small; 
+    text-align: right; 
+}
+
+#musicPanes, #webPanes, #spotifyPanes, #tvPanes, #videoPanes, #photosPanes, #streamingPanes, #guidePanes, .TwoColumn {
+    position: relative;
+}
+
+#musicLeftPane, #webLeftPane, #spotifyLeftPane, #tvLeftPane, #videoLeftPane, #photosLeftPane, #streamingLeftPane, #guideLeftPane, .TwoColumnLeft {
+    width: 50%;
+    position:absolute;
+    left:0;
+    top:0;
+    border-right:2px solid #3a5069;
+}
+
+#musicRightPane, #webRightPane, #spotifyRightPane, #tvRightPane, #videoRightPane, #photosRightPane, #streamingRightPane, #guideRightPane, .TwoColumnRight {
+    width: 49%;
+    left:50%;
+    position:absolute;
+    top:0;
+    border-left:2px solid #3a5069;
+}
+
+#guideOverlayPane {
+    width: 100%;
+    position:absolute;
+    left:0;
+    top:0;
+    border-right:2px solid #3a5069;
+}
+
+#musicControlPane, #spotifyControlPane, #tvControlPane, #rokuControlsPane {
+    padding: 5px;
+    height: 260px;
+    background-color:#FFF;
+}
+
+#photosDisplayPane {
+    padding: 5px;
+    height: 50%;
+    background-color:#FFF;
+}
+
+#musicQueuePane, #spotifyQueuePane, #tvButtonsPane, #photosImagesPane {
+    overflow: hidden;
+    border-bottom :2px solid #3a5069;
+    padding: 5px;
+}
+
+#musicBrowserPane, #spotifyBrowserPane, #photosBrowserPane, #rokuBrowserPane, #tvChannelsPane, #guideChannelsPane, #guideDatesPane, #guideListingsPane {
+    overflow: hidden;
+    padding: 5px;
+}
+
+.guideChannels, .guideDates {
+    padding: 5px;
+}
+
+.spotifyBrowserPlaylistHeader, .musicBrowserHeader, .guideHeader {
+    font-style:italic;
+}
+
+.overlay, .actionMenuOverlay
+{
+   background-color: #000;
+   opacity: .7;
+   filter: alpha(opacity=70);
+   position: absolute; top: 0; left: 0;
+   width: 100%; height: 100%;
+   z-index: 1000;
+}
+
+.actionMenuOverlay {
+    display:none;
+}
+
+.actionMenu {
+    position:absolute;
+    display:none;
+    padding: 10px;
+    background-color:white;
+    z-index: 1001;
+}
+
+.actionMenuWrapper {
+    position: relative;
+}
+
+.actionMenuMain {
+    float: left;
+}
+
+.actionMenuSub {
+    border-left:2px solid #3a5069;
+    padding-left:10px;
+    margin-left:10px;
+    float: left;
+    display:none;
+}
+
+#videoMenu {
+}
+
+.photoGridImage {
+    display:inline;
+}
+
+
+.tvProgrammeRecord, .guideEpgProgrammeRecord, .guideEpgProgrammeRecordSeries, .guideEpgProgrammeCancel, .guideEpgSeriesCancel, #remoteExit, .securityZoneOn, .securityZoneOff {
+    float: right;
+}
+
+.tvProgrammeIsRecord {
+    float: right;
+    color: #f00;
+}
+
+.rokuAppImage {
+    margin-right: 1em;
+    width: 40px;
+    height: 30px;
+}
+
+.noborder {
+    border-style:none;
+}
+
+.width100 {
+    width: 100%;
+}
+.width95 {
+    width: 95%;
+}
+.width90 {
+    width: 90%;
+}
+.width75 {
+    width: 75%;
+}
+.width60 {
+    width: 60%;
+}
+.width50 {
+    width: 50%;
+}
+.width40 {
+    width: 40%;
+}
+.width30 {
+    width: 30%;
+}
+.width25 {
+    width: 25%;
+}
+.width20 {
+    width: 20%;
+}
+.width16 {
+    width: 16.7%;
+}
+.width12 {
+    width: 12%;
+}
+.width10 {
+    width: 10%;
+}

@@ -1,0 +1,54 @@
+﻿@Html.Partial("TopBarWide")
+@section scripts {
+@Html.Raw(Render.Script("topBar"))
+@Html.Raw(Render.Script("homeWide"))
+@Html.Raw(Render.Script("streaming"))
+}
+
+
+<div id="streamingPanes">
+    <div id="streamingLeftPane">
+        <table class="buttonRow">
+            <tr>
+                <td class="centeredButton"><img id="goRokuSelect" src="/Content/Buttons/Roku.png" /></td>
+                <td class="centeredButton"><img id="goChromecastSelect" src="/Content/Buttons/Cast.png" /></td>
+                <td class="centeredButton"><img id="goChromecastAudioSelect" src="/Content/Buttons/AudioCast.png" /></td>
+                <td class="centeredButton"><img id="goSmartTvSelect" src="/Content/Buttons/Smart.png" /></td>
+            </tr>
+        </table>
+
+        <div class="@(ViewBag.HideStreamGuidanceClass ?? "")">
+            <p>Recommendations:</p>
+            <ul>
+                <li>Use <strong>Roku</strong> for Amazon Prime, Netflix and TV catchup services</li>
+                <li>Use <strong>Cast</strong> for YouTube, Curzon Home Cinema and other video content sent to Chromecast from a player on the phone or tablet</li>
+                <li>Use <strong>Audio</strong> for audio-only content sent to Chromecast from a player on the phone or tablet</li>
+                <li>Use <strong>Smart</strong> for controlling the TV with its own remote control</li>
+            </ul>
+        </div>
+
+        <div id="rokuBrowserPane" class="rokuBrowserPane @(ViewBag.HideRokuClass ?? "")">
+            <div class="rokuBrowserItems" id="rokuBrowserItems">
+                @Html.Partial("BrowserPane")
+            </div>
+        </div>
+    </div>
+
+    <div id="streamingRightPane">
+        <div id="rokuSearchPane" class="rokuSearchPane @(ViewBag.HideRokuClass ?? "")">
+            <div class="rokuSearch">
+                @Html.Partial("RokuSearchPane")
+            </div>
+        </div>
+        <div id="rokuControlsPane" class="rokuControlsPane @(ViewBag.HideRokuClass ?? "")">
+            <div class="rokuControls">
+                @Html.Partial("RokuControlsPane")
+            </div>
+        </div>
+        <div id="smartControlsPane" class="smartControlsPane @(ViewBag.HideSmartClass ?? "")">
+            <div class="smartControls">
+                @Html.Partial("SmartControlsPane")
+            </div>
+        </div>
+    </div>
+</div>

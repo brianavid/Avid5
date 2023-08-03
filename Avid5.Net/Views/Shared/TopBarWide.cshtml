@@ -1,0 +1,61 @@
+﻿@*
+    Any external (non-LAN) accesses which display the top bar (i.e. not the Guide) should be rejected
+*@
+@if (!IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+{
+	Context.Response.Redirect("~/Home/GoAway");
+}
+
+<div id='TopBar'>
+
+  <table class="topBar @(Running.RunningProgramTopBarClass)">
+	  <tr>
+		<td class="centeredButton"><img id="toggleSettings" src='~/Content/Buttons/SmallRound/Spanner.png'></td>
+		<td class="width12">
+		  <table>
+			<tr>
+			  <td class='pageTitle' align='center'>
+				<div id=homeTitle>@Running.RunningProgram</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class='pageTitle' align='center'>
+				<div id=volumeDisplay>@Receiver.VolumeDisplay</div>
+			  </td>
+			</tr>
+		  </table>
+
+		  </td>
+		  <td class="centeredButton"><img id="volumeDown" src='~/Content/Buttons/SmallRound/Audio.Volume.Down.png'></td>
+		  <td class="centeredButton"><img id="volumeUp" src='~/Content/Buttons/SmallRound/Audio.Volume.Up.png'></td>
+		  <td class="centeredButton"><img id="volumeMute" src='~/Content/Buttons/SmallRound/Audio.Mute.On.png'></td>
+          <td class="centeredButton"><img id="selectTV" src="~/Content/Buttons/Select.TV.Button.png"></td>
+          <td class="centeredButton"><img id="selectMusic" src="~/Content/Buttons/Select.Music.Button.png"></td>
+		  <td class="centeredButton"><img id="selectSpotify" src="~/Content/Buttons/Select.Spotify.Button.png"></td>
+		  <td class="centeredButton"><img id="selectVideo" src="~/Content/Buttons/Select.Video.Button.png"></td>
+          <td class="centeredButton"><img id="selectStream" src="~/Content/Buttons/Stream.png"></td>
+		  <td class="centeredButton"><img id="selectPhotos" src="~/Content/Buttons/Select.Photos.Button.png"></td>
+		  <td class="centeredButton"><img id="selectEpg" src="~/Content/Buttons/Select.Guide.Button.png"></td>
+		@if (ViewData.ContainsKey("IsHome"))
+		{
+		  <td class="centeredButton"><img id="allOffWide" src='~/Content/Buttons/SmallRound/Power.Off.png'></td>
+		}
+        else if (ViewData.ContainsKey("LinkBack"))
+		{
+		  <td class="centeredButton"><img id="goBack" src='~/Content/Buttons/SmallRound/Back.png'></td>
+		}
+		else
+		{
+		  <td class="centeredButton"><img id="goHomeWide" src='~/Content/Buttons/SmallRound/Home.png'></td>
+		}
+	  </tr>
+  </table>
+</div>
+<div id="isWide" style="display:none">Yes</div>
+<div id="topBarTitle" style="display:none">@ViewBag.Title</div>
+
+@{
+    ViewBag.Wide = "Wide";
+}
+@Html.Partial("ActionMenu")
+

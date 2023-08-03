@@ -1,0 +1,16 @@
+﻿<div id="topBarTitle" style="display:none">@ViewBag.Title</div>
+@section scripts {
+    @Html.Raw(Render.Script("security"))
+    <script>CheckUsingDefaultProfileWhenFocussed(window)</script>
+}
+
+<table class="buttonRow">
+    <tr>
+        <td class="centeredButton">	<img id="securityAwayToday" src="/Content/Buttons/AwayToday.png" /></td>
+        <td class="centeredButton">	<img id="securityAwayTrip" src="/Content/Buttons/AwayTrip.png" /></td>
+    </tr>
+</table>
+
+@Html.Partial("SchedulePane")
+
+

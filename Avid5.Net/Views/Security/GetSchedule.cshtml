@@ -1,0 +1,10 @@
+﻿@Html.Partial("TopBar")
+@section scripts {
+    @Html.Raw(Render.Script("topBar"))
+    @Html.Raw(Render.Script("security"))
+}
+
+
+@Html.Partial("PaneButtons")
+@Html.Partial("SchedulePane")
+

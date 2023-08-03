@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "";
+}
+
+@Html.Partial("TopBarWide")
+@section scripts {
+    @Html.Raw(Render.Script("topBar"))
+    @Html.Raw(Render.Script("homeWide"))
+}
+

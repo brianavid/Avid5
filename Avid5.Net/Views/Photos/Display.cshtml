@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Photo";
+}
+
+@Html.Partial("TopBar")
+@section scripts {
+    @Html.Raw(Render.Script("topBar"))
+    @Html.Raw(Render.Script("photos"))
+}
+
+@Html.Partial("PaneButtons")
+<div class="photosDisplay">
+    @Html.Partial("DisplayPane")
+</div>
