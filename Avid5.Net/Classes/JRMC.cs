@@ -14,6 +14,7 @@ using NLog.Targets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using static Avid.Spotify.SpotifyData;
 
 /// <summary>
 /// The JRMC class encapsulates all access to the J River Media Center player which is used for
@@ -576,10 +577,16 @@ public class JRMC
         if (File.Exists(CachePath))
         {
             XDocument cacheXml = XDocument.Load(CachePath);
+
             theJRMC.albumList = new AlbumCollection(cacheXml.Root.Element("Music").Elements("A").Select(
-                a=>new AlbumData(a.Attribute("id").Value, a.Elements("T").Select(
-                    t=>new TrackData(t.Elements("I").Select(
-                        i=> Tuple.Create(i.Value, i.Attribute("k").Value)).ToDictionary(tp=>tp.Item2, tp=>tp.Item1))).ToArray())));
+                a => new AlbumData(a.Attribute("id").Value, a.Elements("T").Select(
+                    t => new TrackData(t.Elements("I").Select(
+                        i => Tuple.Create(i.Value, i.Attribute("k").Value)).ToDictionary(tp => tp.Item2, tp => tp.Item1))).ToArray())));
+
+            theJRMC.photoAlbumList = new AlbumCollection(cacheXml.Root.Element("Photo").Elements("A").Select(
+                a => new AlbumData(a.Attribute("id").Value, a.Elements("T").Select(
+                    t => new TrackData(t.Elements("I").Select(
+                        i => Tuple.Create(i.Value, i.Attribute("k").Value)).ToDictionary(tp => tp.Item2, tp => tp.Item1))).ToArray())));
         }
         else
         {
@@ -591,10 +598,10 @@ public class JRMC
 
                 foreach (var itemId in itemIds)
                 {
-                    FetchAllAlbums(itemId, AlbumList, PhotoAlbumList);
+                    FetchAllAlbums(itemId, AlbumList, PhotoAlbumList, 0);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 theJRMC.albumList = null;
             }
@@ -607,7 +614,10 @@ public class JRMC
                         theJRMC.albumList.InArtistOrder.Select(a => new XElement("A", new XAttribute("id", a.AlbumId),
                         a.Tracks.Select(t => new XElement("T", 
                         t.Info.Select(i => new XElement("I", new XAttribute("k", i.Key), i.Value))))))), 
-                        new XElement("Photo")}));
+                    new XElement("Photo",
+                        theJRMC.photoAlbumList.InArtistOrder.Select(a => new XElement("A", new XAttribute("id", a.AlbumId),
+                        a.Tracks.Select(t => new XElement("T",
+                        t.Info.Select(i => new XElement("I", new XAttribute("k", i.Key), i.Value)))))))}));
 
                 albumXml.Save(CachePath);
             }
@@ -635,7 +645,7 @@ public class JRMC
     /// <param name="itemiD"></param>
     /// <param name="albumList"></param>
     /// <param name="photoAlbumList"></param>
-    static void FetchAllAlbums(string itemiD, AlbumCollection albumList, AlbumCollection photoAlbumList)
+    static void FetchAllAlbums(string itemiD, AlbumCollection albumList, AlbumCollection photoAlbumList, int depth)
     {
         var childIds = GetChildren(itemiD);
 
@@ -647,23 +657,25 @@ public class JRMC
                 foreach (var childName in childIds.Keys)
                 {
                     var childId = childIds[childName];
-                    FetchAllAlbums(childId, albumList, photoAlbumList);
+                    FetchAllAlbums(childId, albumList, photoAlbumList, depth+1);
                 }
             }
             else
             {
-                if (childIds.ContainsKey("Artist"))
-                {
-                    FetchAllAlbums(childIds["Artist"], albumList, photoAlbumList);
-                }
                 if (childIds.ContainsKey("Album"))
                 {
-                    FetchAllAlbums(childIds["Album"], albumList, photoAlbumList);
+                    FetchAllAlbums(childIds["Album"], albumList, photoAlbumList, depth + 1);
                 }
-                if (childIds.ContainsKey("Composer"))
-                {
-                    FetchAllAlbums(childIds["Composer"], albumList, photoAlbumList);
-                }
+                //if (childIds.ContainsKey("Artist"))
+                //{
+                //    logger.Info($"{pad}Fetch *** Artist");
+                //    FetchAllAlbums(childIds["Artist"], albumList, photoAlbumList, depth + 1);
+                //}
+                //if (childIds.ContainsKey("Composer"))
+                //{
+                //    logger.Info($"{pad}Fetch *** Composer");
+                //    FetchAllAlbums(childIds["Composer"], albumList, photoAlbumList, depth + 1);
+                //}
             }
         }
         else
@@ -675,7 +687,7 @@ public class JRMC
             {
                 string albumId = tracks[0].Info["Key"];
 
-                if (tracks[0].Info["Filename"].Contains(@"\Photos\"))
+                if (tracks[0].Info["Filename"].Contains(Path.DirectorySeparatorChar + @"Photos" + Path.DirectorySeparatorChar))
                 {
                     if (!photoAlbumList.Keys.Contains(albumId))
                     {
@@ -1143,7 +1155,7 @@ public class JRMC
         AlbumData album)
     {
         var trackInfo = album.Track0.Info;
-        return trackInfo["Filename"].ToLower().Contains(@"\classical\");
+        return trackInfo["Filename"].ToLower().Contains(Path.DirectorySeparatorChar + @"classical" + Path.DirectorySeparatorChar);
     }
 
     /// <summary>

@@ -64,6 +64,7 @@ public static class Spotify
 		                    var tokenJsonString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 		                    if (!string.IsNullOrEmpty(tokenJsonString))
 		                    {
+                                tokenJsonString = tokenJsonString.Replace("access_token", "AccessToken").Replace("expires_in", "ExpiresIn").Replace("token_type", "TokenType");
                                 AuthorizationCodeTokenResponse token = JsonConvert.DeserializeObject<AuthorizationCodeTokenResponse>(tokenJsonString);
 		                        if (!string.IsNullOrEmpty(token.AccessToken) && !string.IsNullOrEmpty(token.TokenType))
 		                        {
@@ -1123,9 +1124,21 @@ public static class Spotify
                 foreach (var dev in devices.Devices)
                 {
                     logger.Info($"Spotify play device found: {dev.Name} [{dev.Type}]");
-                    if (dev.Type == "avr")
+                    if (dev.Type.ToLower() == "computer" && dev.Name == Environment.MachineName)
                     {
+                        logger.Info($"Environment.MachineName: {Environment.MachineName}");
                         playbackDevice = dev.Id;
+                    }
+                }
+
+                if (playbackDevice == null)
+                {
+                    foreach (var dev in devices.Devices)
+                    {
+                        if (dev.Type.ToLower() == "avr")
+                        {
+                            playbackDevice = dev.Id;
+                        }
                     }
                 }
             }
@@ -1160,7 +1173,7 @@ public static class Spotify
                         var request = new PlayerResumePlaybackRequest();
                         request.DeviceId = GetPlaybackDevice();
                         request.Uris = new List<string> { id };
-                        request.OffsetParam.Position = 0;
+                        request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Position = 0 };
                         return WebAppService.Player.ResumePlayback(request).Result;
                     }
                 }
@@ -1210,7 +1223,7 @@ public static class Spotify
                         var request = new PlayerResumePlaybackRequest();
                         request.DeviceId = GetPlaybackDevice();
                         request.ContextUri = id;
-                        request.OffsetParam.Position = 0;
+                        request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Position = 0 };
                         return WebAppService.Player.ResumePlayback(request).Result;
                     }
                 }
@@ -1264,7 +1277,7 @@ public static class Spotify
                             var request = new PlayerResumePlaybackRequest();
                             request.DeviceId = GetPlaybackDevice();
                             request.ContextUri = id;
-                            request.OffsetParam.Position = 0;
+                            request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Position = 0 };
                             return WebAppService.Player.ResumePlayback(request).Result;
                         }
                     }
@@ -1293,8 +1306,8 @@ public static class Spotify
                 try
                 {
                     var request = new PlayerCurrentlyPlayingRequest();
-                    var playingTrack = WebAppService.Player.GetCurrentlyPlaying(request).Result.Item as FullTrack;
-                    return MakeTrack(playingTrack);
+                    var playingTrack = WebAppService.Player.GetCurrentlyPlaying(request).Result?.Item as FullTrack;
+                    return playingTrack == null ? null : MakeTrack(playingTrack);
                 }
                 catch (System.Exception ex)
                 {
@@ -1321,7 +1334,7 @@ public static class Spotify
             {
                 var request = new PlayerCurrentPlaybackRequest();
                 var playback = WebAppService.Player.GetCurrentPlayback(request).Result;
-                if (playback.Context != null)
+                if (playback?.Context != null)
                 {
                     if (playback.Context.Type == "album")
                     {
@@ -1333,7 +1346,7 @@ public static class Spotify
                     }
                 }
 
-                if (playback.Item != null)
+                if (playback?.Item != null)
                 {
                     return new List<SpotifyData.Track> { MakeTrack(GetFullTrack(SimplifyId((playback.Item as FullTrack).Uri))) };
                 }
@@ -1356,7 +1369,7 @@ public static class Spotify
         var request = new PlayerResumePlaybackRequest();
         request.DeviceId = GetPlaybackDevice();
         request.ContextUri = playback.Context.Uri;
-        request.OffsetParam.Uri = id;
+        request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Uri = id };
         var ok = WebAppService.Player.ResumePlayback(request).Result;
         return GetCurrentTrack();
     }
@@ -1408,7 +1421,6 @@ public static class Spotify
                 try
                 {
                     return WebAppService.Player.SkipPrevious().Result ? 0 : -1;
-                    return 0;
                 }
                 catch (System.Exception ex)
                 {
@@ -1436,9 +1448,6 @@ public static class Spotify
                     {
                         var request = new PlayerResumePlaybackRequest();
                         request.DeviceId = GetPlaybackDevice();
-                        request.ContextUri = playback.Context.Uri;
-                        request.OffsetParam.Uri = (playback.Item as FullTrack).Id;
-                        request.OffsetParam.Position = playback.ProgressMs;
                         return WebAppService.Player.ResumePlayback(request).Result ? 0 : -1;
                     }
                     return 0;
@@ -1560,7 +1569,7 @@ public static class Spotify
             {
                 try
                 {
-                    var request = new PlayerSeekToRequest(pos);
+                    var request = new PlayerSeekToRequest(pos*1000);
                     return WebAppService.Player.SeekTo(request).Result ? pos : -1;
                 }
                 catch (System.Exception ex)
@@ -1709,7 +1718,15 @@ public static class Spotify
         Func<T, string> GetAlbumId)
     {
         var albumIds = col.Take(200).Select(GetAlbumId).ToEnumerable();
-        return WebAppService.Albums.GetSeveral(new AlbumsRequest(albumIds.ToList())).Result.Albums.Select(MakeAlbum);
+        var count = albumIds.Count();
+        foreach (var batch in albumIds.Batch(20))
+        {
+            var albumBatch = WebAppService.Albums.GetSeveral(new AlbumsRequest(batch.ToList())).Result.Albums.Select(MakeAlbum);
+            foreach (var album in albumBatch)
+            {
+                yield return album;
+            }
+        }
     }
 
     /// Make an external Track structure from that returned by the Web API
