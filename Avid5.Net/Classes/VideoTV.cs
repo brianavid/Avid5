@@ -733,17 +733,17 @@ public class VideoTV
 
     static void LoadAllEpgProgrammes()
     {
-        var today = (DateTime.Now - new DateTime(1899, 12, 30)).Days;
         allProgrammes = new List<Programme>();
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 14; i++)
         {
             for (var j = 0; j < 10; j++)
             {
-                var xml = JRMC.GetXml(JRMC.Url + $"Television/GetGuidePrograms?StartDate={today + i}");
+                var xml = JRMC.GetXml(JRMC.Url + $"Television/GetGuidePrograms?StartDate={DateTime.Today.AddDays(i).ToShortDateString()}");
                 if (xml == null)
                 {
                     Thread.Sleep(1000);
-                } else
+                } 
+                else
                 {
                     var programsItem = xml.Root.Element("Item");
                     var xmlText = RepairBrokenXml(programsItem.Value);
