@@ -216,7 +216,7 @@
                 var name = track.Info["Name"];
                 string album = track.Info.ContainsKey("Album") ? track.Info["Album"] : string.Empty;
                 string artist = track.Info.ContainsKey("Artist") ? track.Info["Artist"] : string.Empty;
-                string imageUrl = JRMC.Url + "File/GetImage?File=" + track.Info["Key"];
+                string imageUrl = "/Music/GetAlbumImage?id=" + track.Info["Key"];
                 <div class="musicPlayingTrack">
                     <img src="@imageUrl" class="musicInfoImage" alt="No Image" />
                     <div class="musicInfoArtist">@artist</div>
@@ -247,7 +247,7 @@
                 var composer = track.Info.ContainsKey("Composer") ? track.Info["Composer"] : string.Empty;
                 string album = track.Info.ContainsKey("Album") ? track.Info["Album"] : string.Empty;
                 string artist = track.Info.ContainsKey("Artist") ? track.Info["Artist"] : string.Empty;
-                string imageUrl = JRMC.Url + "File/GetImage?File=" + track.Info["Key"];
+                string imageUrl = "/Music/GetAlbumImage?id=" + track.Info["Key"];
                 <div class="musicPlayingTrack">
                     <img src="@imageUrl" class="musicInfoImage" alt="No Image" />
                     <div>

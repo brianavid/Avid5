@@ -1,5 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System.Net;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
+using NLog.LayoutRenderers.Wrappers;
 
 namespace Avid5.Net.Controllers
 {
@@ -91,6 +93,13 @@ namespace Avid5.Net.Controllers
             var info = JRMC.GetPlaybackInfo();
             if (info != null)
             {
+                if (info.HasElements)
+                {
+                    foreach (var xImageUrl in info.Elements().Where(e => e.Attribute("Name").Value == "ImageURL"))
+                    {
+                        xImageUrl.Value = xImageUrl.Value.Replace("MCWS/v1/File/GetImage?File=", "/Music/GetAlbumImage?id=");
+                    }
+                }
                 info.Save(writer);
             }
             return this.Content(writer.ToString(), @"text/xml", writer.Encoding);
@@ -109,6 +118,31 @@ namespace Avid5.Net.Controllers
             string id)
         {
             JRMC.RemoveQueuedTrack(id);
+            return this.Content("");
+        }
+
+        // GET: /Music/GetAlbumImage
+        public ActionResult GetAlbumImage(
+            string id)
+        {
+            try
+            {
+                var requestUri = JRMC.Url + "File/GetImage?File=" + id;
+                HttpWebRequest request =
+                   (HttpWebRequest)HttpWebRequest.Create(requestUri);
+                request.Method = WebRequestMethods.Http.Get;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                   byte[] bytes= new byte[response.ContentLength];
+                   response.GetResponseStream().Read(bytes);
+                   return base.File(bytes, response.ContentType);
+                }
+            }
+            catch (Exception ex)
+            { 
+            }
+
             return this.Content("");
         }
 
