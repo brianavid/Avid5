@@ -9,7 +9,7 @@
             if (track.ContainsKey("Key"))
             {
                 string key = track["Key"];
-                string imageUrl = JRMC.Url + "File/GetImage?ThumbnailSize=small&Width=80&Height=80&Pad=1&FillTransparency=FFFFFF&File=" + key;
+                string imageUrl = "/Photos/GetThumbnail?id=" + key;
 
                 <div id='@key' class='photoGridImage' >
                     <img src="@imageUrl" />

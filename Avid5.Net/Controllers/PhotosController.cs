@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Avid5.Net.Controllers
 {
@@ -35,5 +36,30 @@ namespace Avid5.Net.Controllers
             return View();
         }
 
+
+        // GET: /Photos/GetThumbnail
+        public ActionResult GetThumbnail(
+            string id)
+        {
+            try
+            {
+                var requestUri = JRMC.Url + "File/GetImage?ThumbnailSize=small&Width=80&Height=80&Pad=1&FillTransparency=FFFFFF&File=" + id;
+                HttpWebRequest request =
+                   (HttpWebRequest)HttpWebRequest.Create(requestUri);
+                request.Method = WebRequestMethods.Http.Get;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    byte[] bytes = new byte[response.ContentLength];
+                    response.GetResponseStream().Read(bytes);
+                    return base.File(bytes, response.ContentType);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return this.Content("");
+        }
     }
 }

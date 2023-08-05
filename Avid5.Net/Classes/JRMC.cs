@@ -596,10 +596,8 @@ public class JRMC
                 theJRMC.albumList = new AlbumCollection();
                 theJRMC.photoAlbumList = new AlbumCollection();
 
-                foreach (var itemId in itemIds)
-                {
-                    FetchAllAlbums(itemId, AlbumList, PhotoAlbumList, 0);
-                }
+                FetchAllAlbums(itemIds[0], AlbumList, 0);
+                FetchAllAlbums(itemIds[1], PhotoAlbumList, 0);
             }
             catch (Exception ex)
             {
@@ -645,7 +643,7 @@ public class JRMC
     /// <param name="itemiD"></param>
     /// <param name="albumList"></param>
     /// <param name="photoAlbumList"></param>
-    static void FetchAllAlbums(string itemiD, AlbumCollection albumList, AlbumCollection photoAlbumList, int depth)
+    static void FetchAllAlbums(string itemiD, AlbumCollection albumList, int depth)
     {
         var childIds = GetChildren(itemiD);
 
@@ -657,25 +655,15 @@ public class JRMC
                 foreach (var childName in childIds.Keys)
                 {
                     var childId = childIds[childName];
-                    FetchAllAlbums(childId, albumList, photoAlbumList, depth+1);
+                    FetchAllAlbums(childId, albumList, depth+1);
                 }
             }
             else
             {
                 if (childIds.ContainsKey("Album"))
                 {
-                    FetchAllAlbums(childIds["Album"], albumList, photoAlbumList, depth + 1);
+                    FetchAllAlbums(childIds["Album"], albumList, depth + 1);
                 }
-                //if (childIds.ContainsKey("Artist"))
-                //{
-                //    logger.Info($"{pad}Fetch *** Artist");
-                //    FetchAllAlbums(childIds["Artist"], albumList, photoAlbumList, depth + 1);
-                //}
-                //if (childIds.ContainsKey("Composer"))
-                //{
-                //    logger.Info($"{pad}Fetch *** Composer");
-                //    FetchAllAlbums(childIds["Composer"], albumList, photoAlbumList, depth + 1);
-                //}
             }
         }
         else
@@ -687,21 +675,10 @@ public class JRMC
             {
                 string albumId = tracks[0].Info["Key"];
 
-                if (tracks[0].Info["Filename"].Contains(Path.DirectorySeparatorChar + @"Photos" + Path.DirectorySeparatorChar))
+                if (!albumList.Keys.Contains(albumId))
                 {
-                    if (!photoAlbumList.Keys.Contains(albumId))
-                    {
-                        var album = new AlbumData(albumId, tracks);
-                        photoAlbumList.Add(albumId, album);
-                    }
-                }
-                else
-                {
-                    if (!albumList.Keys.Contains(albumId))
-                    {
-                        var album = new AlbumData(albumId, tracks);
-                        albumList.Add(albumId, album);
-                    }
+                    var album = new AlbumData(albumId, tracks);
+                    albumList.Add(albumId, album);
                 }
             }
         }
