@@ -40,7 +40,7 @@ public static class Roku
             request.ContentType = "text/xml";
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            XDocument xDoc =
+			using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                 XDocument.Load(new StreamReader(response.GetResponseStream()));
 
             return xDoc;
