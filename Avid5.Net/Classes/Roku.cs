@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Text;
 using NLog;
+using System.Net.Http;
 
 public static class Roku
 {
@@ -34,18 +35,17 @@ public static class Roku
         {
             Uri requestUri = new Uri(Url + url);
 
-            HttpWebRequest request =
-                (HttpWebRequest)HttpWebRequest.Create(requestUri);
-            request.Method = WebRequestMethods.Http.Get;
-            request.ContentType = "text/xml";
+			var httpClient = new HttpClient();
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			//make the sync GET request
 			using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
-                XDocument.Load(new StreamReader(response.GetResponseStream()));
-
-            return xDoc;
-        }
-        catch
+			{
+				var response = httpClient.Send(request);
+				response.EnsureSuccessStatusCode();
+				return XDocument.Load(new StreamReader(response.Content.ReadAsStream()));
+			}
+		}
+		catch
         {
             return null;
         }
@@ -64,12 +64,11 @@ public static class Roku
         try
         {
             Uri requestUri = new Uri(Url + url + (paramValue ?? ""));
-
-            HttpWebRequest request =
-                (HttpWebRequest)HttpWebRequest.Create(requestUri);
-            request.Method = WebRequestMethods.Http.Post;
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			var httpClient = new HttpClient();
+			using (var request = new HttpRequestMessage(HttpMethod.Post, requestUri))
+			{
+				var response = httpClient.Send(request);
+			}
         }
         catch
         {

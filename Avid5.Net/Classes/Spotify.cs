@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Xml.Linq;
 using static Avid.Spotify.SpotifyData;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 
 /// <summary>
 /// Class of static methods to access the Spotify player through its WebAPI interface
@@ -55,13 +56,17 @@ public static class Spotify
 
 	                    if (!string.IsNullOrEmpty(refreshUrl))
 		                {
-		                    HttpWebRequest request =
-		                        (HttpWebRequest)HttpWebRequest.Create(refreshUrl);
-		                    request.Method = WebRequestMethods.Http.Get;
-		                    request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+                            string tokenJsonString = null;
+							var httpClient = new HttpClient();
 
-		                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-		                    var tokenJsonString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                            //make the sync GET request
+                            using (var request = new HttpRequestMessage(HttpMethod.Get, refreshUrl))
+                            {
+                                request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
+								var response = httpClient.Send(request);
+                                response.EnsureSuccessStatusCode();
+                                tokenJsonString = new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+                            }
 		                    if (!string.IsNullOrEmpty(tokenJsonString))
 		                    {
                                 tokenJsonString = tokenJsonString.Replace("access_token", "AccessToken").Replace("expires_in", "ExpiresIn").Replace("token_type", "TokenType");
@@ -141,15 +146,14 @@ public static class Spotify
                 logger.Info("Probing Authentication API");
                 try
                 {
-                    HttpWebRequest request =
-                        (HttpWebRequest)HttpWebRequest.Create("http://brianavid.dnsalias.com/SpotifyAuth/Auth/Probe");
-                    request.Method = WebRequestMethods.Http.Get;
-                    request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-                    request.Timeout = 10000;
-
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                    return response.StatusCode == HttpStatusCode.OK;
+                    string requestUri = "http://brianavid.dnsalias.com/SpotifyAuth/Auth/Probe";
+					var httpClient = new HttpClient();
+                    using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+                    {
+                        var response = httpClient.Send(request);
+                        response.EnsureSuccessStatusCode();
+                        return true;
+                    }
                 }
                 catch (Exception ex)
                 {

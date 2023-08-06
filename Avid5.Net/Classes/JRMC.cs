@@ -316,19 +316,15 @@ public class JRMC
         {
             try
             {
-                HttpWebRequest request =
-                    (HttpWebRequest)HttpWebRequest.Create(requestUri);
-                request.Method = WebRequestMethods.Http.Get;
-                request.ContentType = "text/xml";
-                XDocument xDoc = null;
+                var httpClient = new HttpClient();
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK)
+                //make the sync GET request
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                 {
-                    xDoc = XDocument.Load(new StreamReader(response.GetResponseStream()));
+                    var response = httpClient.Send(request);
+                    response.EnsureSuccessStatusCode();
+					return XDocument.Load(new StreamReader(response.Content.ReadAsStream()));
                 }
-
-                return xDoc;
             }
             catch (WebException)
             {

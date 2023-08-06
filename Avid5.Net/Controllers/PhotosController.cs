@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Avid5.Net.Controllers
 {
@@ -44,15 +43,15 @@ namespace Avid5.Net.Controllers
             try
             {
                 var requestUri = JRMC.Url + "File/GetImage?ThumbnailSize=small&Width=80&Height=80&Pad=1&FillTransparency=FFFFFF&File=" + id;
-                HttpWebRequest request =
-                   (HttpWebRequest)HttpWebRequest.Create(requestUri);
-                request.Method = WebRequestMethods.Http.Get;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    byte[] bytes = new byte[response.ContentLength];
-                    response.GetResponseStream().Read(bytes);
-                    return base.File(bytes, response.ContentType);
+				var httpClient = new HttpClient();
+
+				//make the sync GET request
+				using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+				{
+					var response = httpClient.Send(request);
+					response.EnsureSuccessStatusCode();
+                    byte[] bytes = response.Content.ReadAsByteArrayAsync().Result;
+					return base.File(bytes, response.Content.Headers.ContentType.MediaType);
                 }
             }
             catch

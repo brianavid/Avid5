@@ -45,18 +45,16 @@ public static class Receiver
 
         Uri requestUri = new Uri(Url);
 
-        HttpWebRequest request =
-            (HttpWebRequest)HttpWebRequest.Create(requestUri);
-        request.Method = WebRequestMethods.Http.Post;
-        StreamWriter requestWriter = new StreamWriter(request.GetRequestStream(), Encoding.UTF8);
-        requestWriter.Write(body);
-        requestWriter.Close();
+		var httpClient = new HttpClient();
 
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        XDocument xDoc =
-            XDocument.Load(new StreamReader(response.GetResponseStream()));
-
-        return xDoc;
+		//make the sync POST request
+		using (var request = new HttpRequestMessage(HttpMethod.Post, requestUri))
+		{
+			request.Content = new StringContent(body, System.Text.Encoding.UTF8);
+			var response = httpClient.Send(request);
+			response.EnsureSuccessStatusCode();
+			return XDocument.Load(new StreamReader(response.Content.ReadAsStream()));
+		}
     }
 
     /// <summary>
