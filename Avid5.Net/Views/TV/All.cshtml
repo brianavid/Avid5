@@ -2,7 +2,7 @@
     ViewBag.Title = "TV";
 }
 
-@Html.Partial("TopBarWide")
+@await Html.PartialAsync("TopBarWide")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("homeWide"))
@@ -20,17 +20,17 @@
 
         <div id="tvChannelsPane">
             <div id="tvChannels" class="tvChannels">
-                @Html.Partial("ChannelsPane")
+                @await Html.PartialAsync("ChannelsPane")
             </div>
         </div>
     </div>
     <div id ="tvRightPane">
          <div class="tvButtons" id="tvButtonsPane">
-            @Html.Partial("ButtonsPane")
+            @await Html.PartialAsync("ButtonsPane")
         </div>
 
         <div class="tvControlPane" id="tvControlPane">
-            @Html.Partial("ControlPane")
+            @await Html.PartialAsync("ControlPane")
         </div>
     </div>
 </div>

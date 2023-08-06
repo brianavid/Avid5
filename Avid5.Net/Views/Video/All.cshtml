@@ -2,7 +2,7 @@
     ViewBag.Title = "Video";
 }
 
-@Html.Partial("TopBarWide")
+@await Html.PartialAsync("TopBarWide")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("homeWide"))
@@ -20,19 +20,19 @@
         </table>
 
         <div class="videoRecordings" id="videoRecordings">
-            @Html.Partial("RecordingsPane")
+            @await Html.PartialAsync("RecordingsPane")
         </div>
         <div class="videoVideos" id="videoVideos" style="display:none">
-            @Html.Partial("VideosPane")
+            @await Html.PartialAsync("VideosPane")
         </div>
         <div class="videoDvds" id="videoDvds" style="display:none">
-            @Html.Partial("DVDsPane")
+            @await Html.PartialAsync("DVDsPane")
         </div>
     </div>
 
     <div id ="videoRightPane">
         <div class="videoWatchPane" id="videoWatchPane">
-            @Html.Partial("WatchPane")
+            @await Html.PartialAsync("WatchPane")
         </div>
     </div>
 </div>

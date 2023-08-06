@@ -1,4 +1,4 @@
-﻿@Html.Partial("TopBar")
+﻿@await Html.PartialAsync("TopBar")
 @section scripts {
 @Html.Raw(Render.Script("topBar"))
 @Html.Raw(Render.Script("home"))
@@ -6,22 +6,22 @@
 }
 
 <div class="@(ViewBag.HideRokuClass ?? "")">
-    @Html.Partial("PaneButtons")
+    @await Html.PartialAsync("PaneButtons")
 </div>
 <div id="rokuControlsPane">
     <div id="rokuSearchPane" class="rokuSearchPane @(ViewBag.HideRokuClass ?? "")">
         <div class="rokuSearch">
-            @Html.Partial("RokuSearchPane")
+            @await Html.PartialAsync("RokuSearchPane")
         </div>
     </div>
     <div id="rokuControlsPane" class="rokuControlsPane @(ViewBag.HideRokuClass ?? "")">
         <div class="rokuControls">
-            @Html.Partial("RokuControlsPane")
+            @await Html.PartialAsync("RokuControlsPane")
         </div>
     </div>
     <div id="smartControlsPane" class="smartControlsPane @(ViewBag.HideSmartClass ?? "")">
         <div class="smartControls">
-            @Html.Partial("SmartControlsPane")
+            @await Html.PartialAsync("SmartControlsPane")
         </div>
     </div>
 </div>

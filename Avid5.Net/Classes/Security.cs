@@ -94,12 +94,7 @@ public class Security
         {
             //  If there is a current profile in the registry, then apply that immediately on starting
             //  This makes the secuity cycling persist acrosss web app restarts and even power failures.
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Avid");
-            var securityProfileId = key.GetValue("SecurityProfile") as string;
-            if (securityProfileId == null)
-            {
-                securityProfileId = Config.ReadValue("SecurityProfile");
-            }
+            var securityProfileId = Config.ReadValue("SecurityProfile");
 
             if (!String.IsNullOrEmpty(securityProfileId))
             {

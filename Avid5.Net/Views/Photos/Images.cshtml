@@ -2,13 +2,13 @@
     ViewBag.Title = "Photo";
 }
 
-@Html.Partial("TopBar")
+@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("photos"))
 }
 
-@Html.Partial("PaneButtons")
+@await Html.PartialAsync("PaneButtons")
 <div class="photosImagesGrid" id="photosImagesGrid">
-    @Html.Partial("ImagesPane")
+    @await Html.PartialAsync("ImagesPane")
 </div>

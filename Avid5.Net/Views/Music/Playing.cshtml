@@ -2,14 +2,14 @@
 	ViewBag.Title = "Music";
 }
 
-@Html.Partial("TopBar")
+@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("music"))
 }
 
 <script type="text/javascript">var JrmcUrl = '@JRMC.Url'; var JrmcHost = '@JRMC.Host';</script>
-@Html.Partial("PaneButtons")
+@await Html.PartialAsync("PaneButtons")
 <div class="musicPlayback">
-    @Html.Partial("PlayingPane")
+    @await Html.PartialAsync("PlayingPane")
 </div>

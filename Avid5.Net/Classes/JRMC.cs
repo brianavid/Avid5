@@ -599,7 +599,7 @@ public class JRMC
                 FetchAllAlbums(itemIds[0], AlbumList, 0);
                 FetchAllAlbums(itemIds[1], PhotoAlbumList, 0);
             }
-            catch (Exception ex)
+            catch
             {
                 theJRMC.albumList = null;
             }

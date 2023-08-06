@@ -12,7 +12,7 @@ public static class Config
 {
     public static string ContentRootPath { get; private set; }
 
-    static IHostApplicationLifetime? _appLifetime;
+    static IHostApplicationLifetime _appLifetime;
 
     public static void Initialize(IHostApplicationLifetime appLifetime, string contentRootPath)
     {

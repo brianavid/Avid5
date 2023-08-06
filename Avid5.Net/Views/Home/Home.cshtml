@@ -2,7 +2,7 @@
     ViewBag.Title = "";
 }
 
-@Html.Partial("TopBar")
+@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("home"))

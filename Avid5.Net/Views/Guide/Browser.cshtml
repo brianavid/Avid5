@@ -7,7 +7,7 @@
 *@
 @if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
 {
-    @Html.Partial("TopBar");
+    @await Html.PartialAsync("TopBar");
 }
 else
 {
@@ -22,12 +22,12 @@ else
     @Html.Raw(Render.Script("guide2"))
 }
 
-@Html.Partial("PaneButtons")
+@await Html.PartialAsync("PaneButtons")
 <div id="guidePanes">
     <div id="guideOverlayPane">
         <div id="guideSelectorPane">
             <div class="guideSelectorItems guideOverlaySelectors" id="guideSelectorItems">
-                @Html.Partial("SelectorPane")
+                @await Html.PartialAsync("SelectorPane")
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@ else
     <div id="guideOverlayPane">
         <div id="guideListingsPane">
             <div class="guideBrowserItems guideOverlayListings" id="guideBrowserItems">
-                @Html.Partial("ListingsPane")
+                @await Html.PartialAsync("ListingsPane")
             </div>
         </div>
     </div>

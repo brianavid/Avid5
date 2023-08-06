@@ -3,15 +3,15 @@
     ViewBag.Mode = "Tv";
 }
 
-@Html.Partial("TopBar")
+@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("tv"))
 }
 
-@Html.Partial("PaneButtons")
+@await Html.PartialAsync("PaneButtons")
 <div id="tvChannelsPane">
     <div id="tvChannels" class="tvChannels">
-        @Html.Partial("ChannelsPane")
+        @await Html.PartialAsync("ChannelsPane")
     </div>
 </div>

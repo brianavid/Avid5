@@ -2,13 +2,13 @@
     ViewBag.Title = "TV";
 }
 
-@Html.Partial("TopBar")
+@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("tv"))
 }
 
-@Html.Partial("PaneButtons")
+@await Html.PartialAsync("PaneButtons")
 <div class="tvButtons" id="tvButtonsPane">
-    @Html.Partial("ButtonsPane")
+    @await Html.PartialAsync("ButtonsPane")
 </div>

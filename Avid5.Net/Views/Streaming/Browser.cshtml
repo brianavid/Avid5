@@ -1,4 +1,4 @@
-﻿@Html.Partial("TopBar")
+﻿@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("home"))
@@ -30,6 +30,6 @@
 
 <div id="rokuBrowserPane" class="rokuBrowserPane @(ViewBag.HideRokuClass ?? "")">
     <div class="rokuBrowserItems" id="rokuBrowserItems">
-        @Html.Partial("BrowserPane")
+        @await Html.PartialAsync("BrowserPane")
     </div>
 </div>

@@ -139,7 +139,7 @@ namespace Avid5.Net.Controllers
                    return base.File(bytes, response.ContentType);
                 }
             }
-            catch (Exception ex)
+            catch
             { 
             }
 

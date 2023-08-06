@@ -2,13 +2,13 @@
     ViewBag.Title = "Spotify";
 }
 
-@Html.Partial("TopBar")
+@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("spotify"))
 }
 
-@Html.Partial("PaneButtons")
+@await Html.PartialAsync("PaneButtons")
 <div class="spotifyPlaybackQueueItems" id="spotifyPlaybackQueueItems">
-    @Html.Partial("QueuePane")
+    @await Html.PartialAsync("QueuePane")
 </div>
