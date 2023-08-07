@@ -19,12 +19,6 @@ public static class Running
 
     /// <summary>
     /// Avid name for the currently running player application
-    /// Arguments to the
-    /// </summary>
-    static string runningArgs = "";
-
-    /// <summary>
-    /// Avid name for the currently running player application
     /// </summary>
     public static String RunningProgram { get { return runningProgram; } }
 
@@ -108,62 +102,25 @@ public static class Running
 
         lastActive = DateTime.UtcNow;
 
-        runningArgs = args;
-
         if (name != "Roku")
         {
             StopRoku();
         }
         Receiver.SelectComputerInput();
 
-        if (name == "Music")
-        {
-            if (runningProgram != name)
-            {
-                if (runningProgram == "Photo")
-                {
-                    ExitJRMC();
-                }
-                VideoTV.Stop();
-                if (spotifyRunning)
-                {
-                    Spotify.Stop();
-                }
-                runningProgram = name;
-                Screen.SetScreenDisplayMode(0);
-                Receiver.SelectRoomsOutput();
-            }
-
-            JRMC.SetDisplay(JRMC.DisplayMode.Standard, maximize: true);
-            logger.Info("LaunchProgram OK {0}", runningProgram);
-            return true;
-        }
-
         if (runningProgram == name && String.IsNullOrEmpty(args))
         {
-            if (runningProgram != "Spotify")
-            {
-                VideoTV.Stop();
-                if (spotifyRunning)
-                {
-                    Spotify.Stop();
-                }
-                NothingRunning();
-                return false;
-            }
             logger.Info("LaunchProgram OK {0}", runningProgram);
             return true;
         }
 
-        if (runningProgram == "Music" || runningProgram == "Photo")
+        if (spotifyRunning)
         {
-            ExitJRMC();
-        }
+            Spotify.Stop();
+			spotifyRunning = false;
 
-        if (runningProgram == "TV")
-        {
-            VideoTV.Stop();
-        }
+		}
+        StopAndHideJRMC();
 
         runningProgram = name;
 
@@ -175,17 +132,16 @@ public static class Running
             case "TV":
                 if (args != null && args == "Radio")
                 {
-                    Screen.SetScreenDisplayMode(0);
-                    Receiver.SelectRoomsOutput();
+                    Screen.EnsureScreenOff();
+					Receiver.SelectRoomsOutput();
                 }
                 else
                 {
                     Screen.EnsureScreenOn();
                     Receiver.SelectTVOutput();
                     Screen.WaitForScreenOn();
-                    Receiver.SelectComputerInput();
-                    VideoTV.WatchLive();
                 }
+                VideoTV.WatchLive();
                 logger.Info("LaunchProgram OK {0}", runningProgram);
                 return true;
 
@@ -199,13 +155,19 @@ public static class Running
                 }
 
                 Screen.WaitForScreenOn();
-                Receiver.SelectComputerInput();
                 logger.Info("LaunchProgram OK {0}", runningProgram);
-                return true;
+				return true;
 
-            case "Spotify":
-                Screen.SetScreenDisplayMode(0);
-                Receiver.SelectComputerInput();
+			case "Photos":
+				Screen.EnsureScreenOn();
+				Receiver.SelectRoomsOutput();
+				Screen.WaitForScreenOn();
+				logger.Info("LaunchProgram OK {0}", runningProgram);
+				return true;
+
+			case "Spotify":
+				Screen.EnsureScreenOff();
+				Receiver.SelectComputerInput(); //  ??? Or select Spotify input??
                 Receiver.SelectRoomsOutput();
                 spotifyRunning = true;
                 logger.Info("LaunchProgram OK {0}", runningProgram);
@@ -214,56 +176,17 @@ public static class Running
     }
 
     /// <summary>
-    /// Launch the player applictaion (which will only be the Photo viewer) leaving any JRMC music still playing
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    public static bool LaunchNewProgram(
-        string name,
-        string args)
-    {
-        logger.Info("LaunchNewProgram {0} -> {1}", runningProgram, name);
-
-        lastActive = DateTime.UtcNow;
-
-        runningArgs = "";
-
-        if (name == "Photo")
-        {
-            if (runningProgram == "Photo")
-            {
-                ExitJRMC();
-                Thread.Sleep(500);
-            }
-
-            VideoTV.Stop();
-            if (spotifyRunning)
-            {
-	            Spotify.Stop();
-            }
-            Receiver.SelectComputerInput();
-            Receiver.ReselectInput();
-            Screen.EnsureScreenOn();
-            Receiver.SelectRoomsOutput();
-            Screen.WaitForScreenOn();
-            runningProgram = "Photo";
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Exit all running programmes
     /// </summary>
-    /// <param name="keepScreen"></param>
     /// <returns></returns>
-    public static bool ExitAllPrograms(
-        bool keepScreen = false)
+    public static bool ExitAllPrograms()
     {
         logger.Info("ExitAllPrograms");
 
         lastActive = DateTime.UtcNow;
+
+        Receiver.TurnOff();
+        Screen.EnsureScreenOff();
 
         if (spotifyRunning)
         {
@@ -271,29 +194,16 @@ public static class Running
             spotifyRunning = false;
         }
 
-        if (runningProgram == "Music" || runningProgram == "Photo")
-        {
-            ExitJRMC();
-        }
+		VideoTV.Stop();
+		StopAndHideJRMC();
 
-        if (runningProgram == "Roku")
+		if (runningProgram == "Roku")
         {
             Roku.KeyPress("Home");
             Receiver.SelectComputerInput();
         }
 
-        if (!keepScreen)
-        {
-            Receiver.TurnOff();
-	        Screen.SetScreenDisplayMode(0);
-        }
-        else
-        {
-            Screen.EnsureScreenOn();
-            Receiver.SelectTVOutput();
-        }
-
-        NothingRunning();
+		NothingRunning();
 
         return true;
     }
@@ -301,9 +211,10 @@ public static class Running
     /// <summary>
     /// Command the JRMC player to stop and and hide itself
     /// </summary>
-    private static void ExitJRMC()
+    private static void StopAndHideJRMC()
     {
-        JRMC.ExitDisplay(runningProgram == "Photo");
+		VideoTV.Stop();
+		JRMC.StopAndHide();
     }
 
     /// <summary>
@@ -328,10 +239,7 @@ public static class Running
 
         if (runningProgram != streamSource)
         {
-            if (runningProgram == "Music" || runningProgram == "Photo")
-            {
-                ExitJRMC();
-            }
+			StopAndHideJRMC();
             StopRoku();
             NothingRunning();
         }
@@ -345,8 +253,8 @@ public static class Running
     /// </summary>
     static void NothingRunning()
     {
-        VideoTV.Stop();
-        if (spotifyRunning)
+		StopAndHideJRMC();
+		if (spotifyRunning)
         {
             Spotify.Stop();
         }
@@ -398,7 +306,7 @@ public static class Running
             if (Receiver.IsOn() && lastActive.AddMinutes(15) < DateTime.UtcNow)
             {
                 logger.Info("No activity from {0} since {1} - Exiting", runningProgram, lastActive.ToLocalTime().ToShortTimeString());
-                ExitAllPrograms(false);
+                ExitAllPrograms();
             }
         }
     }

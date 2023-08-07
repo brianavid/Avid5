@@ -48,23 +48,6 @@ function LaunchProgram(application, url, args) {
     });
 }
 
-//  Cause AVid to launch a new player application (leaving the existing music playing) with specified arguments 
-//  and afterwards switch the view to the specfied URL
-//  During the launch, overlay the screen with a grey mask
-function LaunchNewProgram(application, args, url) {
-    OverlayScreenForLaunch()
-    $.ajax({
-        url: "/Action/Launch?detach=yes&name=" + application + "&args=" + encodeURIComponent(args),
-        success: function (data) {
-            window.location = url;
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            RemoveScreenOverlay()
-        },
-        cache: false
-    });
-}
-
 //  Switch the entire view to a new URL
 function LinkTo(url) {
     window.location = url
@@ -133,10 +116,10 @@ function ClearStackedPanes() {
     stackedPaneUrls = [];
 }
 
-//  Turn off all player applications and wwitch the entire view to a new URL 
-function AllOffJump(url,turnScreenOn) {
+//  Turn off all player applications and switch the entire view to a new URL 
+function AllOffJump(url) {
     $.ajax({
-        url: "/Action/AllOff" + (turnScreenOn ? "?keep=true" : ""),
+        url: "/Action/AllOff",
         success: function (data) {
             window.location = url;
         },

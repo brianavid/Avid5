@@ -92,6 +92,10 @@ function UpdateJrmcDisplayPlayingInformation() {
                                     element.innerHTML = value; // text
                             }
 
+                            if (name == "Status" && value == "Stopped") {
+                                $("#videoRecordingPlayFromStart").text("Play recording")
+                            }
+
                             if (name == "PositionMS") {
                                 PositionMS = parseInt(value);
                                 updateSlider();
@@ -354,7 +358,8 @@ function AddVideoRecordingsHammerActions() {
 
     videoRecordingsListHammer.on("tap", "#videoRecordingPlayFromStart", function () {
         $("#videoRecordingPlayFromStart").text("Playing ...")
-        var playUrl = "/Video/PlayRecording?id=" + $("#recordingId").text();
+        $("#videoRecordingConfirmDelete").hide();
+       var playUrl = "/Video/PlayRecording?id=" + $("#recordingId").text();
         $.ajax({
             url: playUrl,
             success: function (data) {

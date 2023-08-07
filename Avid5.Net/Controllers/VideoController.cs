@@ -83,8 +83,8 @@ namespace Avid5.Net.Controllers
             {
                 var recording = VideoTV.AllRecordings[id];
                 VideoTV.Title = recording.Title;
+                JRMC.GoFullScreen();
                 SendMCWS("Playback/PlayByFilename?Location=-1&Filenames=" + HttpUtility.UrlEncode(recording.Filename).Replace("+", "%20"));
-                VideoTV.GoFullScreen();
 
             }
             return this.Content("");
@@ -113,8 +113,8 @@ namespace Avid5.Net.Controllers
             VideoTV.IsDvdMode = true;
             VideoTV.Title = title;
 
+			JRMC.GoFullScreen();
             SendMCWS("Playback/PlayByFilename?Location=-1&Filenames=" + HttpUtility.UrlEncode(path+ "\\VIDEO_TS\\VIDEO_TS.IFO").Replace("+", "%20"));
-            VideoTV.GoFullScreen();
             return this.Content("");
         }
 
@@ -126,8 +126,8 @@ namespace Avid5.Net.Controllers
             VideoTV.IsDvdMode = false;
             VideoTV.Title = title;
 
+			JRMC.GoFullScreen();
             SendMCWS("Playback/PlayByFilename?Location=-1&Filenames=" + HttpUtility.UrlEncode(path).Replace("+","%20"));
-            VideoTV.GoFullScreen();
             return this.Content("");
         }
 

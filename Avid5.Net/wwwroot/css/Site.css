@@ -70,7 +70,8 @@ textarea {
 .topBar {
     width: 100%;
     background-color: #ccc;
-    overflow:auto;
+    overflow: auto;
+    outline: 2px solid blue;
 }
 
 .topBarNone {

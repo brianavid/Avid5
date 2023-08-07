@@ -1174,54 +1174,46 @@ public class JRMC
     }
 
     /// <summary>
-    /// Display modes for JRMC
-    /// </summary>
-    public enum DisplayMode {
-        Standard = 0,   //  Standard listing/panel
-        Mini = 1,       //  Mini mode - very small
-        Display = 2,    //  Display mode for photos and visualization
-    }
-
-    /// <summary>
-    /// Command the JRMC player to display itself in a specific mode
-    /// </summary>
-    /// <param name="displayMode"></param>
-    /// <param name="maximize"></param>
-    public static void SetDisplay(
-        DisplayMode displayMode,
-        bool maximize = false)
-    {
-        if (maximize)
-        {
-            SendCommand("Control/MCC?Command=10027");          //Maximize
-            Thread.Sleep(200);
-        }
-        SendCommand("Control/MCC?Command=22009&Parameter=" + ((int)displayMode).ToString());  // Display screen
-    }
-
-    /// <summary>
     /// Command the JRMC player to stop and and hide itself
     /// </summary>
-    /// <param name="clearPlayingNow"></param>
-    public static void ExitDisplay(
-        bool clearPlayingNow)
+    public static void StopAndHide()
     {
-        if (clearPlayingNow)
-        {
-            SendCommand("Control/MCC?Command=10049&Parameter=0");  // Clear
-        }
-        SendCommand("Playback/Stop");
-        SendCommand("Control/MCC?Command=22000&Parameter=0");  // Normal screen
-        SendCommand("Control/MCC?Command=10014");              // Minimize
-        //SendCommand("Control/Key?key=Alt;F4");               // exit
-    }
+        ClearPlaylist();
+		SendCommand("Playback/Stop");
+        CloseScreen();
+	}
 
-    /// <summary>
-    /// Format a track's duration for display
-    /// </summary>
-    /// <param name="rawDuration"></param>
-    /// <returns></returns>
-    public static string FormatDuration(string rawDuration)
+	public static void ClearPlaylist()
+	{
+		SendCommand("Playback/ClearPlaylist");
+	}
+
+	public static void GoFullScreen()
+	{
+		SendCommand("Control/MCC?Command=22009&Parameter=2");
+	}
+
+	public static void GoTheater()
+	{
+		SendCommand("Control/MCC?Command=22009&Parameter=3");
+	}
+
+	public static void GoShowUI()
+	{
+		SendCommand("Control/MCC?Command=22009&Parameter=4");
+	}
+
+	public static void CloseScreen()
+	{
+		SendCommand("Control/MCC?Command=20007");
+	}
+
+	/// <summary>
+	/// Format a track's duration for display
+	/// </summary>
+	/// <param name="rawDuration"></param>
+	/// <returns></returns>
+	public static string FormatDuration(string rawDuration)
     {
         int seconds = (int)float.Parse(rawDuration);
         return seconds < 0 ? "<0:00" : string.Format("{0}:{1:00}", seconds / 60, seconds % 60);

@@ -45,9 +45,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/Launch
         public ActionResult Launch(
             string name,
-            string args,
-            string title,
-            string detach)
+            string args)
         {
             Security.ClearSavedProfile();
 
@@ -61,28 +59,20 @@ namespace Avid5.Net.Controllers
                 {
                     args = HttpUtility.UrlDecode(args);
                 }
-                if (!string.IsNullOrEmpty(detach))
-                {
-                    Running.LaunchNewProgram(name, args);
-                }
-                else
-                {
-                    Running.LaunchProgram(name, args);
-                }
+                Running.LaunchProgram(name, args);
             }
 
             return Content("OK");
         }
 
         // GET: /Action/AllOff
-        public ActionResult AllOff(
-            string keep)
+        public ActionResult AllOff()
         {
             try
             {
                 Security.ClearSavedProfile();
 
-                Running.ExitAllPrograms(!string.IsNullOrEmpty(keep));
+                Running.ExitAllPrograms();
 	            return Content(Receiver.VolumeDisplay);
             }
             catch (System.Exception ex)
@@ -95,14 +85,14 @@ namespace Avid5.Net.Controllers
         // GET: /Action/ScreenOff
         public ActionResult ScreenOff()
         {
-            Screen.SetScreenDisplayMode(0);
-            return Content("");
+            Screen.EnsureScreenOff();
+			return Content("");
         }
 
         // GET: /Action/ScreenOn
         public ActionResult ScreenOn()
         {
-            Screen.SetScreenDisplayMode(1);
+            Screen.EnsureScreenOn();
             return Content("");
         }
 
@@ -142,8 +132,8 @@ namespace Avid5.Net.Controllers
             Running.StartStream("Chromecast");
             Receiver.SelectChromecastInput();
             Receiver.SelectRoomsOutput();
-            Screen.SetScreenDisplayMode(0);
-            return Content("");
+            Screen.EnsureScreenOff();
+			return Content("");
         }
 
         // GET: /Action/GoPC

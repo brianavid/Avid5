@@ -912,7 +912,7 @@ public class VideoTV
 
     public static void Stop()
     {
-        JRMC.GetXml(JRMC.Url + "Playback/ClearPlaylist");
+        JRMC.ClearPlaylist();
         IsDvdMode = false; ;
     }
 
@@ -926,30 +926,12 @@ public class VideoTV
     /// </summary>
     public static bool IsDvdMode { get; set; }
 
-    public static void GoFullScreen()
-    {
-        JRMC.GetXml(JRMC.Url + "Control/MCC?Command=22009&Parameter=2");
-    }
-
-    public static void GoTheater()
-    {
-        JRMC.GetXml(JRMC.Url + "Control/MCC?Command=22009&Parameter=3");
-    }
-
-    public static void GoShowUI()
-    {
-        JRMC.GetXml(JRMC.Url + "Control/MCC?Command=22009&Parameter=4");
-    }
-
-    public static void CloseScreen()
-    {
-        JRMC.GetXml(JRMC.Url + "Control/MCC?Command=20007");
-    }
-
     public static void WatchLive()
     {
         JRMC.GetXml(JRMC.Url + "Control/MCC?Command=30002");
-    }
+        JRMC.GoFullScreen();
+
+	}
 
     public static void SelectChannel(
         Channel channel)
@@ -957,23 +939,26 @@ public class VideoTV
         JRMC.GetXml(JRMC.Url + $"Playback/PlayByIndex?Index={channel.Index}");
     }
 
-    public static Dictionary<string, string> GetPlaybackInfo()
+    public static string GetPlaybackInfo(string key)
     {
         var info = JRMC.GetXml(JRMC.Url + "Playback/Info");
         if (info != null)
         {
-            return MakeDict(info.Root);
+            var dict = MakeDict(info.Root);
+            if (dict.ContainsKey(key))
+            {
+                return dict[key];
+            }
         }
+		return "";
+	}
 
-        return new Dictionary<string, string>();
-    }
-
-    public static bool IsWatchingTv
+	public static bool IsWatchingTv
     {
         get
         {
-            var info = GetPlaybackInfo();
-            return info != null && AllChannels.ContainsKey(info["FileKey"]);
+            var infokey = GetPlaybackInfo("FileKey");
+            return infokey!= null && AllChannels.ContainsKey(infokey);
         }
     }
 
@@ -981,10 +966,10 @@ public class VideoTV
     {
         get
         {
-            var info = GetPlaybackInfo();
-            if (info != null && AllChannels.ContainsKey(info["FileKey"]))
+            var infokey = GetPlaybackInfo("FileKey");
+            if (infokey != null && AllChannels.ContainsKey(infokey))
             {
-                return GetNowAndNext(AllChannels[info["FileKey"]]).First();
+                return GetNowAndNext(AllChannels[infokey]).First();
 
             }
             return null;

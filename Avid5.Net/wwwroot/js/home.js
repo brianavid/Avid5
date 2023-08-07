@@ -48,7 +48,7 @@ $(function () {
         }
         else
         {
-            LaunchNewProgram("Photo", "", "/Photos/Browse");
+            LaunchProgram("Photo", "/Photos/Browse");
         }
     });
 
