@@ -44,7 +44,7 @@ public static class Config
         {
             if (doc == null)
             {
-                doc = XDocument.Load(FilePath("AvidConfig.xml"));
+                doc = XDocument.Load(FilePath("Avid5Config.xml"));
             }
             return doc;
         }
