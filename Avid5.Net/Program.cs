@@ -33,6 +33,7 @@ logger.Info("Avid 5 Started");
 
 Config.Initialize(app.Lifetime, app.Environment.ContentRootPath);
 Receiver.Initialize();
+Screen.Initialise();
 Running.Initialize();
 Spotify.Initialize();
 Security.Initialize();

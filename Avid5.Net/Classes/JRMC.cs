@@ -1205,7 +1205,8 @@ public class JRMC
 
 	public static void CloseScreen()
 	{
-		SendCommand("Control/MCC?Command=20007");
+		SendCommand("Control/MCC?Command=20007");   //  Once to get out of Theater mode
+		SendCommand("Control/MCC?Command=20007");   //  And a second one to actually close
 	}
 
 	/// <summary>

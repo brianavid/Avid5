@@ -11,18 +11,51 @@ public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-    static string RunCECControlProcess(string command, bool wait = false)
+	//	If during initialisation, the RunCECControlProcess mechanism fails,
+	//	this is most likely to be the result of side-by-side operation with Avid4.
+	//	Only one mechanism is allowed to access the CEC port.
+	//	So (for now) fall back to the old "Tray App" API on port 89, which is still there for Avid4.
+	static HttpClient trayAppClient = new HttpClient();
+
+	public static void Initialise()
 	{
-		Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
-
-		var httpClient = new HttpClient();
-
-		//make the sync GET request
-		using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+		logger.Info($"Initialise");
+		var result = RunCECControlProcess("pow 0", true);
+		logger.Info($"CEC returns {result}");
+		if (!result.StartsWith("power status"))
 		{
-			var response = httpClient.Send(request);
-			response.EnsureSuccessStatusCode();
-			return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+			trayAppClient = new HttpClient();
+			trayAppClient.BaseAddress = new Uri("http://localhost:89");
+			trayAppClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue();
+			trayAppClient.DefaultRequestHeaders.CacheControl.NoCache = true;
+			trayAppClient.DefaultRequestHeaders.CacheControl.MaxAge = new TimeSpan(0);
+		}
+		else
+		{
+			isOn = result == "power status: on";
+		}
+	}
+
+	static string RunCECControlProcess(string command, bool wait = false)
+	{
+		try
+		{
+			Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
+			logger.Info($"{requestUri}");
+			var httpClient = new HttpClient();
+
+			//make the sync GET request
+			using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+			{
+				var response = httpClient.Send(request);
+				response.EnsureSuccessStatusCode();
+				return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+			}
+		}
+		catch (System.Exception ex)
+		{
+			logger.Error(ex);
+			return "";
 		}
 	}
 
@@ -31,7 +64,22 @@ public static class Screen
 	/// </summary>
 	static void TurnOn()
     {
-        RunCECControlProcess("on 0");
+		if (trayAppClient != null)
+		{
+			try
+			{
+				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenOn").Result;
+				resp.EnsureSuccessStatusCode();
+			}
+			catch (System.Exception ex)
+			{
+				logger.Error(ex);
+			}
+		}
+		else
+		{
+			RunCECControlProcess("on 0");
+		}
 
 		isOn = true;
     }
@@ -42,9 +90,31 @@ public static class Screen
     /// <returns></returns>
     static bool TestScreenOn()
     {
-        var result = RunCECControlProcess("pow 0", true);
-		logger.Info($"CEC returns {result}");
-        return isOn;
+		if (trayAppClient != null)
+		{
+			try
+			{
+				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenIsOn").Result;
+				resp.EnsureSuccessStatusCode();
+
+				return bool.Parse(resp.Content.ReadAsStringAsync().Result);
+			}
+			catch (System.Exception ex)
+			{
+				logger.Error(ex);
+				return isOn;
+			}
+		}
+		else 
+		{
+			var result = RunCECControlProcess("pow 0", true);
+			logger.Info($"CEC returns {result}");
+			if (result.StartsWith("power status"))
+			{
+				isOn = result == "power status: on";
+			}
+			return isOn;
+		}
 	}
 
 	/// <summary>
@@ -98,7 +168,22 @@ public static class Screen
             WaitForScreenOn();
         }
 
-		RunCECControlProcess("standby 0");
+		if (trayAppClient != null)
+		{
+			try
+			{
+				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenOff").Result;
+				resp.EnsureSuccessStatusCode();
+			}
+			catch (System.Exception ex)
+			{
+				logger.Error(ex);
+			}
+		}
+		else
+		{
+			RunCECControlProcess("standby 0");
+		}
 		isOn = false;
     }
 
