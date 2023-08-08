@@ -71,7 +71,7 @@ textarea {
     width: 100%;
     background-color: #ccc;
     overflow: auto;
-    outline: 2px solid blue;
+    outline: 4px dashed blue;
 }
 
 .topBarNone {
