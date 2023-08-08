@@ -299,7 +299,7 @@ public class VideoTV
         bool isDeleted = false;
         public String ChannelName { get { return Channel == null ? Channel.UnknownName : Channel.Name; } }
 
-        static string XmlFilename = Config.FilePath("Series.xml");
+        static string XmlFilename = Config.FilePath("Series-v5.xml");
         const string Format = "dd-MM-yyyy HH:mm";
         const int PreWindowMinutes = 90;
         const int PostWindowMinutes = 180;
