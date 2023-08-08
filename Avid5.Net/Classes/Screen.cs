@@ -1,4 +1,8 @@
 ﻿using NLog;
+using System;
+using System.Diagnostics;
+using System.Web;
+using System.Xml.Linq;
 
 /// <summary>
 /// Class to control the screen, using unofficially documented discrete power on/off IR Codes
@@ -7,14 +11,29 @@ public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-    /// <summary>
-    /// Turn the screen on by issuing the appropriate HDMI-CEC command to device 0 (which is always the TV screen).
-    /// </summary>
-    static void TurnOn()
-    {
-        //DesktopClient.TvScreenOn();
+    static string RunCECControlProcess(string command, bool wait = false)
+	{
+		Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
 
-        isOn = true;
+		var httpClient = new HttpClient();
+
+		//make the sync GET request
+		using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+		{
+			var response = httpClient.Send(request);
+			response.EnsureSuccessStatusCode();
+			return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+		}
+	}
+
+	/// <summary>
+	/// Turn the screen on by issuing the appropriate HDMI-CEC command to device 0 (which is always the TV screen).
+	/// </summary>
+	static void TurnOn()
+    {
+        RunCECControlProcess("on 0");
+
+		isOn = true;
     }
 
     /// <summary>
@@ -23,20 +42,16 @@ public static class Screen
     /// <returns></returns>
     static bool TestScreenOn()
     {
-        //  If we are watching an external source, it does not matter if the screen is on
-        //if (Receiver.SelectedInput != "Computer")
-        {
-            return isOn;
-        }
+        var result = RunCECControlProcess("pow 0", true);
+		logger.Info($"CEC returns {result}");
+        return isOn;
+	}
 
-        //return DesktopClient.TvScreenIsOn();
-    }
-
-    /// <summary>
-    /// Wait for the screen to turn on before any further activity (such as starting a full-screen player
-    /// application that needs to know the screen size).
-    /// </summary>
-    public static void WaitForScreenOn()
+	/// <summary>
+	/// Wait for the screen to turn on before any further activity (such as starting a full-screen player
+	/// application that needs to know the screen size).
+	/// </summary>
+	public static void WaitForScreenOn()
     {
         logger.Info("WaitForScreenOn");
 
@@ -83,8 +98,8 @@ public static class Screen
             WaitForScreenOn();
         }
 
-        //DesktopClient.TvScreenOff();
-        isOn = false;
+		RunCECControlProcess("standby 0");
+		isOn = false;
     }
 
     /// <summary>

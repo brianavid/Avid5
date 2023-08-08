@@ -1,0 +1,1 @@
+start-process "G:\Documents\Avid5\Avid.Cec\bin\Release\net6.0\Avid.Cec.exe" "`"C:\Program Files (x86)\Pulse-Eight\USB-CEC Adapter\cec-client.exe`""
