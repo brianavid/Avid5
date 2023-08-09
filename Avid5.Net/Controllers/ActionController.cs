@@ -106,8 +106,6 @@ namespace Avid5.Net.Controllers
                 case "Chromecast":
                 case "Roku":
                 case "SmartTv":
-                case "Music":
-                case "Spotify":
                     streamProgram = Running.RunningProgram;
                     break;
             }
@@ -119,20 +117,22 @@ namespace Avid5.Net.Controllers
         // GET: /Action/GoChromecast
         public ActionResult GoChromecast()
         {
-            Screen.EnsureScreenOn();
-            Running.StartStream("Chromecast");
             Receiver.SelectChromecastInput();
             Receiver.SelectTVOutput();
-            return Content("");
+            Screen.EnsureScreenOn();
+            Running.StartStream("Chromecast");
+			Screen.WaitForScreenOn();
+
+			return Content("");
         }
 
         // GET: /Action/GoChromecastAudio
         public ActionResult GoChromecastAudio()
         {
-            Running.StartStream("Chromecast");
             Receiver.SelectChromecastInput();
             Receiver.SelectRoomsOutput();
             Screen.EnsureScreenOff();
+            Running.StartStream("Chromecast");
 			return Content("");
         }
 
@@ -140,31 +140,33 @@ namespace Avid5.Net.Controllers
         public ActionResult GoPC()
         {
             Screen.EnsureScreenOn();
+            Receiver.SelectTVOutput();
             Running.StartStream("PC");
             Receiver.SelectComputerInput();
-            Receiver.SelectTVOutput();
-            return Content("");
+			Screen.WaitForScreenOn();
+			return Content("");
         }
 
         // GET: /Action/GoRoku
         public ActionResult GoRoku()
         {
             Roku.KeyPress("Home");
-            Screen.EnsureScreenOn();
-            Running.StartStream("Roku");
             Receiver.SelectRokuInput();
             Receiver.SelectTVOutput();
-            return Content("");
+            Screen.EnsureScreenOn();
+            Running.StartStream("Roku");
+			Screen.WaitForScreenOn();
+			return Content("");
         }
 
         // GET: /Action/GoSmart
         public ActionResult GoSmart()
         {
+            Receiver.SelectTvInput();
+            Receiver.SelectTVOutput();
             Screen.EnsureScreenOn();
             Running.StartStream("SmartTv");
             Screen.WaitForScreenOn();
-            Receiver.SelectTvInput();
-            Receiver.SelectTVOutput();
             return Content("");
         }
 

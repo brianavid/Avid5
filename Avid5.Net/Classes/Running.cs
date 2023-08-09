@@ -124,7 +124,7 @@ public static class Running
 
         runningProgram = name;
 
-        switch (name)
+		switch (name)
         {
             default:
                 return false;
@@ -148,32 +148,32 @@ public static class Running
             case "Video":
                 Screen.EnsureScreenOn();
                 Receiver.SelectTVOutput();
-
-                if (args == null)
-                {
-                    return true;
-                }
-
                 Screen.WaitForScreenOn();
                 logger.Info("LaunchProgram OK {0}", runningProgram);
 				return true;
 
-			case "Photos":
+			case "Photo":
 				Screen.EnsureScreenOn();
-				Receiver.SelectRoomsOutput();
+				Receiver.SelectTVOutput();
 				Screen.WaitForScreenOn();
+				logger.Info("LaunchProgram OK {0}", runningProgram);
+				return true;
+
+			case "Music":
+				Screen.EnsureScreenOff();
+				Receiver.SelectRoomsOutput();
 				logger.Info("LaunchProgram OK {0}", runningProgram);
 				return true;
 
 			case "Spotify":
 				Screen.EnsureScreenOff();
 				Receiver.SelectComputerInput(); //  ??? Or select Spotify input??
-                Receiver.SelectRoomsOutput();
-                spotifyRunning = true;
-                logger.Info("LaunchProgram OK {0}", runningProgram);
-                return true;
-        }
-    }
+				Receiver.SelectRoomsOutput();
+				spotifyRunning = true;
+				logger.Info("LaunchProgram OK {0}", runningProgram);
+				return true;
+		}
+	}
 
     /// <summary>
     /// Exit all running programmes

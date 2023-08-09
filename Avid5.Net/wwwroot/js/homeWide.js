@@ -34,7 +34,7 @@ $(function () {
 
     $("#selectPhotos").mousedown(function () {
         StopSwitching();
-        LaunchProgram("Photo", "/Photos/Browse");
+        LaunchProgram("Photo", "/Photos/All");
     });
 
     $("#selectEpg").mousedown(function () {

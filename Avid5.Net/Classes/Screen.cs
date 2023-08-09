@@ -98,6 +98,7 @@ public static class Screen
 	/// </summary>
 	static void TurnOn()
     {
+		logger.Info("TurnOn");
 		if (trayAppClient != null)
 		{
 			try
@@ -124,6 +125,7 @@ public static class Screen
     /// <returns></returns>
     static bool TestScreenOn()
     {
+		logger.Info("TestScreenOn");
 		if (trayAppClient != null)
 		{
 			try
@@ -131,7 +133,9 @@ public static class Screen
 				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenIsOn").Result;
 				resp.EnsureSuccessStatusCode();
 
-				return bool.Parse(resp.Content.ReadAsStringAsync().Result);
+				var result = resp.Content.ReadAsStringAsync().Result;
+				logger.Info($"TvScreenIsOn : {result}");
+				isOn = bool.Parse(result);
 			}
 			catch (System.Exception ex)
 			{
@@ -147,8 +151,8 @@ public static class Screen
 			{
 				isOn = result == "power status: on";
 			}
-			return isOn;
 		}
+		return isOn;
 	}
 
 	/// <summary>
@@ -167,10 +171,18 @@ public static class Screen
 
                 break;
             }
+			TurnOn();
 
             System.Threading.Thread.Sleep(500);
         }
-    }
+
+		if (!isOn)
+		{
+			logger.Info("Given up waiting");
+		}
+
+		JRMC.GoTheater();
+	}
 
 	/// <summary>
 	/// Ensure that the screen is on - we do this by turning it on!
@@ -196,8 +208,9 @@ public static class Screen
 	/// </summary>
 	static void TurnOff()
     {
-        // if we've just turned the screen on, wait for the transition
-        if (isOn)
+		logger.Info("TurnOff");
+		// if we've just turned the screen on, wait for the transition
+		if (isOn)
         {
             WaitForScreenOn();
         }
