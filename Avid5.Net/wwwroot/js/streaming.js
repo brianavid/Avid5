@@ -215,8 +215,6 @@ $(function () {
     AddRokuControlHammerActions()
     AddRokuSearchHammerActions()
     AddSmartControlHammerActions()
-    AddWebControlHammerActions()
-    AddWebSearchHammerActions()
     AddBrowserHammerActions();
 
     $("#goStreamSourceSelect").click(function () {
