@@ -134,19 +134,31 @@ public static class Config
         }
     }
 
-    /// <summary>
-    /// The local Spotify market
-    /// </summary>
-    public static string SpotifyMarket
-    {
-        get
-        {
-            XElement elAddr = Doc.Root.Element("SpotifyMarket");
-            return elAddr == null ? null : elAddr.Value;
-        }
-    }
+	/// <summary>
+	/// The local Spotify market
+	/// </summary>
+	public static string SpotifyMarket
+	{
+		get
+		{
+			XElement elAddr = Doc.Root.Element("SpotifyMarket");
+			return elAddr == null ? null : elAddr.Value;
+		}
+	}
 
-    public static void SaveValue(string name, string value)
+	/// <summary>
+	/// The (optional) path to the CEC-client program for direct use within Avid, by-passing Avid-CEC
+	/// </summary>
+	public static string CECClientPath
+	{
+		get
+		{
+			XElement elAddr = Doc.Root.Element("CECClientPath");
+			return elAddr == null ? null : elAddr.Value;
+		}
+	}
+
+	public static void SaveValue(string name, string value)
     {
         try
         {

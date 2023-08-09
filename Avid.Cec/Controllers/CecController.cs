@@ -30,7 +30,7 @@ namespace Avid.Cec.Controllers
 				myProcess.StartInfo.UseShellExecute = false;
 				myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				myProcess.StartInfo.CreateNoWindow = true;
-				myProcess.StartInfo.Arguments = "-s -d 3";
+				myProcess.StartInfo.Arguments = "-s -d 1";
 				myProcess.StartInfo.UseShellExecute = false;
 				myProcess.StartInfo.RedirectStandardInput = true;
 				myProcess.StartInfo.RedirectStandardOutput = true;

@@ -10,6 +10,7 @@ using System.Xml.Linq;
 public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
+	static string ClientPath = Config.CECClientPath;
 
 	//	If during initialisation, the RunCECControlProcess mechanism fails,
 	//	this is most likely to be the result of side-by-side operation with Avid4.
@@ -38,6 +39,39 @@ public static class Screen
 
 	static string RunCECControlProcess(string command, bool wait = false)
 	{
+		if (!String.IsNullOrEmpty(ClientPath))
+		{
+			using (Process myProcess = new Process())
+			{
+				logger.Info($"RunCECControlProcess: '{command}'");
+				myProcess.StartInfo.FileName = ClientPath;
+				myProcess.StartInfo.UseShellExecute = false;
+				myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				myProcess.StartInfo.CreateNoWindow = true;
+				myProcess.StartInfo.Arguments = "-s -d 1";
+				myProcess.StartInfo.UseShellExecute = false;
+				myProcess.StartInfo.RedirectStandardInput = true;
+				myProcess.StartInfo.RedirectStandardOutput = true;
+
+				myProcess.Start();
+
+				StreamWriter myStreamWriter = myProcess.StandardInput;
+				myStreamWriter.Write(command);
+				myStreamWriter.Close();
+
+				string result = "";
+				if (wait)
+				{
+					result = myProcess.StandardOutput.ReadToEnd().Trim();
+					myProcess.WaitForExit();
+					logger.Info($"  Result: {myProcess.ExitCode} '{result}'");
+					result = myProcess.ExitCode.ToString() + ": " + result;
+				}
+
+				return result;
+			}
+
+		}
 		try
 		{
 			Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
