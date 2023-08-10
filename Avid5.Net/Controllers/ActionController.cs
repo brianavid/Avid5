@@ -196,17 +196,26 @@ namespace Avid5.Net.Controllers
             return Content("");
         }
 
-        // GET: /Action/RecycleApp
-        public ActionResult RecycleApp()
-        {
-            Spotify.ExitPlayer();
+		// GET: /Action/RecycleApp
+		public ActionResult RecycleApp()
+		{
+			Spotify.ExitPlayer();
 
-            Config.StopApplication();
-            return Content("");
-        }
+			Config.StopApplication();
+			return Content("");
+		}
 
-        // GET: /Action/RebootSystems
-        public ActionResult RebootSystems()
+		// GET: /Action/Exit
+		public ActionResult Exit()
+		{
+			Spotify.ExitPlayer();
+
+			Config.ExitProcess();
+			return Content("");
+		}
+
+		// GET: /Action/RebootSystems
+		public ActionResult RebootSystems()
         {
             Receiver.Reboot();
 

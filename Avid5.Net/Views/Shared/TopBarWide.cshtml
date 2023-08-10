@@ -1,7 +1,7 @@
 ﻿@*
     Any external (non-LAN) accesses which display the top bar (i.e. not the Guide) should be rejected
 *@
-@if (!IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+@if (!IpAddress.IsLanIP(Context))
 {
 	Context.Response.Redirect("~/Home/GoAway");
 }

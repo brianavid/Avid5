@@ -180,8 +180,14 @@ public static class Config
         }
     }
 
-    public static void StopApplication()
-    {
-        _appLifetime.StopApplication();
-    }
+	public static void StopApplication()
+	{
+		_appLifetime.StopApplication();
+	}
+
+	public static void ExitProcess()
+	{
+        StopApplication();
+        Environment.Exit(0);
+	}
 }

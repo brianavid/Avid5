@@ -5,7 +5,7 @@
 @*
     Do not display the topbar for external (internet) requests, but do allow control of the EPG and recording
 *@
-@if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+@if (IpAddress.IsLanIP(Context))
 {
     @await Html.PartialAsync("TopBar");
 }
@@ -15,7 +15,7 @@ else
 }
 
 @section scripts {
-    @if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+    @if (IpAddress.IsLanIP(Context))
     {
         @Html.Raw(Render.Script("topBar"))
     }

@@ -3,7 +3,7 @@
 }
 
 
-@if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+@if (IpAddress.IsLanIP(Context))
 {
     @await Html.PartialAsync("TopBarWide");
 }
@@ -13,7 +13,7 @@ else
 }
 
 @section scripts {
-    @if (IpAddress.IsLanIP(Context.GetServerVariable("REMOTE_ADDR")))
+    @if (IpAddress.IsLanIP(Context))
     {
         @Html.Raw(Render.Script("topBar"))
         @Html.Raw(Render.Script("homeWide"))

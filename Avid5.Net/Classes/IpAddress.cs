@@ -21,9 +21,9 @@ public class IpAddress
     /// </remarks>
     /// <param name="address"></param>
     /// <returns></returns>
-    public static bool IsLanIP(String address)
+    public static bool IsLanIP(HttpContext context)
     {
-        address = address.ToLower();
+        var address = context.Connection.RemoteIpAddress.ToString().ToLower();
 
         return address == "127.0.0.1" ||        //  IPV4 local machine
                address == "::1" ||              //  IPV6 local machine
