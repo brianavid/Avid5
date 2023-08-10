@@ -499,7 +499,14 @@ public class VideoTV
             if (info != null)
             {
                 var infoDict = MakeDict(info.Root);
-                var infoName = infoDict["Name"];
+                if (infoDict.ContainsKey("Keywords") && infoDict["Keywords"].Split(",").Contains("Hidden"))
+                {
+                    break;
+                }
+                var logoUrl = "";
+                infoDict.TryGetValue("Image File", out logoUrl);
+				logger.Info($"Found channel '{infoDict["Name"]}' with logo at '{logoUrl}'");
+
                 var channel = new Channel (key, infoDict, index++);
                 channels.Add(channel);
             }
