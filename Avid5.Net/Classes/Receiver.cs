@@ -257,21 +257,32 @@ public static class Receiver
         GetXml("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Input><Input_Sel>HDMI1</Input_Sel></Input></Main_Zone></YAMAHA_AV>");
     }
 
-    /// <summary>
-    /// Set the Receiver to take digital input from the TV itself
-    /// </summary>
-    public static void SelectTvInput()
-    {
-        logger.Info("SelectTvInput");
-        SelectedInput = "TV";
-        MainZoneInput = "TV";
-        GetXml("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Input><Input_Sel>TV</Input_Sel></Input></Main_Zone></YAMAHA_AV>");
-    }
+	/// <summary>
+	/// Set the Receiver to take digital input from Spotify
+	/// </summary>
+	public static void SelectSpotifyInput()
+	{
+		logger.Info("SelectTvInput");
+		SelectedInput = "Spotify";
+		MainZoneInput = "Spotify";
+		GetXml("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Input><Input_Sel>Spotify</Input_Sel></Input></Main_Zone></YAMAHA_AV>");
+	}
 
-    /// <summary>
-    /// Ensure the Receiver actually has the digital input we currently expect it to have
-    /// </summary>
-    public static void ReselectInput()
+	/// <summary>
+	/// Set the Receiver to take digital input from the TV itself
+	/// </summary>
+	public static void SelectTvInput()
+	{
+		logger.Info("SelectTvInput");
+		SelectedInput = "TV";
+		MainZoneInput = "TV";
+		GetXml("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Input><Input_Sel>TV</Input_Sel></Input></Main_Zone></YAMAHA_AV>");
+	}
+
+	/// <summary>
+	/// Ensure the Receiver actually has the digital input we currently expect it to have
+	/// </summary>
+	public static void ReselectInput()
     {
         if (!string.IsNullOrEmpty(MainZoneInput))
         {

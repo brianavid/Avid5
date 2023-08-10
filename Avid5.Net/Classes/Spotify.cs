@@ -1128,23 +1128,23 @@ public static class Spotify
                 foreach (var dev in devices.Devices)
                 {
                     logger.Info($"Spotify play device found: {dev.Name} [{dev.Type}]");
-                    if (dev.Type.ToLower() == "computer" && dev.Name == Environment.MachineName)
-                    {
-                        logger.Info($"Environment.MachineName: {Environment.MachineName}");
-                        playbackDevice = dev.Id;
-                    }
+					if (dev.Type.ToLower() == "avr")
+					{
+						playbackDevice = dev.Id;
+					}
                 }
 
                 if (playbackDevice == null)
                 {
                     foreach (var dev in devices.Devices)
                     {
-                        if (dev.Type.ToLower() == "avr")
-                        {
-                            playbackDevice = dev.Id;
-                        }
-                    }
-                }
+						if (dev.Type.ToLower() == "computer" && dev.Name.ToLower() == Environment.MachineName.ToLower())
+						{
+							logger.Info($"Environment.MachineName: {Environment.MachineName}");
+							playbackDevice = dev.Id;
+						}
+					}
+				}
             }
         }
 

@@ -13,21 +13,14 @@ public static class Running
     static Logger logger = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// Avid name for the currently running player application
+    /// The currently running player application
     /// </summary>
-    static string runningProgram = "";
-
-    /// <summary>
-    /// Avid name for the currently running player application
-    /// </summary>
-    public static String RunningProgram { get { return runningProgram; } }
+    public static String RunningProgram { get; private set; }
 
     /// <summary>
     /// When was there last activity with the running program?
     /// </summary>
     static DateTime lastActive = DateTime.UtcNow;
-
-    static bool spotifyRunning = false;
 
     /// <summary>
     /// Initialize
@@ -36,22 +29,27 @@ public static class Running
     {
         if (Receiver.SelectedInput == "Roku")
         {
-            runningProgram = "Roku";
+            RunningProgram = "Roku";
         }
 
         if (Receiver.SelectedInput == "TV")
         {
-            runningProgram = "SmartTv";
+            RunningProgram = "SmartTv";
         }
 
-        if (Receiver.SelectedInput == "Chromecast")
-        {
-            runningProgram = "Chromecast";
-        }
+		if (Receiver.SelectedInput == "Chromecast")
+		{
+			RunningProgram = "Chromecast";
+		}
 
-        //  Start a background thread to poll for an inactive screen-off player and so turn it off after
-        //  a short while
-        var activityChecker = new Thread(ActivityChecker);
+		if (Receiver.SelectedInput == "Spotify")
+		{
+			RunningProgram = "Spotify";
+		}
+
+		//  Start a background thread to poll for an inactive screen-off player and so turn it off after
+		//  a short while
+		var activityChecker = new Thread(ActivityChecker);
         activityChecker.Start();
     }
 
@@ -62,7 +60,7 @@ public static class Running
     {
         get
         {
-            switch (runningProgram)
+            switch (RunningProgram)
             {
                 default:
                     return "topBarNone";
@@ -98,7 +96,7 @@ public static class Running
         string name,
         string args)
     {
-        logger.Info("LaunchProgram {0} -> {1} {2}", runningProgram, name, args ?? "");
+        logger.Info("LaunchProgram {0} -> {1} {2}", RunningProgram, name, args ?? "");
 
         lastActive = DateTime.UtcNow;
 
@@ -108,21 +106,16 @@ public static class Running
         }
         Receiver.SelectComputerInput();
 
-        if (runningProgram == name && String.IsNullOrEmpty(args))
+        if (RunningProgram == name && String.IsNullOrEmpty(args))
         {
-            logger.Info("LaunchProgram OK {0}", runningProgram);
+            logger.Info("LaunchProgram OK {0}", RunningProgram);
             return true;
         }
 
-        if (spotifyRunning)
-        {
-            Spotify.Stop();
-			spotifyRunning = false;
+		StopSpotify();
+		StopAndHideJRMC();
 
-		}
-        StopAndHideJRMC();
-
-        runningProgram = name;
+        RunningProgram = name;
 
 		switch (name)
         {
@@ -142,35 +135,34 @@ public static class Running
                     Screen.WaitForScreenOn();
                 }
                 VideoTV.WatchLive();
-                logger.Info("LaunchProgram OK {0}", runningProgram);
+                logger.Info("LaunchProgram OK {0}", RunningProgram);
                 return true;
 
             case "Video":
                 Screen.EnsureScreenOn();
                 Receiver.SelectTVOutput();
                 Screen.WaitForScreenOn();
-                logger.Info("LaunchProgram OK {0}", runningProgram);
+                logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 
 			case "Photo":
 				Screen.EnsureScreenOn();
 				Receiver.SelectTVOutput();
 				Screen.WaitForScreenOn();
-				logger.Info("LaunchProgram OK {0}", runningProgram);
+				logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 
 			case "Music":
 				Screen.EnsureScreenOff();
 				Receiver.SelectRoomsOutput();
-				logger.Info("LaunchProgram OK {0}", runningProgram);
+				logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 
 			case "Spotify":
 				Screen.EnsureScreenOff();
-				Receiver.SelectComputerInput(); //  ??? Or select Spotify input??
+				Receiver.SelectSpotifyInput();
 				Receiver.SelectRoomsOutput();
-				spotifyRunning = true;
-				logger.Info("LaunchProgram OK {0}", runningProgram);
+				logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 		}
 	}
@@ -185,23 +177,9 @@ public static class Running
 
         lastActive = DateTime.UtcNow;
 
-        Receiver.TurnOff();
         Screen.EnsureScreenOff();
-
-        if (spotifyRunning)
-        {
-            Spotify.ExitPlayer();
-            spotifyRunning = false;
-        }
-
-		VideoTV.Stop();
-		StopAndHideJRMC();
-
-		if (runningProgram == "Roku")
-        {
-            Roku.KeyPress("Home");
-            Receiver.SelectComputerInput();
-        }
+		Receiver.SelectComputerInput();
+		Receiver.TurnOff();
 
 		NothingRunning();
 
@@ -217,34 +195,43 @@ public static class Running
 		JRMC.StopAndHide();
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    private static void StopRoku()
-    {
-        if (runningProgram == "Roku")
-        {
-            Roku.KeyPress("Home");
-        }
-    }
+	/// <summary>
+	///
+	/// </summary>
+	private static void StopRoku()
+	{
+		if (RunningProgram == "Roku")
+		{
+			Roku.KeyPress("Home");
+		}
+	}
 
-    /// <summary>
-    /// Note that we are starting streaming, and so stop all media PC player applications
-    /// </summary>
-    /// <returns></returns>
-    public static bool StartStream(
+	/// <summary>
+	///
+	/// </summary>
+	private static void StopSpotify()
+	{
+		if (RunningProgram == "Spotify")
+		{
+			Spotify.Stop();
+		}
+	}
+
+	/// <summary>
+	/// Note that we are starting streaming, and so stop all media PC player applications
+	/// </summary>
+	/// <returns></returns>
+	public static bool StartStream(
         string streamSource)
     {
         logger.Info("StartStream: " + streamSource);
 
-        if (runningProgram != streamSource)
+        if (RunningProgram != streamSource)
         {
-			StopAndHideJRMC();
-            StopRoku();
             NothingRunning();
         }
 
-        runningProgram = streamSource;
+        RunningProgram = streamSource;
         return true;
     }
 
@@ -253,12 +240,10 @@ public static class Running
     /// </summary>
     static void NothingRunning()
     {
+		StopRoku();
 		StopAndHideJRMC();
-		if (spotifyRunning)
-        {
-            Spotify.Stop();
-        }
-        runningProgram = "";
+		StopSpotify();
+		RunningProgram = "";
         logger.Info("NothingRunning");
     }
 
@@ -270,7 +255,7 @@ public static class Running
     static Boolean IsActive()
     {
         //  If a music player is stopped or paused, it may have been forgotten
-        switch (runningProgram)
+        switch (RunningProgram)
         {
             default:
                 //  If the screen is off and the volume is muted, it may have been forgotten
@@ -305,7 +290,7 @@ public static class Running
             //  turn everything off
             if (Receiver.IsOn() && lastActive.AddMinutes(15) < DateTime.UtcNow)
             {
-                logger.Info("No activity from {0} since {1} - Exiting", runningProgram, lastActive.ToLocalTime().ToShortTimeString());
+                logger.Info("No activity from {0} since {1} - Exiting", RunningProgram, lastActive.ToLocalTime().ToShortTimeString());
                 ExitAllPrograms();
             }
         }
