@@ -310,8 +310,6 @@ public class JRMC
     static public XDocument GetXml(
         string url)
     {
-        logger.Info($"Get {url}");
-
         Uri requestUri = new Uri(url);
 
         for (int i = 0; i < 5; i++)
@@ -330,15 +328,13 @@ public class JRMC
             }
             catch (WebException)
             {
-				logger.Info("WebException");
 				return null;
-            }
-            catch (Exception ex)
-            {
-				logger.Info(ex, $"");
+			}
+			catch
+			{
 				System.Threading.Thread.Sleep(2000);
-            }
-        }
+			}
+		}
 
         logger.Fatal("No J River Media Center service");
         return null;
@@ -645,12 +641,10 @@ public class JRMC
     /// <param name="photoAlbumList"></param>
     static void FetchAllAlbums(string itemiD, AlbumCollection albumList, int depth)
     {
-        var pad = new String(' ', depth * 3);
-		logger.Info($"{pad}FetchAllAlbums '{itemiD}'");
 		var childIds = GetChildren(itemiD);
 
-        //  If there are child items, recursively walk the tree
-        if (childIds != null && childIds.Count != 0)
+		//  If there are child items, recursively walk the tree
+		if (childIds != null && childIds.Count != 0)
         {
             if (Convert.ToInt32(itemiD) >= 1000)
             {
@@ -685,7 +679,6 @@ public class JRMC
 
                     logger.Info($"Found album '{albumName}'");
                 }
-
 			}
         }
     }
