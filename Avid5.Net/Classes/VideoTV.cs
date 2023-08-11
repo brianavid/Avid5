@@ -485,7 +485,7 @@ public class VideoTV
         var channels = new List<Channel>();
         var x = JRMC.GetXml(JRMC.Url + "Television/GetOrderedListOfTVChannels");
 
-        if (x == null)
+        if (x == null || !x.Root.HasElements)
         {
             return new Dictionary<string, Channel>();
         }

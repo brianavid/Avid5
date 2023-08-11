@@ -310,6 +310,8 @@ public class JRMC
     static public XDocument GetXml(
         string url)
     {
+        logger.Info($"Get {url}");
+
         Uri requestUri = new Uri(url);
 
         for (int i = 0; i < 5; i++)
@@ -328,11 +330,13 @@ public class JRMC
             }
             catch (WebException)
             {
-                return null;
+				logger.Info("WebException");
+				return null;
             }
-            catch
+            catch (Exception ex)
             {
-                System.Threading.Thread.Sleep(2000);
+				logger.Info(ex, $"");
+				System.Threading.Thread.Sleep(2000);
             }
         }
 
@@ -641,7 +645,9 @@ public class JRMC
     /// <param name="photoAlbumList"></param>
     static void FetchAllAlbums(string itemiD, AlbumCollection albumList, int depth)
     {
-        var childIds = GetChildren(itemiD);
+        var pad = new String(' ', depth * 3);
+		logger.Info($"{pad}FetchAllAlbums '{itemiD}'");
+		var childIds = GetChildren(itemiD);
 
         //  If there are child items, recursively walk the tree
         if (childIds != null && childIds.Count != 0)
@@ -675,8 +681,12 @@ public class JRMC
                 {
                     var album = new AlbumData(albumId, tracks);
                     albumList.Add(albumId, album);
+                    var albumName = tracks[0].Info.ContainsKey("Album") ? tracks[0].Info["Album"] : "??";
+
+                    logger.Info($"Found album '{albumName}'");
                 }
-            }
+
+			}
         }
     }
 
@@ -1128,7 +1138,7 @@ public class JRMC
         AlbumData album)
     {
         var trackInfo = album.Track0.Info;
-        return trackInfo["Filename"].ToLower().Contains(Path.DirectorySeparatorChar + @"classical" + Path.DirectorySeparatorChar);
+        return trackInfo["Filename"].ToLower().Contains(Path.DirectorySeparatorChar + @"Classical" + Path.DirectorySeparatorChar);
     }
 
     /// <summary>
@@ -1207,8 +1217,7 @@ public class JRMC
 
 	public static void CloseScreen()
 	{
-		SendCommand("Control/MCC?Command=20007");               //  Once to get out of Theater view
-		SendCommand("Control/MCC?Command=20007");               //  And a second one to actually close
+		SendCommand("Control/MCC?Command=10014");               //  Minimise
 	}
 
 	/// <summary>

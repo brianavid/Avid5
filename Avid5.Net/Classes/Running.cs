@@ -22,10 +22,12 @@ public static class Running
     /// </summary>
     static DateTime lastActive = DateTime.UtcNow;
 
-    /// <summary>
-    /// Initialize
-    /// </summary>
-    public static void Initialize()
+	private static ManualResetEvent mre = new ManualResetEvent(false);
+
+	/// <summary>
+	/// Initialize
+	/// </summary>
+	public static void Initialize()
     {
         if (Receiver.SelectedInput == "Roku")
         {
@@ -278,9 +280,13 @@ public static class Running
     /// </summary>
     static void ActivityChecker()
     {
-        for (;;)
+        for (; ;)
         {
-            Thread.Sleep(60 * 1000);   //  Every minute, check for activity
+            if (mre.WaitOne(60 * 1000))
+            { 
+                break; 
+            }
+
             if (IsActive())
             {
                 lastActive = DateTime.UtcNow;
@@ -294,5 +300,10 @@ public static class Running
                 ExitAllPrograms();
             }
         }
+    }
+
+    public static void Stop()
+    {
+        mre.Set();
     }
 }

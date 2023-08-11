@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using NLog;
 using NLog.Web;
 
@@ -31,13 +33,35 @@ var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurre
 
 logger.Info("Avid 5 Started");
 
-Config.Initialize(app.Lifetime, app.Environment.ContentRootPath);
-Receiver.Initialize();
-Screen.Initialise();
-Running.Initialize();
-Spotify.Initialize();
-Security.Initialize();
-JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, DateTime.Now.Hour < 5);   //  Reload album data from JRMC when restarting between midnight and five (i.e. in the overnight restart)
-VideoTV.Initialise();
+try
+{
+	Config.Initialize(app.Lifetime, app.Environment.ContentRootPath);
+	Receiver.Initialize();
+	Screen.Initialise();
+	Running.Initialize();
+	Spotify.Initialize();
+	Security.Initialize();
+	JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, DateTime.Now.Hour < 5);   //  Reload album data from JRMC when restarting between midnight and five (i.e. in the overnight restart)
+	VideoTV.Initialise();
 
-app.Run();
+	logger.Info("Avid 5 Initialised");
+
+	app.Start();
+
+	var server = app.Services.GetService<IServer>();
+	var addressFeature = server.Features.Get<IServerAddressesFeature>();
+
+	foreach (var address in addressFeature.Addresses)
+	{
+		Console.WriteLine("Kestrel is listening on address: " + address);
+	}
+
+	app.WaitForShutdown();
+	Running.Stop();
+	logger.Info("Avid 5 Shutdown");
+}
+catch (Exception ex)
+{
+	logger.Info(ex, $"Avid 5 Exception:", ex.Message);
+	throw;
+}
