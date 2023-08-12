@@ -11,29 +11,45 @@ public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 	static string ClientPath = Config.CECClientPath;
+	static HttpClient cecControlHttpClient = String.IsNullOrEmpty(ClientPath) ? new HttpClient() : null;
 
 	//	If during initialisation, the RunCECControlProcess mechanism fails,
 	//	this is most likely to be the result of side-by-side operation with Avid4.
 	//	Only one mechanism is allowed to access the CEC port.
 	//	So (for now) fall back to the old "Tray App" API on port 89, which is still there for Avid4.
-	static HttpClient trayAppClient = new HttpClient();
+	static HttpClient trayAppClient = null;
 
 	public static void Initialise()
 	{
 		logger.Info($"Initialise");
 		var result = RunCECControlProcess("pow 0", true);
 		logger.Info($"CEC returns {result}");
-		if (!result.StartsWith("power status"))
+		if (result.StartsWith("power status"))
+		{
+			isOn = result == "power status: on";
+		}
+		else
 		{
 			trayAppClient = new HttpClient();
 			trayAppClient.BaseAddress = new Uri("http://localhost:89");
 			trayAppClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue();
 			trayAppClient.DefaultRequestHeaders.CacheControl.NoCache = true;
 			trayAppClient.DefaultRequestHeaders.CacheControl.MaxAge = new TimeSpan(0);
-		}
-		else
-		{
-			isOn = result == "power status: on";
+			try
+			{
+				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenIsOn").Result;
+				resp.EnsureSuccessStatusCode();
+
+				result = resp.Content.ReadAsStringAsync().Result;
+				logger.Info($"TvScreenIsOn : {result}");
+				isOn = bool.Parse(result);
+			}
+			catch
+			{
+				logger.Info($"No tray app found");
+				trayAppClient.Dispose();
+				trayAppClient = null;
+			}
 		}
 	}
 
@@ -74,23 +90,24 @@ public static class Screen
 		}
 		try
 		{
-			Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
-			logger.Info($"{requestUri}");
-			var httpClient = new HttpClient();
-
-			//make the sync GET request
-			using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+			if (cecControlHttpClient != null)
 			{
-				var response = httpClient.Send(request);
-				response.EnsureSuccessStatusCode();
-				return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+				Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
+				logger.Info($"{requestUri}");
+				//make the sync GET request
+				using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+				{
+					var response = cecControlHttpClient.Send(request);
+					response.EnsureSuccessStatusCode();
+					return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+				}
 			}
 		}
 		catch (System.Exception ex)
 		{
 			logger.Error(ex);
-			return "";
 		}
+		return "";
 	}
 
 	/// <summary>

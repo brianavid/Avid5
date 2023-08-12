@@ -15,10 +15,12 @@ public static class Roku
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-    /// <summary>
-    /// The HTTP Url of the Roku service
-    /// </summary>
-    public static string Url
+	static HttpClient httpClient = new HttpClient();
+
+	/// <summary>
+	/// The HTTP Url of the Roku service
+	/// </summary>
+	public static string Url
     {
         get { return "http://" + Config.RokuAddress + ":8060/"; }
     }
@@ -34,8 +36,6 @@ public static class Roku
         try
         {
             Uri requestUri = new Uri(Url + url);
-
-			var httpClient = new HttpClient();
 
 			//make the sync GET request
 			using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
@@ -64,7 +64,6 @@ public static class Roku
         try
         {
             Uri requestUri = new Uri(Url + url + (paramValue ?? ""));
-			var httpClient = new HttpClient();
 			using (var request = new HttpRequestMessage(HttpMethod.Post, requestUri))
 			{
 				var response = httpClient.Send(request);

@@ -22,7 +22,7 @@ public static class Running
     /// </summary>
     static DateTime lastActive = DateTime.UtcNow;
 
-	private static ManualResetEvent mre = new ManualResetEvent(false);
+	private static ManualResetEvent StopActivityCheckingEvent = new ManualResetEvent(false);
 
 	/// <summary>
 	/// Initialize
@@ -282,7 +282,8 @@ public static class Running
     {
         for (; ;)
         {
-            if (mre.WaitOne(60 * 1000))
+            //  Poll every minute unless we are exiting
+            if (StopActivityCheckingEvent.WaitOne(60 * 1000))
             { 
                 break; 
             }
@@ -304,6 +305,6 @@ public static class Running
 
     public static void Stop()
     {
-        mre.Set();
+        StopActivityCheckingEvent.Set();
     }
 }

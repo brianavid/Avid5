@@ -21,7 +21,9 @@ public static class Spotify
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-    static SpotifyClient webAppService = null;
+	static HttpClient httpClient = new HttpClient();
+
+	static SpotifyClient webAppService = null;
     static DateTime webApiExpiry = DateTime.Now;
     static string webApiCurrentUserId = null;
     static object webAppServiceLock = new object();
@@ -57,7 +59,6 @@ public static class Spotify
 	                    if (!string.IsNullOrEmpty(refreshUrl))
 		                {
                             string tokenJsonString = null;
-							var httpClient = new HttpClient();
 
                             //make the sync GET request
                             using (var request = new HttpRequestMessage(HttpMethod.Get, refreshUrl))
@@ -147,7 +148,6 @@ public static class Spotify
                 try
                 {
                     string requestUri = "http://brianavid.dnsalias.com/SpotifyAuth/Auth/Probe";
-					var httpClient = new HttpClient();
                     using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                     {
                         var response = httpClient.Send(request);

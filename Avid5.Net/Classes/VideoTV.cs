@@ -2,6 +2,7 @@ using NLog;
 using System.Globalization;
 using System.Xml.Linq;
 using System.Text;
+using System.Linq;
 
 /// <summary>
 /// The VideoTV class encapsulates access to the J River Media Center player when used for
@@ -745,7 +746,9 @@ public class VideoTV
         {
             for (var j = 0; j < 10; j++)
             {
-                var xml = JRMC.GetXml(JRMC.Url + $"Television/GetGuidePrograms?StartDate={DateTime.Today.AddDays(i).ToShortDateString()}");
+                var date = DateTime.Today.AddDays(i).ToShortDateString();
+				var channels = String.Join(",", AllChannels.Select(c => c.Key));
+				var xml = JRMC.GetXml(JRMC.Url + $"Television/GetGuidePrograms?StartDate={date}&Channels={channels}");
                 if (xml == null)
                 {
                     Thread.Sleep(1000);

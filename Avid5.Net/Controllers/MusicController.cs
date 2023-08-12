@@ -128,12 +128,10 @@ namespace Avid5.Net.Controllers
             try
             {
                 var requestUri = JRMC.Url + "File/GetImage?File=" + id;
-				var httpClient = new HttpClient();
-
 				//make the sync GET request
 				using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
 				{
-					var response = httpClient.Send(request);
+					var response = JRMC.httpClient.Send(request);
 					response.EnsureSuccessStatusCode();
 					byte[] bytes = response.Content.ReadAsByteArrayAsync().Result;
 					return base.File(bytes, response.Content.Headers.ContentType.MediaType);

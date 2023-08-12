@@ -16,10 +16,12 @@ public static class Receiver
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-    /// <summary>
-    /// The HTTP Url through which the receiver is accessed
-    /// </summary>
-    static string Url = null;
+    static HttpClient httpClient = new HttpClient();
+
+	/// <summary>
+	/// The HTTP Url through which the receiver is accessed
+	/// </summary>
+	static string Url = null;
 
     /// <summary>
     /// Post an HTTP request to the Yamaha AV Receiver, expecting an XML response, which is returned
@@ -44,8 +46,6 @@ public static class Receiver
         }
 
         Uri requestUri = new Uri(Url);
-
-		var httpClient = new HttpClient();
 
 		//make the sync POST request
 		using (var request = new HttpRequestMessage(HttpMethod.Post, requestUri))
