@@ -2,7 +2,6 @@ using NLog;
 using System.Globalization;
 using System.Xml.Linq;
 using System.Text;
-using System.Linq;
 
 /// <summary>
 /// The VideoTV class encapsulates access to the J River Media Center player when used for
@@ -73,7 +72,7 @@ public class VideoTV
         public DateTime StartTime { get; private set; }
         public TimeSpan Duration { get; private set; }
         public DateTime StopTime { get { return StartTime + Duration; } }
-        public String Filename { get; private set; }
+        public String Filename { get; internal set; }
         public bool InError { get; internal set; }
         public bool IsOld { get; internal set; }
         public string SidecarPath {  get; private set; }
@@ -473,15 +472,36 @@ public class VideoTV
 
         foreach (var r in recordings)
         {
-            if (File.Exists(r.Filename))
+            var filename = GetActualCaseForFileName(Config.OldRecordingsPath, Path.GetFileName(r.Filename));
+
+			if (File.Exists(filename))
             {
-                var leaf = Path.GetFileNameWithoutExtension(r.Filename).ToLower();
+                var leaf = Path.GetFileNameWithoutExtension(filename).ToLower();
                 OldRecordings[leaf] = r;
+				r.Filename = filename;
             }
-        }
+            else
+            {
+				logger.Warn($"Missing old recording file {filename}");
+			}
+		}
     }
 
-    static Dictionary<string,Channel> GetAllChannels()
+	private static string GetActualCaseForFileName(string directory, string filename)
+	{
+		// Enumerate all files in the directory, using the file name as a pattern
+		// This will list all case variants of the filename even on file systems that
+		// are case sensitive
+		IEnumerable<string> foundFiles = Directory.EnumerateFiles(directory, filename, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive } );
+
+		if (foundFiles.Any())
+		{
+    		filename = foundFiles.First();
+		}
+
+		return filename;
+	}
+	static Dictionary<string,Channel> GetAllChannels()
     {
         var channels = new List<Channel>();
         var x = JRMC.GetXml(JRMC.Url + "Television/GetOrderedListOfTVChannels");
@@ -506,7 +526,6 @@ public class VideoTV
                 }
                 var logoUrl = "";
                 infoDict.TryGetValue("Image File", out logoUrl);
-				logger.Info($"Found channel '{infoDict["Name"]}' with logo at '{logoUrl}'");
 
                 var channel = new Channel (key, infoDict, index++);
                 channels.Add(channel);

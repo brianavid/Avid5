@@ -1214,7 +1214,10 @@ public class JRMC
 
 	public static void CloseScreen()
 	{
-		SendCommand("Control/MCC?Command=10014");               //  Minimise
+        //  On Ubuntu, minimizing the UI seems to be irreversable except by clicking on the desktop.
+        //  So we leave JRMC in Theater mode and rely on turning off the screen.
+        //SendCommand("Control/MCC?Command=10014");               //  Minimise
+        GoTheater();
 	}
 
 	/// <summary>
