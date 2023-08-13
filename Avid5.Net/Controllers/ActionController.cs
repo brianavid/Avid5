@@ -188,10 +188,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/RebuildMediaDb
         public ActionResult RebuildMediaDb()
         {
-            if (Running.RunningProgram != "Video" && Running.RunningProgram != "Spotify")
-            {
-                JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, true);
-            }
+            JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, true);
             Spotify.LoadAndIndexAllSavedTracks();
             return Content("");
         }
@@ -205,12 +202,12 @@ namespace Avid5.Net.Controllers
 			return Content("");
 		}
 
-		// GET: /Action/Exit
-		public ActionResult Exit()
+        // GET: /Action/ExitApp
+        public ActionResult ExitApp()
 		{
 			Spotify.ExitPlayer();
 
-			Config.ExitProcess();
+			Config.StopApplication(false);
 			return Content("");
 		}
 

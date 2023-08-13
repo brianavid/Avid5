@@ -58,7 +58,8 @@ try
 
 	app.WaitForShutdown();
 	Running.Stop();
-	logger.Info("Avid 5 Shutdown");
+	logger.Info($"Avid 5 Shutdown restart={Config.Restart}");
+	Environment.Exit(Config.Restart ? 0 : 1);
 }
 catch (Exception ex)
 {

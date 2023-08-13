@@ -24,6 +24,6 @@ public static class Render
         string scriptName)
     {
         return string.Format("<script src='/js/{0}.js?x={1}' type='text/javascript'></script>",
-            scriptName, (new System.IO.FileInfo(Path.Combine(Config.ContentRootPath, "Scripts", scriptName + ".js"))).LastWriteTime.ToString("HHmmss"));
+            scriptName, (new System.IO.FileInfo(Path.Combine(Config.ContentRootPath, "wwwroot", "js", scriptName + ".js"))).LastWriteTime.ToString("HHmmss"));
     }
 }

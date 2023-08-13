@@ -172,6 +172,30 @@ $(function () {
         });
     });
 
+    $("#actionMenuExitApp").click(function () {
+        $(".actionMenu").hide()
+        $.ajax({
+            url: "/Action/ExitApp",
+            success: function (data) {
+                location.href = '/Home/Home';
+            },
+            error: HideActionMenu,
+            cache: false
+        });
+    });
+
+    $("#actionMenuExitAppWide").click(function () {
+        $(".actionMenu").hide()
+        $.ajax({
+            url: "/Action/ExitApp",
+            success: function (data) {
+                location.href = '/Home/Wide';
+            },
+            error: HideActionMenu,
+            cache: false
+        });
+    });
+
     $("#actionMenuRebootSystems").click(function () {
         $(".actionMenu").hide()
         OverlayScreen()
