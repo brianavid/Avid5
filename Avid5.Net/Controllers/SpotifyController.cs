@@ -348,16 +348,10 @@ namespace Avid5.Net.Controllers
             return this.Content("");
         }
 
-        // GET: /Spotify/GetLoginUrl
-        public ContentResult GetLoginUrl()
+        // GET: /Spotify/Authenticate
+        public ContentResult Authenticate()
         {
-            return this.Content(Spotify.GetSpotifyLoginUrl());
-        }
-
-        // GET: /Spotify/SaveSpotifyLoginToken
-        public ContentResult SaveSpotifyLoginToken()
-        {
-            Spotify.SaveSpotifyLoginToken();
+            Spotify.Authenticate();
             return this.Content("");
         }
     }

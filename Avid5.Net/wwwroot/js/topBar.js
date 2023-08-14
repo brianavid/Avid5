@@ -151,14 +151,9 @@ $(function () {
     $("#actionMenuSpotifyLogin").click(function () {
         $(".actionMenu").hide()
         $.ajax({
-            url: "/Spotify/GetLoginUrl",
-            success: function (url) {
-                window.open(url, "_blank");
-                $.ajax({
-                    url: "/Spotify/SaveSpotifyLoginToken",
-                    cache: false
-                });
-            },
+            url: "/Spotify/Authenticate",
+            success: HideActionMenu,
+            error: HideActionMenu,
             cache: false
         });
     });

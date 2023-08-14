@@ -147,7 +147,7 @@ public static class Spotify
                 logger.Info("Probing Authentication API");
                 try
                 {
-                    string requestUri = "http://brianavid.dnsalias.com/SpotifyAuth/Auth/Probe";
+                    string requestUri = "http://brianavid.dnsalias.com:88/Auth/Probe";
                     using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                     {
                         var response = httpClient.Send(request);
@@ -1873,8 +1873,10 @@ public static class Spotify
     }
     #endregion
 
-    const string RedirectUri = "http://brianavid.dnsalias.com/SpotifyAuth/Auth/";
-    public static string GetSpotifyLoginUrl()
+    //  This URL (hopefully permanently running) will be used to authenticate Avid5 instances
+    const string RedirectUri = "http://brianavid.dnsalias.com:88/Auth/";
+
+    public static void Authenticate()
     {
         try
         {
@@ -1907,38 +1909,35 @@ public static class Spotify
                 }
             };
 
-            return auth.ToUri().ToString();
-        }
-        catch (Exception ex)
-        {
-            logger.Error(ex);
-            return null;
-        }
-    }
+            //  Start a browser to authenticate
+            var url =  auth.ToUri().ToString();
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                UseShellExecute = true,
+                FileName = url
+            };
+            System.Diagnostics.Process.Start(psi);
 
-    public static void SaveSpotifyLoginToken()
-    {
-        try
-        {
             //  Try for two minutes to get the RefreshToken constructed as part of the OAUTH exchange
             for (int i = 0; i < 120; i++)
             {
-                HttpWebRequest request =
-                    (HttpWebRequest)HttpWebRequest.Create(RedirectUri + "GetLastRefreshToken");
-                request.Method = WebRequestMethods.Http.Get;
-                request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                var lastRefreshToken = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                if (!string.IsNullOrEmpty(lastRefreshToken))
+                using (var request = new HttpRequestMessage(HttpMethod.Get, RedirectUri + "GetLastRefreshToken"))
                 {
-                    //  Save the required authentication refresh URL into the registry so that the main
-                    //  Avid4 web app can authenticate using the same credentials
-                    //Config.SaveValue("SpotifyRefreshUrl", RedirectUri + "Refresh?refresh_token=" + lastRefreshToken);
-                    logger.Info("Authenticated to Spotify Web API");
-                    break;
+                    request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
+                    using (HttpResponseMessage response = httpClient.Send(request))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        var lastRefreshToken = new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+                        if (!string.IsNullOrEmpty(lastRefreshToken))
+                        {
+                            //  Save the required authentication refresh URL so that the 
+                            //  Avid5 web app can authenticate using the same credentials
+                            Config.SaveValue("SpotifyRefreshUrl", RedirectUri + "Refresh?refresh_token=" + lastRefreshToken);
+                            logger.Info("Authenticated to Spotify Web API");
+                            break;
+                        }
+                    }
                 }
-                System.Threading.Thread.Sleep(1000);
             }
         }
         catch (Exception ex)
