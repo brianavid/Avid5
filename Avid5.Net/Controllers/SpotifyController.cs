@@ -347,5 +347,18 @@ namespace Avid5.Net.Controllers
             Spotify.RemoveSavedAlbum(id);
             return this.Content("");
         }
+
+        // GET: /Spotify/GetLoginUrl
+        public ContentResult GetLoginUrl()
+        {
+            return this.Content(Spotify.GetSpotifyLoginUrl());
+        }
+
+        // GET: /Spotify/SaveSpotifyLoginToken
+        public ContentResult SaveSpotifyLoginToken()
+        {
+            Spotify.SaveSpotifyLoginToken();
+            return this.Content("");
+        }
     }
 }

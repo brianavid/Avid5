@@ -1873,4 +1873,77 @@ public static class Spotify
     }
     #endregion
 
+    const string RedirectUri = "http://brianavid.dnsalias.com/SpotifyAuth/Auth/";
+    public static string GetSpotifyLoginUrl()
+    {
+        try
+        {
+            //  My own web server has an authenticator with the client secret for my developer client ID
+            const string ClientId = "b2d4e764bb8c49f39f1211dfc6b71b34";
+
+            var auth = new LoginRequest(new Uri(RedirectUri + "Authenticate"), ClientId, SpotifyAPI.Web.LoginRequest.ResponseType.Code)
+            {
+                //How many permissions we need? Ask for the lot!
+                Scope = new[] {
+                    Scopes.UgcImageUpload,
+                    Scopes.UserReadPlaybackState,
+                    Scopes.UserModifyPlaybackState,
+                    Scopes.UserReadCurrentlyPlaying,
+                    Scopes.Streaming,
+                    Scopes.AppRemoteControl,
+                    Scopes.UserReadEmail,
+                    Scopes.UserReadPrivate,
+                    Scopes.PlaylistReadCollaborative,
+                    Scopes.PlaylistModifyPublic,
+                    Scopes.PlaylistReadPrivate,
+                    Scopes.PlaylistModifyPrivate,
+                    Scopes.UserLibraryModify,
+                    Scopes.UserLibraryRead,
+                    Scopes.UserTopRead,
+                    Scopes.UserReadPlaybackPosition,
+                    Scopes.UserReadRecentlyPlayed,
+                    Scopes.UserFollowRead,
+                    Scopes.UserFollowModify
+                }
+            };
+
+            return auth.ToUri().ToString();
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex);
+            return null;
+        }
+    }
+
+    public static void SaveSpotifyLoginToken()
+    {
+        try
+        {
+            //  Try for two minutes to get the RefreshToken constructed as part of the OAUTH exchange
+            for (int i = 0; i < 120; i++)
+            {
+                HttpWebRequest request =
+                    (HttpWebRequest)HttpWebRequest.Create(RedirectUri + "GetLastRefreshToken");
+                request.Method = WebRequestMethods.Http.Get;
+                request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                var lastRefreshToken = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                if (!string.IsNullOrEmpty(lastRefreshToken))
+                {
+                    //  Save the required authentication refresh URL into the registry so that the main
+                    //  Avid4 web app can authenticate using the same credentials
+                    //Config.SaveValue("SpotifyRefreshUrl", RedirectUri + "Refresh?refresh_token=" + lastRefreshToken);
+                    logger.Info("Authenticated to Spotify Web API");
+                    break;
+                }
+                System.Threading.Thread.Sleep(1000);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex);
+        }
+    }
 }

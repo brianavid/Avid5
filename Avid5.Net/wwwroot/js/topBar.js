@@ -148,6 +148,21 @@ $(function () {
         });
     });
 
+    $("#actionMenuSpotifyLogin").click(function () {
+        $(".actionMenu").hide()
+        $.ajax({
+            url: "/Spotify/GetLoginUrl",
+            success: function (url) {
+                window.open(url, "_blank");
+                $.ajax({
+                    url: "/Spotify/SaveSpotifyLoginToken",
+                    cache: false
+                });
+            },
+            cache: false
+        });
+    });
+
     $("#actionMenuRecycleApp").click(function () {
         $(".actionMenu").hide()
         $.ajax({
