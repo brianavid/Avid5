@@ -270,6 +270,8 @@ public static class Running
                 return JRMC.IsActivelyPlaying();
             case "Spotify":
                 return Spotify.GetPlaying() > 0;
+            case "Roku":
+                return Roku.IsActivelyPlaying();
         }
 
     }

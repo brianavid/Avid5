@@ -1,4 +1,24 @@
-﻿var rokuControlHammer = null;
+﻿function UpdateStreamingDisplayPlayingInformation() {
+    if (overlayVisible || !navigator.onLine) {
+        return;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/Streaming/RokuGetPlayingInfo",
+        timeout: 700,
+        cache: false,
+        success: function (xml) {
+            if (xml != null && xml != "") {
+                var info = xml.documentElement;
+                $("#RokuState").text(info.getAttribute("state"));
+                $("#RokuPositionDisplay").text(info.getAttribute("position"));
+            }
+        }
+    });
+}
+
+var rokuControlHammer = null;
 
 function AddRokuControlHammerActions() {
     if (!rokuControlHammer) {
@@ -217,7 +237,14 @@ $(function () {
     AddSmartControlHammerActions()
     AddBrowserHammerActions();
 
-    $("#goStreamSourceSelect").click(function () {
+
+    // update information once now
+    UpdateStreamingDisplayPlayingInformation();
+
+    // update again every little bit
+    streamingRepeater = setInterval("UpdateStreamingDisplayPlayingInformation()", 2000);
+
+   $("#goStreamSourceSelect").click(function () {
         LinkTo("/Streaming/Browser")
     });
 

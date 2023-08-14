@@ -88,6 +88,64 @@ public static class Roku
         }
     }
 
+    static Dictionary<string, string> PlayerInfo
+    {
+        get
+        {
+            var info = GetXml("query/media-player");
+            if (info == null)
+            {
+                return null;
+            }
+
+            var infoDict = info.Root.Elements().ToDictionary(e => e.Name.LocalName, e => e.Value);
+            infoDict.Add("state", info.Root.Attribute("state").Value);
+            return infoDict;
+            //  Question - Do we add the attribute values too?
+        }
+    }
+
+    public static bool IsActivelyPlaying()
+    {
+        var info = GetXml("query/media-player");
+        if (info == null)
+        {
+            return true;
+        }
+        return info.Root.Attribute("state").Value == "play";
+    }
+
+
+    public static XElement GetPlayingInfo()
+    {
+        var info = PlayerInfo;
+        var stateDisplay = "";
+        var positionDisplay = "";
+        var durationDisplay = "";
+
+        if (info != null)
+        {
+            if (info.ContainsKey("state"))
+            {
+                stateDisplay = info["state"];
+            }
+            if (info.ContainsKey("position"))
+            {
+                var ms = int.Parse(new string(info["position"].TakeWhile(c => char.IsDigit(c)).ToArray()));
+                positionDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString(@"mm\:ss");
+            }
+            if (info.ContainsKey("duration"))
+            {
+                var ms = int.Parse(info["duration"].TakeWhile(c => char.IsDigit(c)).ToString());
+                durationDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString("mm:ss");
+            }
+        }
+        return new XElement("Info", new List<XAttribute> {
+            new XAttribute("state", stateDisplay ),
+            new XAttribute("position", String.IsNullOrEmpty(durationDisplay) ? positionDisplay : positionDisplay + "/" + durationDisplay )
+        });
+    }
+
     public static void RunApp(
         string appId,
         Dictionary<string,string> args = null)

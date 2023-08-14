@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace Avid5.Net.Controllers
 {
@@ -57,6 +58,12 @@ namespace Avid5.Net.Controllers
         {
             Roku.RunApp(id);
             return this.Content("");
+        }
+
+        public ContentResult RokuGetPlayingInfo()
+        {
+            var info = Roku.GetPlayingInfo();
+            return this.Content(info.ToString(), @"text/xml", Encoding.UTF8);
         }
 
         public ContentResult KeyDown(
