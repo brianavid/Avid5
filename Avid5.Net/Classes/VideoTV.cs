@@ -37,14 +37,6 @@ public class VideoTV
         public bool IsRadio {  get { return Number >= 700; } }
         public bool IsFavourite { get { return Info.ContainsKey("Keywords") && Info["Keywords"].Contains("Favorite"); } }
         public Dictionary<string,String> Info { get; internal set; }
-        public string LogoUrl
-        {
-            get
-            {
-                string infoPath;
-                return Info.TryGetValue("Image File", out infoPath) ? infoPath : "";
-            }
-        }
 
         public Channel(string key, Dictionary<string, string> info, int index)
         {
@@ -55,6 +47,37 @@ public class VideoTV
             Name = FullName.Split(new[] { ' ' }, 2)[1];
             Number = int.Parse(FullName.Split(' ')[0]);
             Index = index;
+        }
+
+        private byte[] _LogoImageBytes = null;
+        public string LogoMediaType { get; private set; }
+        public byte[] LogoImageBytes
+        {
+            get
+            {
+                if (_LogoImageBytes == null)
+                {
+                    var logoUrl = JRMC.Url + "File/GetFile?FileType=Key&Helper=ChannelLogo&File=" + Key;
+                    if (Info.ContainsKey("Image File") && Info["Image File"].StartsWith("http"))
+                    {
+                        logoUrl = Info["Image File"];
+                    }
+                    using (var request = new HttpRequestMessage(HttpMethod.Get, logoUrl))
+                    {
+                        var response = JRMC.httpClient.Send(request);
+                        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                        {
+                            LogoMediaType = "";
+                            _LogoImageBytes = new byte[0];
+                            return _LogoImageBytes;
+                        }
+                        response.EnsureSuccessStatusCode();
+                        _LogoImageBytes = response.Content.ReadAsByteArrayAsync().Result;
+                        LogoMediaType = response.Content.Headers.ContentType.MediaType;
+                    }
+                }
+                return _LogoImageBytes;
+            }
         }
     }
 
@@ -524,9 +547,6 @@ public class VideoTV
                 {
                     break;
                 }
-                var logoUrl = "";
-                infoDict.TryGetValue("Image File", out logoUrl);
-
                 var channel = new Channel (key, infoDict, index++);
                 channels.Add(channel);
             }

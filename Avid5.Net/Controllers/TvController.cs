@@ -69,25 +69,12 @@ namespace Avid5.Net.Controllers
             string channelKey)
         {
             var channel = VideoTV.AllChannels[channelKey];
-
-			//  The LogoUrl can eithewr be a locally cached file path or an http URL
-			if (System.IO.File.Exists(channel.LogoUrl))
+            var bytes = channel.LogoImageBytes;
+            if (bytes == null || bytes.Length == 0) 
             {
-                return base.File(System.IO.File.ReadAllBytes(channel.LogoUrl), channel.LogoUrl.EndsWith(".png") ? "image/png" : "image/jpeg");
+                return this.Content("");
             }
-            else if (channel.LogoUrl.StartsWith("http"))
-            {
-				//make the sync GET request
-				using (var request = new HttpRequestMessage(HttpMethod.Get, channel.LogoUrl))
-				{
-					var response = JRMC.httpClient.Send(request);
-					response.EnsureSuccessStatusCode();
-					byte[] bytes = response.Content.ReadAsByteArrayAsync().Result;
-					return base.File(bytes, response.Content.Headers.ContentType.MediaType);
-				}
-
-			}
-			return Redirect("/Avid5-192.png");
+            return base.File(bytes, channel.LogoMediaType);
         }
 
         // GET: /Tv/Action

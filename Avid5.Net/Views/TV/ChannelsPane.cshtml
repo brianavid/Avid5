@@ -4,11 +4,8 @@
     {
         <div class="tvChannel" id="@channel.Key">
             <div class="tvChannelName">
-            @if (!string.IsNullOrEmpty(channel.LogoUrl))
-            {
-                <img height = "40" src = "/Tv/GetChannelLogo?channelKey=@channel.Key" /> 
-            } 
-            @channel.FullName</div>
+            <img height = "40" src = "/Tv/GetChannelLogo?channelKey=@channel.Key" /> 
+            @channel.Name</div>
             <div class="tvChannelNowNext">
                 @if (channel.IsFavourite)
                 {
