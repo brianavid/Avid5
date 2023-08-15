@@ -591,12 +591,14 @@ public class JRMC
                 theJRMC.albumList = new AlbumCollection();
                 theJRMC.photoAlbumList = new AlbumCollection();
 
-				var start = DateTime.Now;
+                logger.Info($"Fetching all Music albums");
+                var start = DateTime.Now;
 				FetchAllAlbums(itemIds[0], AlbumList, 0);
                 var albums = theJRMC.albumList.InArtistOrder;
 				logger.Info($"Found {albums.Count()} Music albums with {albums.Select(a => a.Tracks.Count()).Sum()} tracks in {Math.Round((DateTime.Now - start).TotalSeconds)} seconds");
 
-				start = DateTime.Now;
+                logger.Info($"Fetching all Photo albums");
+                start = DateTime.Now;
 				FetchAllAlbums(itemIds[1], PhotoAlbumList, 0);
 				albums = theJRMC.photoAlbumList.InArtistOrder;
 				logger.Info($"Found {albums.Count()} Photo albums with {albums.Select(a => a.Tracks.Count()).Sum()} tracks in {Math.Round((DateTime.Now - start).TotalSeconds)} seconds");
@@ -1197,27 +1199,26 @@ public class JRMC
 
 	public static void GoFullScreen()
 	{
-		SendCommand("Control/MCC?Command=22009&Parameter=2");   //  View
-		SendCommand("Control/MCC?Command=10027");               //  Maximize
+        SendCommand("Control/MCC?Command=22009&Parameter=2");   //  View
+        SendCommand("Control/MCC?Command=10027");               //  Maximize
 	}
 
 	public static void GoTheater()
 	{
-		SendCommand("Control/MCC?Command=22009&Parameter=3");   //  View
-		SendCommand("Control/MCC?Command=10027");               //  Maximize
-	}
+        SendCommand("Control/MCC?Command=22009&Parameter=3");   //  View
+        SendCommand("Control/MCC?Command=10027");               //  Maximize
+    }
 
-	public static void GoShowUI()
+    public static void GoShowUI()
 	{
-		SendCommand("Control/MCC?Command=22009&Parameter=4");   //  View
+        SendCommand("Control/MCC?Command=22009&Parameter=4");   //  View
+        SendCommand("Control/MCC?Command=10027");               //  Maximize
 	}
 
 	public static void CloseScreen()
 	{
-        //  On Ubuntu, minimizing the UI seems to be irreversable except by clicking on the desktop.
-        //  So we leave JRMC in Theater mode and rely on turning off the screen.
-        //SendCommand("Control/MCC?Command=10014");               //  Minimise
-        GoTheater();
+        SendCommand("Control/MCC?Command=22009&Parameter=1");   //  View
+        SendCommand("Control/MCC?Command=10014");               //  Minimise
 	}
 
 	/// <summary>

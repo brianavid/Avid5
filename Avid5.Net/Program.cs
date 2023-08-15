@@ -64,5 +64,4 @@ try
 catch (Exception ex)
 {
 	logger.Info(ex, $"Avid 5 Exception:", ex.Message);
-	throw;
 }
