@@ -198,7 +198,10 @@ public static class Screen
 			logger.Info("Given up waiting");
 		}
 
-        JRMC.GoTheater();
+		if (Receiver.SelectedInput == "Computer")
+		{
+			JRMC.GoTheater();
+		}
     }
 
     /// <summary>
@@ -208,7 +211,10 @@ public static class Screen
 	{
 		logger.Info("EnsureScreenOn");
 
-        JRMC.GoFullScreen();
+		if (Receiver.SelectedInput == "Computer")
+		{
+			JRMC.GoFullScreen();
+		}
         TurnOn();
 	}
 
