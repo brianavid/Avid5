@@ -69,4 +69,11 @@ $(function () {
         LinkTo("/Security/GetProfiles");
     });
 
+    $(".playerActionButton").mousedown(function () {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/Key?Focus=1&Key=") + this.id,
+            cache: false
+        });
+    });
+
 });

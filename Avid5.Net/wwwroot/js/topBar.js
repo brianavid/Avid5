@@ -94,13 +94,27 @@ $(function () {
     });
 
     $("#actionMenuSoundTV").click(function () {
-        $(".actionMenuSub").show();
+        $("#actionMenuSubSoundTV").show();
+    });
+
+    $("#actionMenuSelectView").click(function () {
+        $("#actionMenuSubSelectView").show();
     });
 
     $(".actionMenuSoundModeItem").click(function () {
         var mode = this.innerText
         $.ajax({
             url: "/Action/SoundTV?mode=" + mode,
+            success: HideActionMenu,
+            error: HideActionMenu,
+            cache: false
+        });
+    });
+
+    $(".actionMenuSelectViewItem").click(function () {
+        var view = this.innerText
+        $.ajax({
+            url: "/Action/SelectView?view=" + view,
             success: HideActionMenu,
             error: HideActionMenu,
             cache: false

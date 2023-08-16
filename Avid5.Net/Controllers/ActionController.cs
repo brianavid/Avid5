@@ -211,14 +211,40 @@ namespace Avid5.Net.Controllers
 			return Content("");
 		}
 
-		// GET: /Action/RebootSystems
-		public ActionResult RebootSystems()
+        // GET: /Action/RebootSystems
+        public ActionResult RebootSystems()
         {
             Receiver.Reboot();
 
             Process.Start("shutdown", "/r /t 0");
             return Content("");
         }
+
+        // GET: /Action/SelectView
+        public ActionResult SelectView(string view)
+        {
+            if (!String.IsNullOrEmpty(view))
+            {
+                switch (view)
+                {
+                    case "Standard":
+                        JRMC.GoShowUI();
+                        break;
+                    case "Display":
+                        JRMC.GoFullScreen();
+                        break;
+                    case "Theater":
+                        JRMC.GoTheater();
+                        break;
+                    case "Closed":
+                        JRMC.CloseScreen();
+                        break;
+                }
+            }
+            return Content("");
+        }
+
+
 
     }
 }

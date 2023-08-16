@@ -483,9 +483,6 @@ $(function () {
 
     $("#displayDVDs").click(DisplayDvds);
 
-    $("#actionMenuVideoScreenFix").click(function () {
-    });
-
     // update information once now
     UpdateJrmcDisplayPlayingInformation();
 

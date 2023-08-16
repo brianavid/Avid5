@@ -4,9 +4,9 @@
         <div class="actionMenuMain">
             <div class="actionMenuItem" id="actionMenuScreenOff">Screen off</div>
             <div class="actionMenuItem" id="actionMenuScreenOn">Screen on</div>
-            @if (Running.RunningProgram == "Video")
+            @if (Screen.IsOn)
             {
-                <div class="actionMenuItem" id="actionMenuVideoScreenFix">Redraw screen</div>
+                <div class="actionMenuItem" id="actionMenuSelectView">Select view</div>
             }
             <div class="actionMenuItem" id="actionMenuSoundTV">Sound on TV</div>
             <div class="actionMenuItem" id="actionMenuSoundRooms">Sound in rooms</div>
@@ -16,11 +16,17 @@
             <div class="actionMenuItem" id="actionMenuExitApp@(ViewBag.Wide ?? "")">Exit Avid</div>
             <div class="actionMenuItem" id="actionMenuRebootSystems">Reboot Systems</div>
         </div>
-        <div class="actionMenuSub">
+        <div class="actionMenuSub" id="actionMenuSubSoundTV">
             @foreach (var outputMode in Receiver.AvailableOutputModes)
             {
                 <div class="actionMenuItem actionMenuSoundModeItem">@outputMode</div>
             }
+        </div>
+        <div class="actionMenuSub" id="actionMenuSubSelectView">
+            <div class="actionMenuItem actionMenuSelectViewItem">Standard</div>
+            <div class="actionMenuItem actionMenuSelectViewItem">Display</div>
+            <div class="actionMenuItem actionMenuSelectViewItem">Theater</div>
+            <div class="actionMenuItem actionMenuSelectViewItem">Closed</div>
         </div>
     </div>
 </div>

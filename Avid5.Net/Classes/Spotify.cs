@@ -1518,7 +1518,7 @@ public static class Spotify
     /// <returns></returns>
     public static int Stop()
     {
-        if (WebAppService != null)
+        if (webAppService != null)  //  Note the use of webAppService to avoid unnecessarily starting Spotify
         {
             lock (webAppServiceLock)
             {

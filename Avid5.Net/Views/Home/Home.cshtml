@@ -24,11 +24,56 @@
         <td class="centeredButton"><img id="selectSecurity" src="~/Content/Buttons/Security.png"></td>
         <td class="centeredButton"><img id="selectPhotos" src="~/Content/Buttons/Select.Photos.Button.png"></td>
     </tr>
-    <tr>
+    @if (!Screen.IsOn || !(Receiver.SelectedInput == "Computer"))
+    {
+        <tr>
         <td class="centeredButton"></td>
         <td class="centeredButton"><img id="selectPC" src="/Content/Buttons/PC.png" /></td>
         <td class="centeredButton"></td>
-    </tr>
+        </tr>
+    }
 </table>
 
+ @if (Screen.IsOn && Receiver.SelectedInput == "Computer")
+{
+    <p/>
+    <p/>
+    <p/>
+    <p/>
+    <table align="center" class='width100'>
+        <tr>
+            <td valign="top" class="width16">&nbsp;</td>
+            <td valign="top" class="width60">
+                <div id="arrows">
+                    <table class='width100'>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td class="centeredButton"><img class="playerActionButton" id="Up" src="/Content/Buttons/BigRound/Nav.Up.png"></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="centeredButton"><img class="playerActionButton" id="Left" src="/Content/Buttons/BigRound/Nav.Left.png"></td>
+                            <td class="centeredButton"><img class="playerActionButton" id="Enter" src="/Content/Buttons/BigRound/OK.png"></td>
+                            <td class="centeredButton"><img class="playerActionButton" id="Right" src="/Content/Buttons/BigRound/Nav.Right.png"></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td class="centeredButton"><img class="playerActionButton" id="Down" src="/Content/Buttons/BigRound/Nav.Down.png"></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td class="centeredButton"><img class="playerActionButton" id="Backspace" src="/Content/Buttons/BigRound/Back.png"></td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+
+            <td valign="top" class="width16">&nbsp;</td>
+
+        </tr>
+    </table>
+
+}
 
