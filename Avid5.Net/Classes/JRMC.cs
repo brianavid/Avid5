@@ -1137,7 +1137,7 @@ public class JRMC
         AlbumData album)
     {
         var trackInfo = album.Track0.Info;
-        return trackInfo["Filename"].ToLower().Contains(Path.DirectorySeparatorChar + @"classical" + Path.DirectorySeparatorChar);
+        return trackInfo["Filename"].ToLower().Split(Path.DirectorySeparatorChar).Contains("classical");
     }
 
     /// <summary>

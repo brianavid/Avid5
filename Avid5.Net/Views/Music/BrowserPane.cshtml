@@ -48,7 +48,7 @@
             {
                 foreach (var playlist in playlists)
                 {
-                    if (playlist["Path"].StartsWith("Avid\\"))
+                    if (playlist["Path"].StartsWith("Avid" + System.IO.Path.DirectorySeparatorChar))
                     {
                         <div class="musicBrowserPlaylist musicBrowserItem" id="@playlist["ID"]">
                             <div class="musicBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@playlist["Name"]</div>

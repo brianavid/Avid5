@@ -114,7 +114,7 @@ namespace Avid5.Net.Controllers
             VideoTV.Title = title;
 
 			JRMC.GoFullScreen();
-            SendMCWS("Playback/PlayByFilename?Location=-1&Filenames=" + HttpUtility.UrlEncode(path+ "\\VIDEO_TS\\VIDEO_TS.IFO").Replace("+", "%20"));
+            SendMCWS("Playback/PlayByFilename?Location=-1&Filenames=" + HttpUtility.UrlEncode(Path.Combine(path,  "VIDEO_TS", "VIDEO_TS.IFO")).Replace("+", "%20"));
             return this.Content("");
         }
 
