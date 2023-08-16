@@ -28,8 +28,8 @@ public static class Screen
 		{
 			isOn = result == "power status: on";
 		}
-		else
-		{
+		else if (String.IsNullOrEmpty(ClientPath))
+        {
 			trayAppClient = new HttpClient();
 			trayAppClient.BaseAddress = new Uri("http://localhost:89");
 			trayAppClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue();
@@ -198,18 +198,18 @@ public static class Screen
 			logger.Info("Given up waiting");
 		}
 
-		JRMC.GoTheater();
-	}
+        JRMC.GoTheater();
+    }
 
-	/// <summary>
-	/// Ensure that the screen is on - we do this by turning it on!
-	/// </summary>
-	public static void EnsureScreenOn()
+    /// <summary>
+    /// Ensure that the screen is on - we do this by turning it on!
+    /// </summary>
+    public static void EnsureScreenOn()
 	{
 		logger.Info("EnsureScreenOn");
 
-        JRMC.GoTheater();
-		TurnOn();
+        JRMC.GoFullScreen();
+        TurnOn();
 	}
 
 	public static void EnsureScreenOff()

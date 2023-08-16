@@ -158,9 +158,8 @@ textarea {
     font-weight: normal;
 }
 
-.musicPlaybackStatus, .spotifyPlaybackStatus
-{
-    font-size:medium; 
+.musicPlaybackStatus, .spotifyPlaybackStatus, .tvPlaybackStatus, .videoPlaybackStatus {
+    font-size: medium;
     height: 100%;
     float: left;
     text-align: center;
@@ -392,12 +391,11 @@ textarea {
 }
 
 
-.tvProgrammeRecord, .guideEpgProgrammeRecord, .guideEpgProgrammeRecordSeries, .guideEpgProgrammeCancel, .guideEpgSeriesCancel, #remoteExit, .securityZoneOn, .securityZoneOff {
+.guideEpgProgrammeRecord, .guideEpgProgrammeRecordSeries, .guideEpgProgrammeCancel, .guideEpgSeriesCancel, #remoteExit, .securityZoneOn, .securityZoneOff {
     float: right;
 }
 
 .tvProgrammeIsRecord {
-    float: right;
     color: #f00;
 }
 

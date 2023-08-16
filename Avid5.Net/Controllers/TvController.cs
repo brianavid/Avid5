@@ -10,11 +10,17 @@ namespace Avid5.Net.Controllers
         // GET: /Tv/Watch
         public ActionResult Watch()
         {
+            return View();
+        }
+
+        // GET: /Tv/WatchOrChannels
+        public ActionResult WatchOrChannels()
+        {
             if (VideoTV.CurrentlyWatching == null)
             {
                 return (View("Channels"));
             }
-            return View();
+            return View("Watch");
         }
 
         // GET: /Tv/ControlPane
@@ -100,10 +106,14 @@ namespace Avid5.Net.Controllers
         // GET: /Tv/RecordNow
         public ContentResult RecordNow()
         {
-            var now = VideoTV.GetNowAndNext(VideoTV.CurrentlyWatching.Channel).FirstOrDefault();
-            if (now != null)
+            var currentlyWatching = VideoTV.CurrentlyWatching;
+            if (currentlyWatching != null)
             {
-                VideoTV.AddTimer(now);
+                var now = VideoTV.GetNowAndNext(currentlyWatching.Channel).FirstOrDefault();
+                if (now != null)
+                {
+                    VideoTV.AddTimer(now);
+                }
             }
             return this.Content("");
         }

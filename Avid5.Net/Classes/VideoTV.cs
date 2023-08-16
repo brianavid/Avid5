@@ -1019,7 +1019,6 @@ public class VideoTV
             if (infokey != null && AllChannels.ContainsKey(infokey))
             {
                 return GetNowAndNext(AllChannels[infokey]).First();
-
             }
             return null;
         }

@@ -6,15 +6,7 @@
         var nextStart = nowAndNext != null && nowAndNext.Count() > 1 ? nowAndNext.Skip(1).First().StartTime.ToLocalTime().ToShortTimeString() : "";
         var nextTitle = nowAndNext != null && nowAndNext.Count() > 1 ? nowAndNext.Skip(1).First().Title : "";
         <div class="tvPlayingInfo">
-            @if (currentlyWatching != null && currentlyWatching.IsScheduled)
-            {
-                <div class="tvProgrammeIsRecord">[Rec]</div>
-            }
-            else
-            {
-                <img class="tvProgrammeRecord" id="Record" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
-            }
-        <div class="tvCurrentChannelName" id="tvCurrentChannelName">@(currentlyWatching != null ? currentlyWatching.Channel.Name : "")</div>
+            <div class="tvCurrentChannelName" id="tvCurrentChannelName">@(currentlyWatching != null ? currentlyWatching.Channel.Name : "")</div>
             <div class="tvCurrentProgramme" id="tvCurrentProgramme">@nowTitle</div>
             <div class="tvProgrammeInfo">
                 <div class="tvNextPrograme" id="tvNextPrograme">@(nextStart): @nextTitle</div>
@@ -23,7 +15,16 @@
         <br />
         <table class="width100">
             <tr>
-                <td class="centeredButton"> <text>&nbsp;</text> </td>
+                <td class="centeredButton">
+                    @if (currentlyWatching != null && currentlyWatching.IsScheduled)
+                    {
+                        <div class="tvProgrammeIsRecord">[Rec]</div>
+                    }
+                    else
+                    {
+                        <img class="tvProgrammeRecord" id="Record" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
+                    }
+                </td>
                 <td class="centeredButton"><img id="tvPlayPause" src="~/Content/Buttons/PlayPauseButton.png" /></td>
                 <td class="centeredButton"><img id="tvStop" src="~/Content/Buttons/Transport.Stop.png" /></td>
             </tr>
@@ -42,9 +43,9 @@
         <br />
         <table class='width100'>
             <tr>
-                <td class="centeredButton width30">@VideoTV.GetPlaybackInfo("Status")</td>
-                <td class="centeredButton width40">@VideoTV.GetPlaybackInfo("RemainingTimeDisplay")</td>
-                <td class="centeredButton width30">&nbsp;</td>
+                <td class="centeredButton tvPlaybackStatus width30">@VideoTV.GetPlaybackInfo("Status")</td>
+                <td class="centeredButton tvPlaybackStatus width40">@VideoTV.GetPlaybackInfo("RemainingTimeDisplay")</td>
+                <td class="centeredButton tvPlaybackStatus width30">&nbsp;</td>
             </tr>
         </table>
     }

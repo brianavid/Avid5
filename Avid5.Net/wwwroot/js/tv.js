@@ -87,7 +87,7 @@ function AddControlHammerActions(controlUnderButtons) {
     controlHammer.on("touch", "#tvStop", function (e) {
         $.ajax({
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Stop"),
-            cache: false
+           cache: false
         })
     });
 
@@ -273,5 +273,5 @@ $(function () {
     $("#displayTvRadio").click(DisplayTvRadio);
 
     // update again every few seconds
-    setInterval("DisplayRunningOnControlPad()", 2000);
+    setInterval("DisplayRunningOnControlPad(false)", 2000);
 })
