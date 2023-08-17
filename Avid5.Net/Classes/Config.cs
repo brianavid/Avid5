@@ -14,19 +14,21 @@ public static class Config
 
     static IHostApplicationLifetime _appLifetime;
 
-    public static void Initialize(IHostApplicationLifetime appLifetime, string contentRootPath)
+    public static void Initialize(IHostApplicationLifetime appLifetime, string contentRootPath, string directoryPath = null)
     {
         _appLifetime = appLifetime;
         ContentRootPath = contentRootPath;
-    }
-
-    public static string DirectoryPath
-    {
-        get
+        if (directoryPath != null)
         {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/opt/avid" : @"C:\Avid.Net";
+            DirectoryPath = directoryPath;
+        }
+        else
+        {
+            DirectoryPath = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/opt/avid" : @"C:\Avid.Net";
         }
     }
+
+    public static string DirectoryPath { get; private set; }
 
     public static string FilePath(string fileName)
     {
@@ -47,18 +49,6 @@ public static class Config
                 doc = XDocument.Load(FilePath("Avid5Config.xml"));
             }
             return doc;
-        }
-    }
-
-    /// <summary>
-    /// The Media PC's fixed IP address
-    /// </summary>
-    public static string IpAddress
-    {
-        get
-        {
-            XElement elAddr = Doc.Root.Element("IpAddress");
-            return elAddr == null ? null : elAddr.Value;
         }
     }
 

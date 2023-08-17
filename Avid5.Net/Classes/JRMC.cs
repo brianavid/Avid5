@@ -263,37 +263,12 @@ public class JRMC
     private const string RequiredTrackData = "Name,Track,Album,Artist,Genre,Composer,Duration,Album Artist,Filename,Date Imported,Last Played";
 
     /// <summary>
-    /// The real Host address of the JRMC web service on the local computer (not 127.0.0.1 which is unreliable)
+    /// The Host address of the JRMC web service on the local computer
     /// </summary>
-    /// <remarks>This is determined only once</remarks>
     public static string Host
     {
-        get {
-            if (host == null)
-            {
-                //  Try the IP address from the config (if provided)
-                string ipAddr = Config.IpAddress;
-                if (ipAddr != null)
-                {
-                    host = "http://" + ipAddr + ":52199/";
-                }
-            }
-            if (host == null)
-            {
-                //  Try a local address
-                IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
-                foreach (var addr in addresses)
-                {
-                    if (addr.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        host = "http://" + addr.ToString() + ":52199/";
-                    }
-                }
-            }
-            return host;
-        }
+        get { return "http://localhost:52199/"; }
     }
-    static string host = null;
 
     /// <summary>
     /// The URL of the JRMC web service on the local computer
@@ -301,6 +276,15 @@ public class JRMC
     public static string Url
     {
         get { return Host + "MCWS/v1/"; }
+    }
+
+    public static void Initialise()
+    {
+        var alive = GetXml(Url + "Alive");
+        if (alive == null)
+        {
+            throw new Exception("Can't connect to JRMC");
+        }
     }
 
     /// <summary>
@@ -325,17 +309,14 @@ public class JRMC
 					return XDocument.Load(new StreamReader(response.Content.ReadAsStream()));
                 }
             }
-            catch (WebException)
-            {
-				return null;
-			}
-			catch
+			catch (Exception ex)
 			{
-				System.Threading.Thread.Sleep(2000);
+                logger.Fatal($"Exception '{ex.Message}' for  {url}");
+                System.Threading.Thread.Sleep(2000);
 			}
 		}
 
-        logger.Fatal("No J River Media Center service");
+        logger.Fatal($"No J River Media Center service for {url}");
         return null;
     }
 

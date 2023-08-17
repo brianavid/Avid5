@@ -110,7 +110,7 @@ namespace Avid5.Net.Controllers
             string url)
         {
             XDocument doc = JRMC.GetXml(JRMC.Url + url);
-            return this.Content(doc.ToString(), @"text/xml");
+            return this.Content(doc == null ? "" : doc.ToString(), @"text/xml");
         }
 
         // GET: /Music/RemoveQueuedTrack

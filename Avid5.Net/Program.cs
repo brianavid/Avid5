@@ -33,20 +33,23 @@ var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurre
 
 logger.Info("Avid 5 Started");
 
+bool initialisedSuccessfully = false;
 try
 {
-	Config.Initialize(app.Lifetime, app.Environment.ContentRootPath);
-	Receiver.Initialize();
-	Screen.Initialise();
-	Running.Initialize();
+	Config.Initialize(app.Lifetime, app.Environment.ContentRootPath, args.Length == 0 ? null : args[0]);
+    Receiver.Initialize();
+    Screen.Initialise();
+    JRMC.Initialise();
+    Running.Initialize();
 	Spotify.Initialize();
 	Security.Initialize();
 	JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, DateTime.Now.Hour < 5);   //  Reload album data from JRMC when restarting between midnight and five (i.e. in the overnight restart)
 	VideoTV.Initialise();
 
 	logger.Info("Avid 5 Initialised");
+	initialisedSuccessfully = true;
 
-	app.Start();
+    app.Start();
 
 	var server = app.Services.GetService<IServer>();
 	var addressFeature = server.Features.Get<IServerAddressesFeature>();
@@ -63,5 +66,7 @@ try
 }
 catch (Exception ex)
 {
-	logger.Info(ex, $"Avid 5 Exception:", ex.Message);
+    logger.Info(ex, $"Avid 5 Exception: {ex.Message}");
+    Console.WriteLine($"Avid 5 Exception: {ex.Message}");
+    Environment.Exit(initialisedSuccessfully ? 0 : 1);
 }

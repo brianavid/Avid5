@@ -151,6 +151,7 @@ public static class Running
 				Screen.EnsureScreenOn();
 				Receiver.SelectTVOutput();
 				Screen.WaitForScreenOn();
+                JRMC.GoFullScreen();
 				logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 

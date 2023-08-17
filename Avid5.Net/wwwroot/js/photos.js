@@ -109,8 +109,6 @@ function AddImagesHammerActions(controlHeight) {
     EnableDragScroll(imagesHammer)
 
     imagesHammer.on("doubletap", ".photoGridImage", function (e) {
-        var url = "Playback/PlayByKey?Album=1&Key=";
-
         $.ajax({
             url: "/Music/SendMCWS?url=" + encodeURIComponent("Playback/PlayByIndex?Index=" + $(".photoGridImage").index(this)),
             cache: false
