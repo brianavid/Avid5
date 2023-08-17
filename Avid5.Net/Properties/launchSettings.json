@@ -2,6 +2,7 @@
   "profiles": {
     "Avid5.Net": {
       "commandName": "Project",
+      "commandLineArgs": "C:\\Avid.Net\\Avid5.Config",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

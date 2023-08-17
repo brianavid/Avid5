@@ -177,7 +177,7 @@ $(function () {
         $.ajax({
             url: "/Action/RecycleApp",
             success: function (data) {
-                location.href = '/Home/Home';
+                setInterval(waitForServerToRestart, 1000);
             },
             error: HideActionMenu,
             cache: false
@@ -189,31 +189,7 @@ $(function () {
         $.ajax({
             url: "/Action/RecycleApp",
             success: function (data) {
-                location.href = '/Home/Wide';
-            },
-            error: HideActionMenu,
-            cache: false
-        });
-    });
-
-    $("#actionMenuExitApp").click(function () {
-        $(".actionMenu").hide()
-        $.ajax({
-            url: "/Action/ExitApp",
-            success: function (data) {
-                location.href = '/Home/Home';
-            },
-            error: HideActionMenu,
-            cache: false
-        });
-    });
-
-    $("#actionMenuExitAppWide").click(function () {
-        $(".actionMenu").hide()
-        $.ajax({
-            url: "/Action/ExitApp",
-            success: function (data) {
-                location.href = '/Home/Wide';
+                setInterval(waitForServerToRestart, 1000);
             },
             error: HideActionMenu,
             cache: false
@@ -222,21 +198,26 @@ $(function () {
 
     $("#actionMenuRebootSystems").click(function () {
         $(".actionMenu").hide()
-        OverlayScreen()
-        $.ajax({
-            url: "/Action/RebootSystems",
-            success: function (data) {
-                setInterval(waitForServerToRestart, 10000);
-            },
-            error: function (data) {
-                setInterval(waitForServerToRestart, 10000);
-            },
-            cache: false
-        });
+        var answer = confirm("Do you really want to reboot Avid? This may interrupt any ongoing recordings")
+        if (answer) {
+            OverlayScreen()
+            $.ajax({
+                url: "/Action/RebootSystems",
+                success: function (data) {
+                    setInterval(waitForServerToRestart, 10000);
+                },
+                error: function (data) {
+                    setInterval(waitForServerToRestart, 10000);
+                },
+                cache: false
+            });
+        }
+        else {
+            HideActionMenu();
+        }
     });
 
     function waitForServerToRestart() {
-        OverlayScreen()
         $.ajax({
             url: "/Action/GetRunning",
             success: function (result) {

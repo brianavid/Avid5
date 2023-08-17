@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
@@ -202,8 +203,8 @@ namespace Avid5.Net.Controllers
 			return Content("");
 		}
 
-        // GET: /Action/ExitApp
-        public ActionResult ExitApp()
+        // GET: /Action/Exit
+        public ActionResult Exit()
 		{
 			Spotify.ExitPlayer();
 
@@ -216,7 +217,14 @@ namespace Avid5.Net.Controllers
         {
             Receiver.Reboot();
 
-            Process.Start("shutdown", "/r /t 0");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("reboot");
+            }
+            else
+            {
+                Process.Start("shutdown", "/r /t 0");
+            }
             return Content("");
         }
 

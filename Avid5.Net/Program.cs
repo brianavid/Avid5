@@ -45,6 +45,7 @@ try
 	Security.Initialize();
 	JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, DateTime.Now.Hour < 5);   //  Reload album data from JRMC when restarting between midnight and five (i.e. in the overnight restart)
 	VideoTV.Initialise();
+	JRMC.CloseScreen();
 
 	logger.Info("Avid 5 Initialised");
 	initialisedSuccessfully = true;

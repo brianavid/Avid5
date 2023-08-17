@@ -4,12 +4,14 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Web;
 using System.Runtime.InteropServices;
+using NLog;
 
 /// <summary>
 /// A class of configuration values helds in a manually edited XML file
 /// </summary>
 public static class Config
 {
+    static Logger logger = LogManager.GetCurrentClassLogger();
     public static string ContentRootPath { get; private set; }
 
     static IHostApplicationLifetime _appLifetime;
@@ -26,6 +28,8 @@ public static class Config
         {
             DirectoryPath = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/opt/avid" : @"C:\Avid.Net";
         }
+
+        logger.Info($"DirectoryPath = {DirectoryPath}");
     }
 
     public static string DirectoryPath { get; private set; }
@@ -46,7 +50,9 @@ public static class Config
         {
             if (doc == null)
             {
-                doc = XDocument.Load(FilePath("Avid5Config.xml"));
+                var configPath = FilePath("Avid5Config.xml");
+                logger.Info($"Load {configPath}");
+                doc = XDocument.Load(configPath);
             }
             return doc;
         }
