@@ -197,8 +197,6 @@ namespace Avid5.Net.Controllers
 		// GET: /Action/RecycleApp
 		public ActionResult RecycleApp()
 		{
-			Spotify.ExitPlayer();
-
 			Config.StopApplication();
 			return Content("");
 		}
