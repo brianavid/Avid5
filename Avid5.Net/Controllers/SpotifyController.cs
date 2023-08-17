@@ -254,7 +254,23 @@ namespace Avid5.Net.Controllers
         public ActionResult GetAlbumImage(
             string id)
         {
-            return Redirect(Spotify.GetAlbumImageUrl(id));
+            try
+            {
+                var requestUri = Spotify.GetAlbumImageUrl(id);
+                //make the sync GET request
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+                {
+                    var response = JRMC.httpClient.Send(request);
+                    response.EnsureSuccessStatusCode();
+                    byte[] bytes = response.Content.ReadAsByteArrayAsync().Result;
+                    return base.File(bytes, response.Content.Headers.ContentType.MediaType);
+                }
+            }
+            catch
+            {
+            }
+
+            return this.Content("");
         }
 
         // GET: /Spotify/AddTrackToPlayList
