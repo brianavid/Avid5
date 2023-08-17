@@ -23,10 +23,11 @@ public static class Spotify
 
 	static HttpClient httpClient = new HttpClient();
 
-	static SpotifyClient webAppService = null;
-    static DateTime webApiExpiry = DateTime.Now;
-    static string webApiCurrentUserId = null;
-    static object webAppServiceLock = new object();
+	static SpotifyClient spotifyService = null;
+    static DateTime spotifyApiExpiry = DateTime.Now;
+    static string spotifyCurrentUserId = null;
+    static object spotifyServiceLock = new object();
+    static SpotifyClientConfig spotifyClientConfig;
 
     static string playbackDevice = null;
 
@@ -43,13 +44,13 @@ public static class Spotify
     /// <summary>
     /// Initialize and memoize the we API service using the authentication token stored in the registry
     /// </summary>
-    static SpotifyClient WebAppService
+    static SpotifyClient SpotifyService
     {
         get
         {
             lock (logger)
             {
-	            if (webAppService == null || webApiExpiry <= DateTime.Now)
+	            if (spotifyService == null || spotifyApiExpiry <= DateTime.Now)
 	            {
                     logger.Info("Connecting and authenticating to Spotify Web API");
 	                try
@@ -94,12 +95,15 @@ public static class Spotify
                                             }
                                         }
                                     }
-                                    webApiExpiry = DateTime.Now.AddSeconds(token.ExpiresIn * 4 / 5);    // Only use the token for 80% of its promised life
-                                    webAppService = new SpotifyClient(token.AccessToken);
+                                    spotifyApiExpiry = DateTime.Now.AddSeconds(token.ExpiresIn * 4 / 5);    // Only use the token for 80% of its promised life
+                                    spotifyClientConfig = SpotifyClientConfig.
+                                        CreateDefault(token.AccessToken).
+                                        WithRetryHandler(new SimpleRetryHandler() { RetryAfter = TimeSpan.FromSeconds(1) });
+                                    spotifyService = new SpotifyClient(spotifyClientConfig);
 
-                                    webApiCurrentUserId = webAppService.UserProfile.Current().Id.ToString();
+                                    spotifyCurrentUserId = spotifyService.UserProfile.Current().Result.Id.ToString();
                                     logger.Info("Connected and authenticated {0} to Spotify Web API (expires at {1})",
-                                        webApiCurrentUserId, webApiExpiry.ToShortTimeString());
+                                        spotifyCurrentUserId, spotifyApiExpiry.ToShortTimeString());
 
                                 }
                                 else
@@ -123,18 +127,18 @@ public static class Spotify
                     }
 	            }
 
-                if (webAppService == null || webApiExpiry <= DateTime.Now)
+                if (spotifyService == null || spotifyApiExpiry <= DateTime.Now)
                 {
                     logger.Error("Failed to connect to Spotify Web API");
                 }
 
-                if (AllSavedAlbumList == null && webAppService != null)
+                if (AllSavedAlbumList == null && spotifyService != null)
                 {
                     LoadAndIndexAllSavedTracks();
                 }
             }
 
-            return webAppService;
+            return spotifyService;
         }
     }
 
@@ -142,7 +146,7 @@ public static class Spotify
     {
         lock (logger)
         {
-            if (webAppService == null || webApiExpiry <= DateTime.Now)
+            if (spotifyService == null || spotifyApiExpiry <= DateTime.Now)
             {
                 logger.Info("Probing Authentication API");
                 try
@@ -173,9 +177,9 @@ public static class Spotify
 
         if (!trackCache.ContainsKey(id))
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
-                trackCache[id] = WebAppService.Tracks.Get(id).Result;
+                trackCache[id] = SpotifyService.Tracks.Get(id).Result;
             }
         }
         return trackCache[id];
@@ -188,9 +192,9 @@ public static class Spotify
 
         if (!albumCache.ContainsKey(id))
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
-                albumCache[id] = WebAppService.Albums.Get(id).Result;
+                albumCache[id] = SpotifyService.Albums.Get(id).Result;
             }
         }
         return albumCache[id];
@@ -203,9 +207,9 @@ public static class Spotify
 
         if (!artistCache.ContainsKey(id))
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
-                artistCache[id] = WebAppService.Artists.Get(id).Result;
+                artistCache[id] = SpotifyService.Artists.Get(id).Result;
             }
         }
         return artistCache[id];
@@ -257,7 +261,7 @@ public static class Spotify
     /// </summary>
     public static void LoadAndIndexAllSavedTracks()
     {
-        if (webAppService != null)
+        if (spotifyService != null)
         {
             logger.Info("LoadAndIndexAllSavedTracks start");
 
@@ -269,9 +273,9 @@ public static class Spotify
                 {
                     IAsyncEnumerable<SavedAlbum> pagedAlbums;
 
-                    lock (webAppServiceLock)
+                    lock (spotifyServiceLock)
                     {
-                        pagedAlbums = WebAppService.Paginate(WebAppService.Library.GetAlbums().Result);
+                        pagedAlbums = SpotifyService.Paginate(SpotifyService.Library.GetAlbums().Result);
                     }
                     AllSavedAlbums = MakeAlbums(pagedAlbums).ToArray();
 
@@ -300,9 +304,9 @@ public static class Spotify
                 {
                     var batchOfIds = batch.Select(id => SimplifyId(id)).ToList();
                     IEnumerable<FullArtist> batchOfArtists;
-                    lock (webAppServiceLock)
+                    lock (spotifyServiceLock)
                     {
-                        batchOfArtists = WebAppService.Artists.GetSeveral(new ArtistsRequest(batchOfIds)).Result.Artists;
+                        batchOfArtists = SpotifyService.Artists.GetSeveral(new ArtistsRequest(batchOfIds)).Result.Artists;
                     }
                     if (batchOfArtists != null)
                     {
@@ -353,17 +357,17 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Track> SearchTracks(
         string name)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             logger.Info("SearchTracks {0}", name);
 
             try
             {
                 IAsyncEnumerable<FullTrack> tracks;
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    SearchResponse searchResult = WebAppService.Search.Item(new SearchRequest(SearchRequest.Types.Track, HttpUtility.UrlEncode(name))).Result;
-                    tracks = WebAppService.Paginate(searchResult.Tracks, (s) => s.Tracks);
+                    SearchResponse searchResult = SpotifyService.Search.Item(new SearchRequest(SearchRequest.Types.Track, HttpUtility.UrlEncode(name))).Result;
+                    tracks = SpotifyService.Paginate(searchResult.Tracks, (s) => s.Tracks);
                 }
                 return MakeTracks(tracks);
             }
@@ -384,17 +388,17 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Album> SearchAlbums(
         string name)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             logger.Info("SearchAlbums {0}", name);
 
             try
             {
                 IAsyncEnumerable<SimpleAlbum> albums;
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    SearchResponse searchResult = WebAppService.Search.Item(new SearchRequest(SearchRequest.Types.Album, HttpUtility.UrlEncode(name))).Result;
-                    albums = WebAppService.Paginate(searchResult.Albums, (s) => s.Albums);
+                    SearchResponse searchResult = SpotifyService.Search.Item(new SearchRequest(SearchRequest.Types.Album, HttpUtility.UrlEncode(name))).Result;
+                    albums = SpotifyService.Paginate(searchResult.Albums, (s) => s.Albums);
                 }
                 return MakeAlbums(albums);
             }
@@ -415,17 +419,17 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Artist> SearchArtists(
         string name)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             logger.Info("SearchArtists {0}", name);
 
             try
             {
                 IAsyncEnumerable<FullArtist> artists;
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    SearchResponse searchResult = WebAppService.Search.Item(new SearchRequest(SearchRequest.Types.Artist, HttpUtility.UrlEncode(name))).Result;
-                    artists = WebAppService.Paginate(searchResult.Artists, (s) => s.Artists);
+                    SearchResponse searchResult = SpotifyService.Search.Item(new SearchRequest(SearchRequest.Types.Artist, HttpUtility.UrlEncode(name))).Result;
+                    artists = SpotifyService.Paginate(searchResult.Artists, (s) => s.Artists);
                 }
                 return MakeArtists(artists);
 
@@ -447,9 +451,9 @@ public static class Spotify
     public static SpotifyData.Track GetTrackById(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
@@ -473,9 +477,9 @@ public static class Spotify
     public static SpotifyData.Album GetAlbumById(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
@@ -499,13 +503,13 @@ public static class Spotify
     public static SpotifyData.Artist GetArtistById(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return MakeArtist(WebAppService.Artists.Get(SimplifyId(id)).Result);
+                    return MakeArtist(SpotifyService.Artists.Get(SimplifyId(id)).Result);
                 }
                 catch (System.Exception ex)
                 {
@@ -616,7 +620,7 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Album> GetAlbumsForArtist(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
@@ -624,9 +628,9 @@ public static class Spotify
                 ArtistHistory.Add(artist.Name, artist.Id);
 
                 IAsyncEnumerable<SimpleAlbum> albums;
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    albums = WebAppService.Paginate(WebAppService.Artists.GetAlbums(SimplifyId(id)).Result);
+                    albums = SpotifyService.Paginate(SpotifyService.Artists.GetAlbums(SimplifyId(id)).Result);
                 }
                 return MakeAlbums(albums);
 
@@ -648,13 +652,13 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Artist> GetSimilarArtistsForArtist(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return WebAppService.Artists.GetRelatedArtists(SimplifyId(id)).Result.Artists.Select(a => MakeArtist(a));
+                    return SpotifyService.Artists.GetRelatedArtists(SimplifyId(id)).Result.Artists.Select(a => MakeArtist(a));
                 }
                 catch (System.Exception ex)
                 {
@@ -683,14 +687,14 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Track> GetTracksForAlbum(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
                 IAsyncEnumerable<SimpleTrack> tracks;
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    tracks = WebAppService.Paginate(WebAppService.Albums.GetTracks(SimplifyId(id)).Result);
+                    tracks = SpotifyService.Paginate(SpotifyService.Albums.GetTracks(SimplifyId(id)).Result);
                 }
                 return MakeTracks(
                         tracks,
@@ -713,9 +717,9 @@ public static class Spotify
     public static String GetAlbumImageUrl(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
@@ -738,7 +742,8 @@ public static class Spotify
     #endregion
 
     #region Playlists and My Music
-    public static Dictionary<String, SpotifyData.Playlist> CurrentPlaylists { get; private set; }
+    public static Dictionary<String, SpotifyData.Playlist> CurrentPlaylistsByName { get; private set; }
+    public static Dictionary<String, SpotifyData.Playlist> CurrentPlaylistsById { get; private set; }
 
     /// <summary>
     /// Get the collection of named playlists, rebuilding from data on Spotify
@@ -746,18 +751,19 @@ public static class Spotify
     /// <returns></returns>
     public static IEnumerable<SpotifyData.Playlist> GetPlayLists()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
                 IAsyncEnumerable<SimplePlaylist> pagingPlaylist;
 
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    pagingPlaylist = WebAppService.Paginate(WebAppService.Playlists.GetUsers(webApiCurrentUserId).Result);
+                    pagingPlaylist = SpotifyService.Paginate(SpotifyService.Playlists.GetUsers(spotifyCurrentUserId).Result);
                 }
                 var playlists = MakePlaylists(pagingPlaylist);
-                CurrentPlaylists = playlists.ToDictionary(p => p.Name);
+                CurrentPlaylistsByName = playlists.ToDictionary(p => p.Name);
+                CurrentPlaylistsById = playlists.ToDictionary(p => p.Id);
                 return playlists;
             }
             catch (System.Exception ex)
@@ -777,14 +783,14 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Track> GetPlayListTracks(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
                 IAsyncEnumerable<PlaylistTrack<IPlayableItem>> tracks;
-                lock (webAppServiceLock)
+                lock (spotifyServiceLock)
                 {
-                    tracks = WebAppService.Paginate(WebAppService.Playlists.GetItems(SimplifyId(id)).Result);
+                    tracks = SpotifyService.Paginate(SpotifyService.Playlists.GetItems(SimplifyId(id)).Result);
                 }
                 return MakeTracks(tracks.Where(t=>t.Track.Type == ItemType.Track).Select(t=>t.Track as FullTrack), null);
             }
@@ -805,7 +811,7 @@ public static class Spotify
     public static IEnumerable<SpotifyData.Album> GetPlayListAlbums(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
@@ -837,13 +843,13 @@ public static class Spotify
     public static string AddPlayList(
         string name)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return WebAppService.Playlists.Create(webApiCurrentUserId, new PlaylistCreateRequest(name)).Result.Uri;
+                    return SpotifyService.Playlists.Create(spotifyCurrentUserId, new PlaylistCreateRequest(name)).Result.Uri;
                 }
                 catch (System.Exception ex)
                 {
@@ -862,14 +868,14 @@ public static class Spotify
     public static void DeletePlayList(
         string id)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
 
-                    var ok = WebAppService.Follow.UnfollowPlaylist(SimplifyId(id)).Result;
+                    var ok = SpotifyService.Follow.UnfollowPlaylist(SimplifyId(id)).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -888,15 +894,15 @@ public static class Spotify
         string id,
         string newName)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new PlaylistChangeDetailsRequest();
                     request.Name = newName;
-                    var ok = WebAppService.Playlists.ChangeDetails(SimplifyId(id), request).Result;
+                    var ok = SpotifyService.Playlists.ChangeDetails(SimplifyId(id), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -915,14 +921,14 @@ public static class Spotify
         string playlistId,
         string trackId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new PlaylistAddItemsRequest(new List<string> { GetFullTrack(trackId).Uri });
-                    var ok = WebAppService.Playlists.AddItems( SimplifyId(playlistId), request).Result;
+                    var ok = SpotifyService.Playlists.AddItems( SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -941,15 +947,15 @@ public static class Spotify
         string playlistId,
         string albumId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var tracks = GetTracksForAlbum(SimplifyId(albumId));
                     var request = new PlaylistAddItemsRequest(tracks.Select(t => t.Id).ToList());
-                    var ok = WebAppService.Playlists.AddItems(SimplifyId(playlistId), request).Result;
+                    var ok = SpotifyService.Playlists.AddItems(SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -968,16 +974,16 @@ public static class Spotify
         string playlistId,
         string trackId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new PlaylistRemoveItemsRequest();
                     request.Tracks = new PlaylistRemoveItemsRequest.Item[1];
                     request.Tracks[0].Uri = trackId;
-                    var ok = WebAppService.Playlists.RemoveItems( SimplifyId(playlistId), request).Result;
+                    var ok = SpotifyService.Playlists.RemoveItems( SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -996,16 +1002,16 @@ public static class Spotify
         string playlistId,
         string albumId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var tracks = GetTracksForAlbum(SimplifyId(albumId));
                     var request = new PlaylistRemoveItemsRequest();
                     request.Tracks = tracks.Select(t => new PlaylistRemoveItemsRequest.Item { Uri = t.Id } ).ToList();;
-                    var ok = WebAppService.Playlists.RemoveItems(SimplifyId(playlistId), request).Result;
+                    var ok = SpotifyService.Playlists.RemoveItems(SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -1044,14 +1050,14 @@ public static class Spotify
     public static void AddSavedAlbum(
         string albumId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new LibrarySaveAlbumsRequest(new List<string> { SimplifyId(albumId) });
-                    var ok = WebAppService.Library.SaveAlbums(request).Result;
+                    var ok = SpotifyService.Library.SaveAlbums(request).Result;
                     AllSavedAlbumList = null;
                 }
                 catch (System.Exception ex)
@@ -1069,14 +1075,14 @@ public static class Spotify
     public static void RemoveSavedAlbum(
         string albumId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new LibraryRemoveAlbumsRequest(new List<string> { SimplifyId(albumId) });
-                    var ok = WebAppService.Library.RemoveAlbums(request).Result;
+                    var ok = SpotifyService.Library.RemoveAlbums(request).Result;
                     AllSavedAlbumList = null;
                 }
                 catch (System.Exception ex)
@@ -1094,14 +1100,14 @@ public static class Spotify
     public static Boolean IsSavedAlbum(
         string albumId)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new LibraryCheckAlbumsRequest(new List<string> { SimplifyId(albumId) });
-                    var saveIndications = WebAppService.Library.CheckAlbums(request).Result;
+                    var saveIndications = SpotifyService.Library.CheckAlbums(request).Result;
                     return saveIndications.First();
                 }
                 catch (System.Exception ex)
@@ -1122,7 +1128,7 @@ public static class Spotify
     {
         if (playbackDevice == null)
         {
-            var devices = WebAppService.Player.GetAvailableDevices().Result;
+            var devices = SpotifyService.Player.GetAvailableDevices().Result;
             if (devices != null && devices.Devices != null)
             {
                 foreach (var dev in devices.Devices)
@@ -1161,16 +1167,19 @@ public static class Spotify
         string id,
         bool append = false)
     {
-        if (WebAppService != null)
+        var track = GetTrackById(id);
+        logger.Info($"Play track: '{track.Name}' [{track.AlbumArtistName}] (append={append})");
+
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     if (append)
                     {
                         var request = new PlayerAddToQueueRequest(id);
-                        return WebAppService.Player.AddToQueue(request).Result;
+                        return SpotifyService.Player.AddToQueue(request).Result;
                     }
                     else
                     {
@@ -1178,7 +1187,7 @@ public static class Spotify
                         request.DeviceId = GetPlaybackDevice();
                         request.Uris = new List<string> { id };
                         request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Position = 0 };
-                        return WebAppService.Player.ResumePlayback(request).Result;
+                        return SpotifyService.Player.ResumePlayback(request).Result;
                     }
                 }
                 catch (System.Exception ex)
@@ -1200,19 +1209,23 @@ public static class Spotify
         string id,
         bool append = false)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
                 if (append)
                 {
                     var tracks = GetTracksForAlbum(SimplifyId(id));
-                    lock (webAppServiceLock)
+                    if (tracks.Any())
+                    {
+                        logger.Info($"Append album '{tracks.First().AlbumName}' [{tracks.First().AlbumArtistName}]");
+                    }
+                    lock (spotifyServiceLock)
                     {
                         foreach (var t in tracks)
                         {
                             var request = new PlayerAddToQueueRequest(t.Id);
-                            if (!WebAppService.Player.AddToQueue(request).Result)
+                            if (!SpotifyService.Player.AddToQueue(request).Result)
                             {
                                 return false;
                             }
@@ -1222,13 +1235,15 @@ public static class Spotify
                 }
                 else
                 {
-                    lock (webAppServiceLock)
+                    lock (spotifyServiceLock)
                     {
+                        var album = MakeAlbum(GetFullAlbum(SimplifyId(id)));
+                        logger.Info($"Play album '{album.Name}' [{album.ArtistName}]");
                         var request = new PlayerResumePlaybackRequest();
                         request.DeviceId = GetPlaybackDevice();
                         request.ContextUri = id;
                         request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Position = 0 };
-                        return WebAppService.Player.ResumePlayback(request).Result;
+                        return SpotifyService.Player.ResumePlayback(request).Result;
                     }
                 }
 
@@ -1252,19 +1267,20 @@ public static class Spotify
         string id,
         bool append = false)
     {
-        if (WebAppService != null)
+        logger.Info($"Play playlist '{CurrentPlaylistsById[id].Name}'");
+        if (SpotifyService != null)
         {
             try
             {
                 if (append)
                 { 
                     var tracks = GetPlayListTracks(id);
-                    lock (webAppServiceLock)
+                    lock (spotifyServiceLock)
                     {
                         foreach (var t in tracks)
                         {
                             var request = new PlayerAddToQueueRequest(t.Id);
-                            if (!WebAppService.Player.AddToQueue(request).Result)
+                            if (!SpotifyService.Player.AddToQueue(request).Result)
                             {
                                 return false;
                             }
@@ -1274,15 +1290,15 @@ public static class Spotify
                 }
                 else
                 {
-                    lock (webAppServiceLock)
+                    lock (spotifyServiceLock)
                     {
-                        lock (webAppServiceLock)
+                        lock (spotifyServiceLock)
                         {
                             var request = new PlayerResumePlaybackRequest();
                             request.DeviceId = GetPlaybackDevice();
                             request.ContextUri = id;
                             request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Position = 0 };
-                            return WebAppService.Player.ResumePlayback(request).Result;
+                            return SpotifyService.Player.ResumePlayback(request).Result;
                         }
                     }
                 }
@@ -1303,14 +1319,14 @@ public static class Spotify
     /// <returns></returns>
     public static SpotifyData.Track GetCurrentTrack()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new PlayerCurrentlyPlayingRequest();
-                    var playingTrack = WebAppService.Player.GetCurrentlyPlaying(request).Result?.Item as FullTrack;
+                    var playingTrack = SpotifyService.Player.GetCurrentlyPlaying(request).Result?.Item as FullTrack;
                     return playingTrack == null ? null : MakeTrack(playingTrack);
                 }
                 catch (System.Exception ex)
@@ -1332,12 +1348,12 @@ public static class Spotify
     /// <returns></returns>
     public static IEnumerable<SpotifyData.Track> GetQueuedTracks()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
             try
             {
                 var request = new PlayerCurrentPlaybackRequest();
-                var playback = WebAppService.Player.GetCurrentPlayback(request).Result;
+                var playback = SpotifyService.Player.GetCurrentPlayback(request).Result;
                 if (playback?.Context != null)
                 {
                     if (playback.Context.Type == "album")
@@ -1369,12 +1385,12 @@ public static class Spotify
     public static SpotifyData.Track SkipToQueuedTrack(
         string id)
     {
-        var playback = WebAppService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
+        var playback = SpotifyService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
         var request = new PlayerResumePlaybackRequest();
         request.DeviceId = GetPlaybackDevice();
         request.ContextUri = playback.Context.Uri;
         request.OffsetParam = new PlayerResumePlaybackRequest.Offset { Uri = id };
-        var ok = WebAppService.Player.ResumePlayback(request).Result;
+        var ok = SpotifyService.Player.ResumePlayback(request).Result;
         return GetCurrentTrack();
     }
 
@@ -1395,13 +1411,13 @@ public static class Spotify
     /// <returns></returns>
     public static int Skip()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return WebAppService.Player.SkipNext().Result ? 0 : -1;
+                    return SpotifyService.Player.SkipNext().Result ? 0 : -1;
                 }
                 catch (System.Exception ex)
                 {
@@ -1418,13 +1434,13 @@ public static class Spotify
     /// <returns></returns>
     public static int Back()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return WebAppService.Player.SkipPrevious().Result ? 0 : -1;
+                    return SpotifyService.Player.SkipPrevious().Result ? 0 : -1;
                 }
                 catch (System.Exception ex)
                 {
@@ -1441,18 +1457,18 @@ public static class Spotify
     /// <returns></returns>
     public static int Play()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    var playback = WebAppService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
+                    var playback = SpotifyService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
                     if (!playback.IsPlaying && playback.Item != null)
                     {
                         var request = new PlayerResumePlaybackRequest();
                         request.DeviceId = GetPlaybackDevice();
-                        return WebAppService.Player.ResumePlayback(request).Result ? 0 : -1;
+                        return SpotifyService.Player.ResumePlayback(request).Result ? 0 : -1;
                     }
                     return 0;
                 }
@@ -1471,13 +1487,13 @@ public static class Spotify
     /// <returns></returns>
     public static int Pause()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return WebAppService.Player.PausePlayback().Result ? 0 : -1;
+                    return SpotifyService.Player.PausePlayback().Result ? 0 : -1;
                 }
                 catch (System.Exception ex)
                 {
@@ -1494,13 +1510,13 @@ public static class Spotify
     /// <returns>+ve: Playing; 0: Paused; -ve: Stolen by another session</returns>
     public static int GetPlaying()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    var playback = WebAppService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
+                    var playback = SpotifyService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
                     return playback == null ? -1 : playback.IsPlaying ? 1 : 0;
                 }
                 catch (System.Exception ex)
@@ -1518,13 +1534,14 @@ public static class Spotify
     /// <returns></returns>
     public static int Stop()
     {
-        if (webAppService != null)  //  Note the use of webAppService to avoid unnecessarily starting Spotify
+        logger.Info($"Stop");
+        if (spotifyService != null)  //  Note the use of webAppService to avoid unnecessarily starting Spotify
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    return WebAppService.Player.PausePlayback().Result ? 0 : -1;
+                    return SpotifyService.Player.PausePlayback().Result ? 0 : -1;
                 }
                 catch (System.Exception ex)
                 {
@@ -1541,13 +1558,13 @@ public static class Spotify
     /// <returns>Position in seconds</returns>
     public static int GetPosition()
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
-                    var playback = WebAppService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
+                    var playback = SpotifyService.Player.GetCurrentPlayback(new PlayerCurrentPlaybackRequest()).Result;
                     return playback == null ? -1 : playback.ProgressMs/1000;
                 }
                 catch (System.Exception ex)
@@ -1567,14 +1584,14 @@ public static class Spotify
     public static int SetPosition(
         int pos)
     {
-        if (WebAppService != null)
+        if (SpotifyService != null)
         {
-            lock (webAppServiceLock)
+            lock (spotifyServiceLock)
             {
                 try
                 {
                     var request = new PlayerSeekToRequest(pos*1000);
-                    return WebAppService.Player.SeekTo(request).Result ? pos : -1;
+                    return SpotifyService.Player.SeekTo(request).Result ? pos : -1;
                 }
                 catch (System.Exception ex)
                 {
@@ -1725,7 +1742,7 @@ public static class Spotify
         var count = albumIds.Count();
         foreach (var batch in albumIds.Batch(20))
         {
-            var albumBatch = WebAppService.Albums.GetSeveral(new AlbumsRequest(batch.ToList())).Result.Albums.Select(MakeAlbum);
+            var albumBatch = SpotifyService.Albums.GetSeveral(new AlbumsRequest(batch.ToList())).Result.Albums.Select(MakeAlbum);
             foreach (var album in albumBatch)
             {
                 yield return album;

@@ -279,9 +279,9 @@ namespace Avid5.Net.Controllers
             string playlistId,
             string playlistName)
         {
-            if (playlistId == null && Spotify.CurrentPlaylists.ContainsKey(playlistName))
+            if (playlistId == null && Spotify.CurrentPlaylistsByName.ContainsKey(playlistName))
             {
-                playlistId = Spotify.CurrentPlaylists[playlistName].Id;
+                playlistId = Spotify.CurrentPlaylistsByName[playlistName].Id;
             }
             if (playlistId == null)
             {
@@ -297,9 +297,9 @@ namespace Avid5.Net.Controllers
             string playlistId,
             string playlistName)
         {
-            if (playlistId == null && Spotify.CurrentPlaylists.ContainsKey(playlistName))
+            if (playlistId == null && !string.IsNullOrEmpty(playlistName) && Spotify.CurrentPlaylistsByName.ContainsKey(playlistName))
             {
-                playlistId = Spotify.CurrentPlaylists[playlistName].Id;
+                playlistId = Spotify.CurrentPlaylistsByName[playlistName].Id;
             }
             if (playlistId == null && !string.IsNullOrEmpty(playlistName))
             {
