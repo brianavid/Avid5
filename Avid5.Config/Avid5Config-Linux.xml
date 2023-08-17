@@ -1,0 +1,12 @@
+<Config>
+	<Recordings>/hdd/TV Recordings</Recordings>
+	<OldRecordings>/hdd/Recorded TV</OldRecordings>
+	<!--DVD>/hdd/DVD</DVD--> <!-- DVDs don't work in JRMC on Linux -->
+	<Video>/hdd/Video</Video>
+	
+	<ReceiverAddress>192.168.1.194</ReceiverAddress>
+	<RokuAddress>192.168.1.200</RokuAddress>
+	
+	<SpotifyMarket>GB</SpotifyMarket>
+	<CECClientPath>/usr/bin/cec-client</CECClientPath>
+</Config>

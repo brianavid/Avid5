@@ -11,7 +11,6 @@ public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 	static string ClientPath = Config.CECClientPath;
-	static HttpClient cecControlHttpClient = String.IsNullOrEmpty(ClientPath) ? new HttpClient() : null;
 
 	//	If during initialisation, the RunCECControlProcess mechanism fails,
 	//	this is most likely to be the result of side-by-side operation with Avid4.
@@ -88,25 +87,7 @@ public static class Screen
 			}
 
 		}
-		try
-		{
-			if (cecControlHttpClient != null)
-			{
-				Uri requestUri = new Uri("http://localhost:5099/Cec/" + (wait ? "Get" : "Do") + "?parm=" + HttpUtility.UrlEncode(command));
-				logger.Info($"{requestUri}");
-				//make the sync GET request
-				using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
-				{
-					var response = cecControlHttpClient.Send(request);
-					response.EnsureSuccessStatusCode();
-					return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
-				}
-			}
-		}
-		catch (System.Exception ex)
-		{
-			logger.Error(ex);
-		}
+
 		return "";
 	}
 

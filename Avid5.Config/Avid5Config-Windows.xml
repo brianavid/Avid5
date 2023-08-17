@@ -1,0 +1,12 @@
+<Config>
+	<Recordings>D:\Video\JRiver\TV Recording</Recordings>
+	<OldRecordings>D:\Recorded TV</OldRecordings>
+	<DVD>D:\DVD</DVD>
+	<Video>D:\Video</Video>
+	
+	<ReceiverAddress>192.168.1.194</ReceiverAddress>
+	<RokuAddress>192.168.1.200</RokuAddress>
+	
+	<SpotifyMarket>GB</SpotifyMarket>
+	<CECControlPath>C:\Program Files (x86)\Pulse-Eight\USB-CEC Adapter\cec-client.exe</CECControlPath>
+</Config>
