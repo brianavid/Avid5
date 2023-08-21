@@ -136,13 +136,13 @@ public static class Roku
             }
             if (info.ContainsKey("duration"))
             {
-                var ms = int.Parse(info["duration"].TakeWhile(c => char.IsDigit(c)).ToString());
-                durationDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString("mm:ss");
+                var ms = int.Parse(info["duration"].TakeWhile(c => char.IsDigit(c)).ToArray());
+                durationDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString(@"mm\:ss");
             }
         }
         return new XElement("Info", new List<XAttribute> {
             new XAttribute("state", stateDisplay ),
-            new XAttribute("position", String.IsNullOrEmpty(durationDisplay) ? positionDisplay : positionDisplay + "/" + durationDisplay )
+            new XAttribute("position", String.IsNullOrEmpty(durationDisplay) ? positionDisplay : positionDisplay + " / " + durationDisplay )
         });
     }
 
