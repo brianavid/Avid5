@@ -656,7 +656,7 @@ public class VideoTV
     static bool IsScheduled(
         string programmeId)
     {
-        return schedule != null && schedule.Values.Any(t => t.EventId == programmeId);
+        return Schedule != null && Schedule.Values.Any(t => t.EventId == programmeId);
     }
 
     public static Dictionary<string, Recording> AllRecordings;
@@ -832,14 +832,17 @@ public class VideoTV
             return null;
         }
 
-        if (!epgProgrammesByChannel.ContainsKey(channel.Name))
+        lock (channel)
         {
-            epgProgrammesByChannel[channel.Name] =
-                allProgrammes.Where(p => p.Channel==channel && !p.InError);
-
-            foreach (var programme in epgProgrammesByChannel[channel.Name])
+            if (!epgProgrammesByChannel.ContainsKey(channel.Name))
             {
-                epgProgrammesByIdAndChannel[MakeIdAndChannelKey(programme.Id, channel.Name)] = programme;
+                epgProgrammesByChannel[channel.Name] =
+                    allProgrammes.Where(p => p.Channel == channel && !p.InError).OrderBy(p => p.StartTime);
+
+                foreach (var programme in epgProgrammesByChannel[channel.Name])
+                {
+                    epgProgrammesByIdAndChannel[MakeIdAndChannelKey(programme.Id, channel.Name)] = programme;
+                }
             }
         }
 
@@ -927,9 +930,9 @@ public class VideoTV
         if (programme != null)
         {
             JRMC.GetXml(JRMC.Url + $"Television/SetRecording?RuleName={programme.Title}&RecType=1&ProgKey={programme.Id}&Channels={programme.Channel.Key}&ExtBefore=5&ExtAfter=10");
+            LoadSchedule();
             if (isSeries)
             {
-                LoadSchedule();
                 var timer = Schedule.Values.FirstOrDefault(t => t.EventId == programme.Id);
 
                 if (timer != null)
