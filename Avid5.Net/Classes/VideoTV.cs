@@ -169,7 +169,7 @@ public class VideoTV
         {
             get
             {
-                return false;
+                return StartTime >= DateTime.UtcNow && StartTime + Duration <= DateTime.UtcNow;
             }
         }
     }
