@@ -41,6 +41,14 @@ function UpdateTvDisplayPlayingInformation() {
                 $("#tvPlaybackCurrentStatus").text(pos.getAttribute("state"));
                 PositionMS = parseInt(pos.getAttribute("positionMS"))
                 DurationMS = parseInt(pos.getAttribute("durationMS"))
+                if (pos.getAttribute("isRecording") === "True") {
+                    $("#Record").hide();
+                    $("#IsRecording").show();
+                }
+                else {
+                    $("#Record").show();
+                    $("#IsRecording").hide();
+                }
                 updateSlider()
             }
         }
@@ -353,5 +361,6 @@ $(function () {
     $("#displayTvRadio").click(DisplayTvRadio);
 
     // update again every few seconds
+    UpdateTvDisplayPlayingInformation();
     setInterval("UpdateTvDisplayPlayingInformation()", 2000);
 })

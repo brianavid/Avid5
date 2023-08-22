@@ -142,7 +142,8 @@ namespace Avid5.Net.Controllers
                     new XAttribute("durationMS", info["DurationMS"]),
                     new XAttribute("channel", currentlyWatching != null ? currentlyWatching.ChannelName : ""),
                     new XAttribute("now", nowTitle),
-                    new XAttribute("next", nextStart + ": " + nextTitle)));
+                    new XAttribute("next", nextStart + ": " + nextTitle),
+                    new XAttribute("isRecording", (currentlyWatching != null && currentlyWatching.IsScheduled).ToString())));
                 return this.Content(doc.ToString(), @"text/xml", Encoding.UTF8);
             }
 

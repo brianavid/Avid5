@@ -16,14 +16,8 @@
         <table class="width100">
             <tr>
                 <td class="centeredButton">
-                    @if (currentlyWatching != null && currentlyWatching.IsScheduled)
-                    {
-                        <div class="tvProgrammeIsRecord">[Rec]</div>
-                    }
-                    else
-                    {
-                        <img class="tvProgrammeRecord" id="Record" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
-                    }
+                    <div class="tvProgrammeIsRecord startHidden" id="IsRecording">Recording</div>
+                    <img class="tvProgrammeRecord" id="Record" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
                 </td>
                 <td class="centeredButton"><img id="tvPlayPause" src="~/Content/Buttons/PlayPauseButton.png" /></td>
                 <td class="centeredButton"><img id="tvStop" src="~/Content/Buttons/Transport.Stop.png" /></td>
