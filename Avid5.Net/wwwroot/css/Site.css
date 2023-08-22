@@ -123,8 +123,15 @@ textarea {
 }
 
 .centeredButton {
-    text-align:center;
+    text-align: center;
+}
 
+.alignLeft {
+    text-align: left;
+}
+
+.alignRight {
+    text-align: right;
 }
 
 .searchText, .rokuText, .spotifyBrowserPlaylistNewName {

@@ -41,12 +41,23 @@
         </table>
         <br />
         <br />
+
         <table class='width100'>
             <tr>
-                <td class="centeredButton tvPlaybackStatus width30">@VideoTV.GetPlaybackInfo("Status")</td>
-                <td class="centeredButton tvPlaybackStatus width40">@VideoTV.GetPlaybackInfo("RemainingTimeDisplay")</td>
-                <td class="centeredButton tvPlaybackStatus width30">&nbsp;</td>
+                <td class="tvPlaybackStatus width30">&nbsp;</td>
+                <td class="tvPlaybackStatus width40"><span id="tvPlaybackCurrentStatus">&nbsp;</span></td>
+                <td class="tvPlaybackStatus width30">&nbsp;</td>
             </tr>
         </table>
+        <table class='width100'>
+            <tr>
+                <td class="tvPlaybackStatus alignLeft width30"><span id="tvPlaybackStartTime">&nbsp;</span></td>
+                <td class="tvPlaybackStatus width40"><span id="tvPlaybackPositionTime">&nbsp;</span></td>
+                <td class="tvPlaybackStatus alignRight width30"><span id="tvPlaybackEndTime">&nbsp;</span></td>
+            </tr>
+        </table>
+        <div>
+            <div id="liveTvPosSlider" class="liveTvPosSlider noUiSlider">&nbsp;</div>
+        </div>
     }
 </div>

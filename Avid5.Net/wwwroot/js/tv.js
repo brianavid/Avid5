@@ -1,4 +1,73 @@
-﻿var controlHammer = null;
+﻿var PositionMS = 0;
+var DurationMS = 0;
+var slidingTime = new Date(0);
+var posSlider = null;
+var lastDisplayUpdate = new Date();
+
+function updateSlider() {
+    var now = new Date();
+    if (now.getTime() - slidingTime.getTime() > 5 * 1000 && DurationMS > 0 && PositionMS <= DurationMS) {
+        var sliderValue = Math.round((PositionMS * 200) / DurationMS);
+        $("#liveTvPosSlider").val(sliderValue)
+    }
+}
+
+function UpdateTvDisplayPlayingInformation() {
+    var now = new Date();
+    if (now.getTime() - lastDisplayUpdate.getTime() > 10 * 1000) {
+        lastDisplayUpdate = now;
+        return;
+    }
+
+    lastDisplayUpdate = now;
+    if (overlayVisible || !navigator.onLine) {
+        return;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/Tv/GetLiveTVPlayingPositionInfo",
+        timeout: 700,
+        cache: false,
+        success: function (xml) {
+            if (xml != null) {
+                var pos = xml.documentElement;
+                $("#tvCurrentChannelName").text(pos.getAttribute("channel"));
+                $("#tvCurrentProgramme").text(pos.getAttribute("now"));
+                $("#tvNextPrograme").text(pos.getAttribute("next"));
+                $("#tvPlaybackStartTime").text(pos.getAttribute("startDisplay"));
+                $("#tvPlaybackPositionTime").text(pos.getAttribute("positionDisplay"));
+                $("#tvPlaybackEndTime").text(pos.getAttribute("endDisplay"));
+                $("#tvPlaybackCurrentStatus").text(pos.getAttribute("state"));
+                PositionMS = parseInt(pos.getAttribute("positionMS"))
+                DurationMS = parseInt(pos.getAttribute("durationMS"))
+                updateSlider()
+            }
+        }
+    });
+}
+
+$("#liveTvPosSlider").noUiSlider({
+    range: [0, 200]
+    , start: 0
+    , step: 1
+    , handles: 1
+    , slide: function () {
+        slidingTime = new Date();
+        var pos = Math.floor($(this).val());
+        PositionMS = pos * DurationMS / 200;
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Position?Position=" + PositionMS),
+            success: function (data) {
+                UpdateTvDisplayPlayingInformation()
+            },
+           cache: false
+        })
+    }
+});
+
+
+var controlHammer = null;
 
 function AddControlHammerActions(controlUnderButtons) {
     if (!controlUnderButtons)
@@ -16,7 +85,7 @@ function AddControlHammerActions(controlUnderButtons) {
         $.ajax({
             url: "/Tv/Action?command=" + this.id,
             success: function (data) {
-                DisplayRunningOnControlPad(false)
+                UpdateTvDisplayPlayingInformation()
             },
             cache: false
         });
@@ -28,7 +97,7 @@ function AddControlHammerActions(controlUnderButtons) {
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Position?Position=60000&Relative=-1"),
             success: function (data) {
                 PositionMS -= 60000;
-                UpdatePositionDisplay();
+                UpdateTvDisplayPlayingInformation();
             },
             cache: false
         })
@@ -40,7 +109,7 @@ function AddControlHammerActions(controlUnderButtons) {
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Position?Position=10000&Relative=-1"),
             success: function (data) {
                 PositionMS -= 10000;
-                UpdatePositionDisplay();
+                UpdateTvDisplayPlayingInformation();
             },
             cache: false
         })
@@ -52,7 +121,7 @@ function AddControlHammerActions(controlUnderButtons) {
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Position?Position=10000&Relative=1"),
             success: function (data) {
                 PositionMS += 10000;
-                UpdatePositionDisplay();
+                UpdateTvDisplayPlayingInformation();
             },
             cache: false
         })
@@ -64,7 +133,7 @@ function AddControlHammerActions(controlUnderButtons) {
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Position?Position=60000&Relative=1"),
             success: function (data) {
                 PositionMS += 60000;
-                UpdatePositionDisplay();
+                UpdateTvDisplayPlayingInformation();
             },
             cache: false
         })
@@ -73,6 +142,9 @@ function AddControlHammerActions(controlUnderButtons) {
     controlHammer.on("touch", "#tvPlayPause", function (e) {
         $.ajax({
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/PlayPause"),
+            success: function (data) {
+                UpdateTvDisplayPlayingInformation();
+            },
             cache: false
         })
     });
@@ -80,14 +152,20 @@ function AddControlHammerActions(controlUnderButtons) {
     controlHammer.on("hold", "#tvPlayPause", function (e) {
         $.ajax({
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Stop"),
-            cache: false
+            success: function (data) {
+                UpdateTvDisplayPlayingInformation();
+            },
+           cache: false
         })
     });
 
     controlHammer.on("touch", "#tvStop", function (e) {
         $.ajax({
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Playback/Stop"),
-           cache: false
+            success: function (data) {
+                UpdateTvDisplayPlayingInformation();
+            },
+          cache: false
         })
     });
 
@@ -96,7 +174,7 @@ function AddControlHammerActions(controlUnderButtons) {
         $.ajax({
             url: "/Tv/RecordNow",
             success: function (data) {
-                DisplayRunningOnControlPad(false)
+                UpdateTvDisplayPlayingInformation()
             },
             cache: false
         });
@@ -123,7 +201,7 @@ function AddButtonsHammerActions(controlHeight) {
         $.ajax({
             url: "/Tv/Action?command=" + this.id,
             success: function (data) {
-                DisplayRunningOnControlPad(false)
+                UpdateTvDisplayPlayingInformation()
             },
             cache: false
         });
@@ -170,7 +248,9 @@ function AddChannelsHammerActions() {
         $.ajax({
             url: "/Tv/ChangeChannel?channelKey=" + encodeURIComponent(this.id),
             success: function (data) {
-                DisplayRunningOnControlPad(true)
+                if (document.getElementById("tvControlPane") == null) {
+                    LinkTo("/Tv/Watch");
+                }
             },
             cache: false
         });
@@ -253,7 +333,7 @@ $(function () {
     AddChannelsHammerActions()
 
     $("#goTvWatch").click(function () {
-        DisplayRunningOnControlPad(true)
+        LinkTo("/Tv/Watch");
     });
 
     $("#goTvTv").click(function () {
@@ -273,5 +353,5 @@ $(function () {
     $("#displayTvRadio").click(DisplayTvRadio);
 
     // update again every few seconds
-    setInterval("DisplayRunningOnControlPad(false)", 2000);
+    setInterval("UpdateTvDisplayPlayingInformation()", 2000);
 })

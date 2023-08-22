@@ -1002,10 +1002,21 @@ public class VideoTV
                 return dict[key];
             }
         }
-		return "";
-	}
+        return "";
+    }
 
-	public static bool IsWatchingTv
+    public static Dictionary<string,string> GetAllPlaybackInfo()
+    {
+        var info = JRMC.GetXml(JRMC.Url + "Playback/Info");
+        if (info != null)
+        {
+            var dict = MakeDict(info.Root);
+            return dict;
+        }
+        return new Dictionary<string, string>(); ;
+    }
+
+    public static bool IsWatchingTv
     {
         get
         {

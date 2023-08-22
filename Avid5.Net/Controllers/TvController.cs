@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NLog;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Avid5.Net.Controllers
 {
@@ -115,6 +117,35 @@ namespace Avid5.Net.Controllers
                     VideoTV.AddTimer(now);
                 }
             }
+            return this.Content("");
+        }
+
+        // GET: /Tv/GetLiveTVPlayingPositionInfo
+        public ContentResult GetLiveTVPlayingPositionInfo()
+        {
+            var info = VideoTV.GetAllPlaybackInfo();
+            if (info != null)
+            {
+                var currentlyWatching = VideoTV.CurrentlyWatching;
+                var nowAndNext = currentlyWatching != null ? VideoTV.GetNowAndNext(currentlyWatching.Channel) : null;
+                var nowTitle = nowAndNext != null && nowAndNext.Count() > 0 ? nowAndNext.First().Title : "";
+                var nextStart = nowAndNext != null && nowAndNext.Count() > 1 ? nowAndNext.Skip(1).First().StartTime.ToLocalTime().ToShortTimeString() : "";
+                var nextTitle = nowAndNext != null && nowAndNext.Count() > 1 ? nowAndNext.Skip(1).First().Title : "";
+                var startTime = DateTime.Now - TimeSpan.FromMilliseconds(int.Parse(info["DurationMS"]));
+                var positionTime = startTime + TimeSpan.FromMilliseconds(int.Parse(info["PositionMS"]));
+                var doc = new XDocument(new XElement("Position",
+                    new XAttribute("state", info["Status"]),
+                    new XAttribute("startDisplay", startTime.ToString("HH:mm:ss")),
+                    new XAttribute("endDisplay", DateTime.Now.ToString("HH:mm:ss")),
+                    new XAttribute("positionDisplay", positionTime.ToString("HH:mm:ss")),
+                    new XAttribute("positionMS", info["PositionMS"]),
+                    new XAttribute("durationMS", info["DurationMS"]),
+                    new XAttribute("channel", currentlyWatching != null ? currentlyWatching.ChannelName : ""),
+                    new XAttribute("now", nowTitle),
+                    new XAttribute("next", nextStart + ": " + nextTitle)));
+                return this.Content(doc.ToString(), @"text/xml", Encoding.UTF8);
+            }
+
             return this.Content("");
         }
 
