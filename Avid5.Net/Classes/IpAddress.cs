@@ -18,19 +18,30 @@ public class IpAddress
     /// <remarks>
     /// For simplicity, this is based on a textual representation of IPV4 or IPV6 addresses.
     /// In the future, this could perhaps be determined with more of an understanding of the address formats
+    /// This takes account of router forwarding and reverse proxy forwarding
     /// </remarks>
     /// <param name="address"></param>
     /// <returns></returns>
     public static bool IsLanIP(HttpContext context)
     {
-        var address = context.Connection.RemoteIpAddress.ToString().ToLower();
+        const string RedirHeader = "X-Forwarded-For";
+        try
+        {
+            var address = context.Connection.RemoteIpAddress.ToString().ToLower();
+            if (context.Request.Headers.ContainsKey(RedirHeader))
+            {
+                address = context.Request.Headers[RedirHeader];
+                if (IPEndPoint.TryParse(address, out IPEndPoint ipEndPoint)) { address = ipEndPoint.Address.ToString(); }
+            }
 
-        return address == "127.0.0.1" ||        //  IPV4 local machine
-               address == "::1" ||              //  IPV6 local machine
-               address.StartsWith("192.168.") ||//  IPV4 local addresses as used in domestic routers
-               address.StartsWith("fc") ||      //  IPV6 fc/7 Unique Local address range
-               address.StartsWith("fd") ||      //  IPV6 fc/7 Unique Local address range
-               address.StartsWith("fe");        //  IPV6 fe/7 Unique Local address range
+            return address == "127.0.0.1" ||        //  IPV4 local machine
+                   address == "::1" ||              //  IPV6 local machine
+                   address.StartsWith("192.168.") ||//  IPV4 local addresses as used in domestic routers
+                   address.StartsWith("fc") ||      //  IPV6 fc/7 Unique Local address range
+                   address.StartsWith("fd") ||      //  IPV6 fc/7 Unique Local address range
+                   address.StartsWith("fe");        //  IPV6 fe/7 Unique Local address range
+        }
+        catch { return false; }
     }
 
 #if MORE_ALGORITHMIC_DETERMINATION
