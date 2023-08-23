@@ -21,7 +21,10 @@ public static class Spotify
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-	static HttpClient httpClient = new HttpClient();
+    //  A publicly available URI running thew OAUTH authentication with the necessary Client Secret
+    private const string AuthenticatorUri = "http://brianavid.dnsalias.com:88/Auth/";
+
+    static HttpClient httpClient = new HttpClient();
 
 	static SpotifyClient spotifyService = null;
     static DateTime spotifyApiExpiry = DateTime.Now;
@@ -41,6 +44,11 @@ public static class Spotify
 
     static string PreferredMarket = Config.SpotifyMarket ?? "GB";
 
+    public static bool HasAuthenticated
+    {
+        get { return !string.IsNullOrEmpty(Config.ReadValue("SpotifyRefreshUrl")); }
+    }
+
     /// <summary>
     /// Initialize and memoize the we API service using the authentication token stored in the registry
     /// </summary>
@@ -55,13 +63,13 @@ public static class Spotify
                     logger.Info("Connecting and authenticating to Spotify Web API");
 	                try
 	                {
-	                    string refreshUrl = Config.ReadValue("SpotifyRefreshUrl") as string;
+	                    string refreshUrl = Config.ReadValue("SpotifyRefreshUrl");
 
 	                    if (!string.IsNullOrEmpty(refreshUrl))
 		                {
                             string tokenJsonString = null;
 
-                            //make the sync GET request
+                            //make the sync GET request to the refresh URL to get an up-to-date access token and a new refresh token
                             using (var request = new HttpRequestMessage(HttpMethod.Get, refreshUrl))
                             {
                                 request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
@@ -69,12 +77,20 @@ public static class Spotify
                                 response.EnsureSuccessStatusCode();
                                 tokenJsonString = new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
                             }
+
 		                    if (!string.IsNullOrEmpty(tokenJsonString))
 		                    {
-                                tokenJsonString = tokenJsonString.Replace("access_token", "AccessToken").Replace("expires_in", "ExpiresIn").Replace("token_type", "TokenType");
+                                //  The token returned (passed through from Spotify) has different JSON representations than in the 
+                                //  AuthorizationCodeTokenResponse structure.
+                                tokenJsonString = tokenJsonString.
+                                    Replace("access_token", "AccessToken").
+                                    Replace("expires_in", "ExpiresIn").
+                                    Replace("token_type", "TokenType");
                                 AuthorizationCodeTokenResponse token = JsonConvert.DeserializeObject<AuthorizationCodeTokenResponse>(tokenJsonString);
+
 		                        if (!string.IsNullOrEmpty(token.AccessToken) && !string.IsNullOrEmpty(token.TokenType))
 		                        {
+                                    //  Replace the parameter value in the existing refresh URL with the newly updated RefreshToken
                                     if (!string.IsNullOrEmpty(token.RefreshToken))
                                     {
                                         var equalsPos = refreshUrl.LastIndexOf('=');
@@ -83,6 +99,7 @@ public static class Spotify
                                             var newRefreshUrl = refreshUrl.Substring(0, equalsPos + 1) + token.RefreshToken;
                                             if (newRefreshUrl != refreshUrl)
                                             {
+                                                //  Save the new refresh URL back into persistent storage
                                                 try
                                                 {
 	                                                Config.SaveValue("SpotifyRefreshUrl", newRefreshUrl);
@@ -95,7 +112,11 @@ public static class Spotify
                                             }
                                         }
                                     }
-                                    spotifyApiExpiry = DateTime.Now.AddSeconds(token.ExpiresIn * 4 / 5);    // Only use the token for 80% of its promised life
+
+                                    // Only use the token for 80% of its promised life
+                                    spotifyApiExpiry = DateTime.Now.AddSeconds(token.ExpiresIn * 4 / 5);
+
+                                    //  Now create a SpotifyClient with the authenticated access token
                                     spotifyClientConfig = SpotifyClientConfig.
                                         CreateDefault(token.AccessToken).
                                         WithRetryHandler(new SimpleRetryHandler() { RetryAfter = TimeSpan.FromSeconds(1) });
@@ -104,7 +125,6 @@ public static class Spotify
                                     spotifyCurrentUserId = spotifyService.UserProfile.Current().Result.Id.ToString();
                                     logger.Info("Connected and authenticated {0} to Spotify Web API (expires at {1})",
                                         spotifyCurrentUserId, spotifyApiExpiry.ToShortTimeString());
-
                                 }
                                 else
 	                            {
@@ -151,7 +171,7 @@ public static class Spotify
                 logger.Info("Probing Authentication API");
                 try
                 {
-                    string requestUri = "http://brianavid.dnsalias.com:88/Auth/Probe";
+                    string requestUri = AuthenticatorUri + "Probe";
                     using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                     {
                         var response = httpClient.Send(request);
@@ -1891,8 +1911,6 @@ public static class Spotify
     #endregion
 
     //  This URL (hopefully permanently running) will be used to authenticate Avid5 instances
-    const string RedirectUri = "http://brianavid.dnsalias.com:88/Auth/";
-
     public static void Authenticate()
     {
         try
@@ -1900,7 +1918,7 @@ public static class Spotify
             //  My own web server has an authenticator with the client secret for my developer client ID
             const string ClientId = "b2d4e764bb8c49f39f1211dfc6b71b34";
 
-            var auth = new LoginRequest(new Uri(RedirectUri + "Authenticate"), ClientId, SpotifyAPI.Web.LoginRequest.ResponseType.Code)
+            var auth = new LoginRequest(new Uri(AuthenticatorUri + "Authenticate"), ClientId, SpotifyAPI.Web.LoginRequest.ResponseType.Code)
             {
                 //How many permissions we need? Ask for the lot!
                 Scope = new[] {
@@ -1935,10 +1953,10 @@ public static class Spotify
             };
             System.Diagnostics.Process.Start(psi);
 
-            //  Try for two minutes to get the RefreshToken constructed as part of the OAUTH exchange
+            //  Try for two minutes to get the RefreshToken constructed as part of the OAUTH exchange with the browser
             for (int i = 0; i < 120; i++)
             {
-                using (var request = new HttpRequestMessage(HttpMethod.Get, RedirectUri + "GetLastRefreshToken"))
+                using (var request = new HttpRequestMessage(HttpMethod.Get, AuthenticatorUri + "GetLastRefreshToken"))
                 {
                     request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
                     using (HttpResponseMessage response = httpClient.Send(request))
@@ -1949,7 +1967,7 @@ public static class Spotify
                         {
                             //  Save the required authentication refresh URL so that the 
                             //  Avid5 web app can authenticate using the same credentials
-                            Config.SaveValue("SpotifyRefreshUrl", RedirectUri + "Refresh?refresh_token=" + lastRefreshToken);
+                            Config.SaveValue("SpotifyRefreshUrl", AuthenticatorUri + "Refresh?refresh_token=" + lastRefreshToken);
                             logger.Info("Authenticated to Spotify Web API");
                             break;
                         }
