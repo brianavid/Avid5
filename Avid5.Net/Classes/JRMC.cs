@@ -293,7 +293,8 @@ public class JRMC
     /// <param name="url"></param>
     /// <returns></returns>
     static public XDocument GetXml(
-        string url)
+        string url,
+        bool mayFail = false)
     {
         Uri requestUri = new Uri(url);
 
@@ -305,6 +306,7 @@ public class JRMC
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                 {
                     var response = httpClient.Send(request);
+                    if (mayFail && response.StatusCode == HttpStatusCode.InternalServerError) return null; // known bug in Television/GetRecordingScheduleXML
                     response.EnsureSuccessStatusCode();
 					return XDocument.Load(new StreamReader(response.Content.ReadAsStream()));
                 }

@@ -183,10 +183,10 @@ public class VideoTV
     {
         public String Id { get; private set; }
         private string Name { get; set; }
+        private string Series { get; set; }
         public String Title { get 
              {
-                string series;
-                return Info.TryGetValue("Series", out series) && series != Name ? series + ": " + Name : Name;
+                return Series != Name ? Series + ": " + Name : Name;
             } 
         }
         public String Description { get { return Info["Description"]; } }
@@ -225,6 +225,7 @@ public class VideoTV
                 Channel = AllChannels[xProg.Element("TV_Channel").Value];
                 StartTime = ParsePythonDateTimeString(xProg.Element("Date_Recorded").Value);
                 StopTime = StartTime.AddSeconds(int.Parse(xProg.Element("Duration").Value));
+                Series = xProg.Elements("Series").Any() ? xProg.Element("Series").Value : Name;
                 InError = false;
             }
             catch (System.Exception ex)
@@ -635,7 +636,7 @@ public class VideoTV
     /// </summary>
     public static void LoadSchedule()
     {
-        var xml = JRMC.GetXml(JRMC.Url + "Television/GetRecordingScheduleXML");
+        var xml = JRMC.GetXml(JRMC.Url + "Television/GetRecordingScheduleXML", mayFail: true);
         if (xml != null && xml.Root.Elements("Item").Count() > 0)
         {
             var scheduleXml = XDocument.Parse("<Item>\n" + xml.Root.Element("Item").Value + "\n</Item>");
