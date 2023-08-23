@@ -9,8 +9,7 @@
     @Html.Raw(Render.Script("spotify"))
 }
 
-<script type="text/javascript">var JrmcUrl = '@JRMC.Url'; var JrmcHost = '@JRMC.Host';</script>
-
+<script type="text/javascript">var HasAuthenticated = @(Spotify.HasAuthenticated ? 1 : 0);</script>
 <div id="spotifyPanes">
     <div id ="spotifyLeftPane">
        <div id="spotifyBrowserPane">

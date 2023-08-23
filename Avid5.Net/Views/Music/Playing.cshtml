@@ -8,7 +8,6 @@
     @Html.Raw(Render.Script("music"))
 }
 
-<script type="text/javascript">var JrmcUrl = '@JRMC.Url'; var JrmcHost = '@JRMC.Host';</script>
 @await Html.PartialAsync("PaneButtons")
 <div class="musicPlayback">
     @await Html.PartialAsync("PlayingPane")

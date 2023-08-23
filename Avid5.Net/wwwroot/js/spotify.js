@@ -735,6 +735,11 @@ function AddBrowserHammerActions() {
 }
 
 $(function () {
+
+    if (!HasAuthenticated) {
+        alert("Spotify won't work unless you Login. You only need do this once");
+    }
+
     var controlHeight = 0;
 
     $("#spotifyControlPane").each(function () {
