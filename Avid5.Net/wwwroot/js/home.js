@@ -1,6 +1,10 @@
 ﻿
 $(function () {
 
+    if (window.innerWidth > 768) {
+        LinkTo("/Home/Wide");
+    }
+
     $("#selectMusic").mousedown(function () {
         StopSwitching();
         LaunchProgram("Music", "/Music/Playing");

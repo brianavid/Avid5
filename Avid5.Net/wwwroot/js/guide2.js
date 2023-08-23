@@ -1,4 +1,11 @@
-﻿var selectorDateHammer = null;
+﻿window.onresize = GuideWindowResized
+
+function GuideWindowResized() {
+    StopSwitching();
+    LinkTo(window.innerWidth > 768 ? "/Guide/BrowserWide?mode=GuideRoot" : "/Guide/Browser?mode=GuideRoot");
+}
+
+var selectorDateHammer = null;
 var selectorChannelHammer = null;
 
 var selectedDate = null;
@@ -9,7 +16,6 @@ function ResetSelectors() {
     $(".guideEpgSelectedDate").removeClass("guideEpgSelectedDate")
     selectedDate = null;
     selectedChannel = null;
-
 }
 
 function ScrollListingsToEnd() {

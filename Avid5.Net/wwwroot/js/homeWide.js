@@ -1,5 +1,8 @@
 ﻿
 $(function () {
+    if (window.innerWidth <= 768) {
+        LinkTo("/Home/Home");
+    }
 
     $("#selectMusic").mousedown(function () {
         StopSwitching();
