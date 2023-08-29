@@ -232,6 +232,7 @@ $(function () {
 
 var overlayVisible = false;
 var lastWake = new Date();
+var lastWidth = 0;
 if (document.referrer == null || document.referrer == "")
 {
     lastWake = new Date(0);
@@ -251,8 +252,12 @@ else
 window.onresize = WindowResized
 
 function WindowResized() {
-    lastWake = new Date(0);
-    SwitchPanelAfterWake (window.innerWidth > 768)
+    if ((lastWidth > 768) != (window.innerWidth > 768)) {
+        lastWake = new Date(0);
+        $("#topBarTitle").text("")
+        SwitchPanelAfterWake(window.innerWidth > 768)
+    }
+    lastWidth = window.innerWidth;
 }
 
 function OverlayScreen() {
