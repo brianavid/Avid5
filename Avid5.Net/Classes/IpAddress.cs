@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,8 @@ using System.Web;
 /// </summary>
 public class IpAddress
 {
+    static Logger logger = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     /// Is this a local LAN address
     /// </summary>
@@ -31,15 +34,25 @@ public class IpAddress
             if (context.Request.Headers.ContainsKey(RedirHeader))
             {
                 address = context.Request.Headers[RedirHeader];
-                if (IPEndPoint.TryParse(address, out IPEndPoint ipEndPoint)) { address = ipEndPoint.Address.ToString(); }
+                if (IPEndPoint.TryParse(address, out IPEndPoint ipEndPoint)) 
+                { 
+                    address = ipEndPoint.Address.ToString().ToLower(); 
+                }
             }
 
-            return address == "127.0.0.1" ||        //  IPV4 local machine
-                   address == "::1" ||              //  IPV6 local machine
-                   address.StartsWith("192.168.") ||//  IPV4 local addresses as used in domestic routers
-                   address.StartsWith("fc") ||      //  IPV6 fc/7 Unique Local address range
-                   address.StartsWith("fd") ||      //  IPV6 fc/7 Unique Local address range
-                   address.StartsWith("fe");        //  IPV6 fe/7 Unique Local address range
+            var isLocal =  address == "127.0.0.1" ||        //  IPV4 local machine
+                           address == "::1" ||              //  IPV6 local machine
+                           address.StartsWith("192.168.") ||//  IPV4 local addresses as used in domestic routers
+                           address.StartsWith("fc") ||      //  IPV6 fc/7 Unique Local address range
+                           address.StartsWith("fd") ||      //  IPV6 fc/7 Unique Local address range
+                           address.StartsWith("fe");        //  IPV6 fe/7 Unique Local address range
+
+            if (!isLocal)
+            {
+                logger.Info($"External access from {context.Connection.RemoteIpAddress.ToString()} for {address}");
+            }
+
+            return isLocal;
         }
         catch { return false; }
     }
