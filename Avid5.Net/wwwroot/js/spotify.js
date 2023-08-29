@@ -699,7 +699,7 @@ function AddBrowserHammerActions() {
 
     var pendingSearch = null;
 
-    $("#ArtistSearchText").bind('keyup', function () {
+    $("#ArtistSearchText").bind('input', function () {
         if (pendingSearch != null) clearTimeout(pendingSearch);
         pendingSearch = setTimeout(function () {
             pendingSearch = null;
@@ -710,7 +710,7 @@ function AddBrowserHammerActions() {
         }, 700)
     })
 
-    $("#AlbumSearchText").bind('keyup', function () {
+    $("#AlbumSearchText").bind('input', function () {
         if (pendingSearch != null) clearTimeout(pendingSearch);
         pendingSearch = setTimeout(function () {
             pendingSearch = null;
@@ -721,7 +721,7 @@ function AddBrowserHammerActions() {
         }, 700)
     })
 
-    $("#TrackSearchText").bind('keyup', function () {
+    $("#TrackSearchText").bind('input', function () {
         if (pendingSearch != null) clearTimeout(pendingSearch);
         pendingSearch = setTimeout(function () {
             pendingSearch = null;

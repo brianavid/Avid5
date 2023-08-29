@@ -252,7 +252,6 @@ window.onresize = WindowResized
 
 function WindowResized() {
     lastWake = new Date(0);
-    $("#topBarTitle").text("")
     SwitchPanelAfterWake (window.innerWidth > 768)
 }
 
