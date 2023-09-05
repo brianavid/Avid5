@@ -145,10 +145,14 @@ public class VideoTV
                 try
                 {
                     var dict = MakeDict(xRecording);
+                    var series = "";
+                    var name = "";
+                    dict.TryGetValue("Name", out name);
+                    dict.TryGetValue("Series", out series);
 
                     Id = dict["Program ID"];
                     Filename = dict["Filename"];
-                    Title = System.IO.Path.GetFileNameWithoutExtension(Filename);
+                    Title = (series != name && series != "") ? series + ": " + name : name;
                     Description = dict["Description"];
                     Channel = AllChannels.Values.FirstOrDefault(c => c.FullName.Equals(dict["Artist"], StringComparison.CurrentCultureIgnoreCase));
                     ChannelDisplayName = dict["Artist"];
@@ -185,7 +189,7 @@ public class VideoTV
         private string Name { get; set; }
         private string Series { get; set; }
         public String Title { get 
-             {
+            {
                 return Series != Name ? Series + ": " + Name : Name;
             } 
         }
