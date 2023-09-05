@@ -1910,49 +1910,49 @@ public static class Spotify
     }
     #endregion
 
-    //  This URL (hopefully permanently running) will be used to authenticate Avid5 instances
-    public static void Authenticate()
+    public static string GetAuthenticationUrl()
     {
-        try
+        logger.Info("Get Authentication URL");
+
+        //  My own web server has an authenticator with the client secret for my developer client ID
+        string ClientId = Config.SpotifyClientId;
+
+        var auth = new LoginRequest(new Uri(AuthenticatorUri + "/Authenticate"), ClientId, SpotifyAPI.Web.LoginRequest.ResponseType.Code)
         {
-            //  My own web server has an authenticator with the client secret for my developer client ID
-            string ClientId = Config.SpotifyClientId;
+            //How many permissions we need? Ask for the lot!
+            Scope = new[] {
+                Scopes.UgcImageUpload,
+                Scopes.UserReadPlaybackState,
+                Scopes.UserModifyPlaybackState,
+                Scopes.UserReadCurrentlyPlaying,
+                Scopes.Streaming,
+                Scopes.AppRemoteControl,
+                Scopes.UserReadEmail,
+                Scopes.UserReadPrivate,
+                Scopes.PlaylistReadCollaborative,
+                Scopes.PlaylistModifyPublic,
+                Scopes.PlaylistReadPrivate,
+                Scopes.PlaylistModifyPrivate,
+                Scopes.UserLibraryModify,
+                Scopes.UserLibraryRead,
+                Scopes.UserTopRead,
+                Scopes.UserReadPlaybackPosition,
+                Scopes.UserReadRecentlyPlayed,
+                Scopes.UserFollowRead,
+                Scopes.UserFollowModify
+            }
+        };
 
-            var auth = new LoginRequest(new Uri(AuthenticatorUri + "/Authenticate"), ClientId, SpotifyAPI.Web.LoginRequest.ResponseType.Code)
-            {
-                //How many permissions we need? Ask for the lot!
-                Scope = new[] {
-                    Scopes.UgcImageUpload,
-                    Scopes.UserReadPlaybackState,
-                    Scopes.UserModifyPlaybackState,
-                    Scopes.UserReadCurrentlyPlaying,
-                    Scopes.Streaming,
-                    Scopes.AppRemoteControl,
-                    Scopes.UserReadEmail,
-                    Scopes.UserReadPrivate,
-                    Scopes.PlaylistReadCollaborative,
-                    Scopes.PlaylistModifyPublic,
-                    Scopes.PlaylistReadPrivate,
-                    Scopes.PlaylistModifyPrivate,
-                    Scopes.UserLibraryModify,
-                    Scopes.UserLibraryRead,
-                    Scopes.UserTopRead,
-                    Scopes.UserReadPlaybackPosition,
-                    Scopes.UserReadRecentlyPlayed,
-                    Scopes.UserFollowRead,
-                    Scopes.UserFollowModify
-                }
-            };
+        //  Get a URL to authenticate
+        return auth.ToUri().ToString();
+    }
 
-            //  Start a browser to authenticate
-            var url =  auth.ToUri().ToString();
-            var psi = new System.Diagnostics.ProcessStartInfo
-            {
-                UseShellExecute = true,
-                FileName = url
-            };
-            System.Diagnostics.Process.Start(psi);
+    public static void WaitForAuthentication()
+    {
+        logger.Info("Wait for Authentication");
 
+        try
+        { 
             //  Try for two minutes to get the RefreshToken constructed as part of the OAUTH exchange with the browser
             for (int i = 0; i < 120; i++)
             {
@@ -1969,11 +1969,13 @@ public static class Spotify
                             //  Avid5 web app can authenticate using the same credentials
                             Config.SaveValue("SpotifyRefreshUrl", AuthenticatorUri + "/Refresh?refresh_token=" + lastRefreshToken);
                             logger.Info("Authenticated to Spotify Web API");
-                            break;
+                            return;
                         }
                     }
                 }
+                Thread.Sleep(1000);
             }
+            logger.Info("Failed to authenticate to Spotify Web API");
         }
         catch (Exception ex)
         {

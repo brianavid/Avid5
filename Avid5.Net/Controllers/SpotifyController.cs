@@ -364,10 +364,16 @@ namespace Avid5.Net.Controllers
             return this.Content("");
         }
 
-        // GET: /Spotify/Authenticate
-        public ContentResult Authenticate()
+        // GET: /Spotify/GetAuthenticationUrl
+        public ContentResult GetAuthenticationUrl()
         {
-            Spotify.Authenticate();
+            return this.Content(Spotify.GetAuthenticationUrl());
+        }
+
+        // GET: /Spotify/WaitForAuthentication
+        public ContentResult WaitForAuthentication()
+        {
+            Spotify.WaitForAuthentication();
             return this.Content("");
         }
     }

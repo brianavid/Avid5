@@ -165,8 +165,16 @@ $(function () {
     $("#actionMenuSpotifyLogin").click(function () {
         $(".actionMenu").hide()
         $.ajax({
-            url: "/Spotify/Authenticate",
-            success: HideActionMenu,
+            url: "/Spotify/GetAuthenticationUrl",
+            success: function (url) {
+                window.open(url,"_blank")
+                $.ajax({
+                    url: "/Spotify/WaitForAuthentication",
+                    success: HideActionMenu,
+                    error: HideActionMenu,
+                    cache: false
+                });
+            }                    ,
             error: HideActionMenu,
             cache: false
         });
