@@ -130,22 +130,50 @@ public static class Config
         }
     }
 
-	/// <summary>
-	/// The local Spotify market
-	/// </summary>
-	public static string SpotifyMarket
-	{
-		get
-		{
-			XElement elAddr = Doc.Root.Element("SpotifyMarket");
-			return elAddr == null ? null : elAddr.Value;
-		}
-	}
+    /// <summary>
+    /// The local Spotify market
+    /// </summary>
+    public static string SpotifyMarket
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("SpotifyMarket");
+            return elAddr == null ? null : elAddr.Value;
+        }
+    }
 
-	/// <summary>
-	/// The (optional) path to the CEC-client program for direct use within Avid, by-passing Avid-CEC
-	/// </summary>
-	public static string CECClientPath
+    /// <summary>
+    /// The URL of the Avid5.Auth service containing the "/Authenicate" redirection registered for 
+    /// Spotify Client OAUTH authentication.
+    /// </summary>
+    /// <remarks>
+    /// Spotify will use the registered "/Authenticate" URL, and the Avid5 client will use other web methods
+    /// </remarks>
+    public static string SpotifyClientUrl
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("SpotifyClientUrl");
+            return elAddr == null ? null : elAddr.Value;
+        }
+    }
+
+    /// <summary>
+    /// The Client ID for Spotify Client OAUTH authentication
+    /// </summary>
+    public static string SpotifyClientId
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("SpotifyClientId");
+            return elAddr == null ? null : elAddr.Value;
+        }
+    }
+
+    /// <summary>
+    /// The (optional) path to the CEC-client program for direct use within Avid, by-passing Avid-CEC
+    /// </summary>
+    public static string CECClientPath
 	{
 		get
 		{
