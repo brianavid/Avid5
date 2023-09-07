@@ -72,10 +72,14 @@ public static class Screen
 		return "";
 	}
 
-	/// <summary>
-	/// Turn the screen on by issuing the appropriate HDMI-CEC command to device 0 (which is always the TV screen).
-	/// </summary>
-	static void TurnOn()
+    /// <summary>
+    /// Turn the screen on
+    /// </summary>
+    /// <remarks>
+    /// If possible, broadcast a Wake-on-LAN packet aimed at the TV's Mac address to see of it it running
+    /// Otherwise fall back issuing the appropriate HDMI-CEC command to device 0 (which is always the TV screen).
+    /// </remarks>
+    static void TurnOn()
     {
 		logger.Info("TurnOn");
 		if ( !String.IsNullOrEmpty(TVMacAddress) && TVMacAddress.Length == 12)
@@ -114,6 +118,10 @@ public static class Screen
     /// <summary>
     /// Is the screen really on (irrespective of our state)?
     /// </summary>
+	/// <remarks>
+	/// If possible, ping the TV's IP address to see of it it running
+	/// Otherwise fall back to CEC
+	/// </remarks>
     /// <returns></returns>
     static bool TestScreenOn()
     {
@@ -209,7 +217,6 @@ public static class Screen
 		logger.Info("EnsureScreenOff");
 
 		TurnOff();
-		JRMC.CloseScreen();
 	}
 
     /// <summary>
