@@ -5,6 +5,9 @@
 {
 	Context.Response.Redirect("/Home/GoAway");
 }
+@{
+	var screenDisplayClass = Screen.IsOn ? "screenOnIndication" : "";
+}
 <script type="text/javascript">var JrmcUrl = '@JRMC.Url'; var JrmcHost = '@JRMC.Host';</script>
 
 <div id='TopBar'>
@@ -12,8 +15,8 @@
   <table class="topBar @(Running.RunningProgramTopBarClass)">
 	  <tr>
 		<td class="centeredButton"><img id="toggleSettings" src='~/Content/Buttons/SmallRound/Spanner.png'></td>
-		<td class="width20">
-		  <table>
+	      <td class="width20 @screenDisplayClass">
+			<table align='center'>
 			<tr>
 			  <td class='pageTitle' align='center'>
 				<div id=homeTitle>@Running.RunningProgram</div>

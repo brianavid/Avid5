@@ -6,7 +6,9 @@ $(function () {
             window.location.reload(true);
     });
 
-    $("#volumeUp").mousedown(function () {
+    window.onresize = WindowResized
+
+   $("#volumeUp").mousedown(function () {
         $.ajax({
             url: "/Action/VolumeUp",
             success: function (data) {
@@ -78,7 +80,11 @@ $(function () {
     $("#actionMenuScreenOn").click(function () {
         $.ajax({
             url: "/Action/ScreenOn",
-            success: HideActionMenu,
+            success: function () {
+                HideActionMenu()
+                if (panelSwitcher != null)
+                    window.location.reload(true);
+            },
             error: HideActionMenu,
             cache: false
         });
@@ -87,7 +93,11 @@ $(function () {
     $("#actionMenuScreenOff").click(function () {
         $.ajax({
             url: "/Action/ScreenOff",
-            success: HideActionMenu,
+            success: function () {
+                HideActionMenu()
+                if (panelSwitcher != null)
+                    window.location.reload(true);
+            },
             error: HideActionMenu,
             cache: false
         });
@@ -257,12 +267,10 @@ else
     }
 }
 
-window.onresize = WindowResized
-
 function WindowResized() {
     if ((lastWidth > 768) != (window.innerWidth > 768)) {
         lastWake = new Date(0);
-        $("#topBarTitle").text("")
+        $("#topBarTitle").text(" ")
         SwitchPanelAfterWake(window.innerWidth > 768)
     }
     lastWidth = window.innerWidth;

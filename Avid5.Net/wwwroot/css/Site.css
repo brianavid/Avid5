@@ -71,7 +71,6 @@ textarea {
     width: 100%;
     background-color: #ccc;
     overflow: auto;
-    outline: 4px dashed blue;
 }
 
 .topBarNone {
@@ -352,14 +351,21 @@ textarea {
     font-style:italic;
 }
 
-.overlay, .actionMenuOverlay
-{
-   background-color: #000;
-   opacity: .7;
-   filter: alpha(opacity=70);
-   position: absolute; top: 0; left: 0;
-   width: 100%; height: 100%;
-   z-index: 1000;
+.overlay, .actionMenuOverlay {
+    background-color: #000;
+    opacity: .7;
+    filter: alpha(opacity=70);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+.screenOnIndication {
+    border: solid 1px rgba(0,0,0,0.3);
+    border-radius: 5px;
 }
 
 .actionMenuOverlay {
