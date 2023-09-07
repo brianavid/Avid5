@@ -145,7 +145,8 @@ namespace Avid5.Net.Controllers
             Running.StartStream("PC");
             Receiver.SelectComputerInput();
 			Screen.WaitForScreenOn();
-			return Content("");
+            JRMC.CloseScreen();
+            return Content("");
         }
 
         // GET: /Action/GoRoku

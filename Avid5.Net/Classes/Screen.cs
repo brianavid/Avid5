@@ -1,6 +1,11 @@
 ﻿using NLog;
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Net.Mail;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Web;
 using System.Xml.Linq;
 
@@ -10,49 +15,25 @@ using System.Xml.Linq;
 public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
-	static string ClientPath = Config.CECClientPath;
+	static string ClientPath;
+    static string TVAddress;
+    static string TVMacAddress;
+    static bool isOn = false;
 
-	//	If during initialisation, the RunCECControlProcess mechanism fails,
-	//	this is most likely to be the result of side-by-side operation with Avid4.
-	//	Only one mechanism is allowed to access the CEC port.
-	//	So (for now) fall back to the old "Tray App" API on port 89, which is still there for Avid4.
-	static HttpClient trayAppClient = null;
-
-	public static void Initialise()
+    public static void Initialise()
 	{
 		logger.Info($"Initialise");
-		var result = RunCECControlProcess("pow 0", true);
-		logger.Info($"CEC returns {result}");
-		if (result.StartsWith("power status"))
-		{
-			isOn = result == "power status: on";
-		}
-		else if (String.IsNullOrEmpty(ClientPath))
-        {
-			trayAppClient = new HttpClient();
-			trayAppClient.BaseAddress = new Uri("http://localhost:89");
-			trayAppClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue();
-			trayAppClient.DefaultRequestHeaders.CacheControl.NoCache = true;
-			trayAppClient.DefaultRequestHeaders.CacheControl.MaxAge = new TimeSpan(0);
-			try
-			{
-				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenIsOn").Result;
-				resp.EnsureSuccessStatusCode();
+        ClientPath = Config.CECClientPath;
+        TVAddress = Config.TVAddress;
+        TVMacAddress = string.Concat(Config.TVMacAddress.Where(char.IsLetterOrDigit));
+        logger.Info($"ClientPath = {ClientPath}");
+        logger.Info($"TVAddress = {TVAddress}");
+        logger.Info($"TVMacAddress = {TVMacAddress}");
+        TestScreenOn();
+    }
 
-				result = resp.Content.ReadAsStringAsync().Result;
-				logger.Info($"TvScreenIsOn : {result}");
-				isOn = bool.Parse(result);
-			}
-			catch
-			{
-				logger.Info($"No tray app found");
-				trayAppClient.Dispose();
-				trayAppClient = null;
-			}
-		}
-	}
 
-	static string RunCECControlProcess(string command, bool wait = false)
+    static string RunCECControlProcess(string command, bool wait = false)
 	{
 		if (!String.IsNullOrEmpty(ClientPath))
 		{
@@ -97,24 +78,37 @@ public static class Screen
 	static void TurnOn()
     {
 		logger.Info("TurnOn");
-		if (trayAppClient != null)
+		if ( !String.IsNullOrEmpty(TVMacAddress) && TVMacAddress.Length == 12)
 		{
-			try
-			{
-				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenOn").Result;
-				resp.EnsureSuccessStatusCode();
-			}
-			catch (System.Exception ex)
-			{
-				logger.Error(ex);
-			}
-		}
-		else
-		{
-			RunCECControlProcess("on 0");
-		}
+            //	Construct WOL packet
+            int counter = 0;
+            byte[] bytes = new byte[102];
 
-		isOn = true;
+            for (int x = 0; x < 6; x++)
+                bytes[counter++] = 0xFF;
+
+			for (int macPackets = 0; macPackets < 16; macPackets++)
+			{
+				for (int macBytes = 0; macBytes < 12; macBytes += 2)
+				{
+					bytes[counter++] = byte.Parse(TVMacAddress.Substring(macBytes, 2), NumberStyles.HexNumber);
+				}
+			}
+
+            //	Broadcast WOL packet on port 9 (Echo/ping)
+            logger.Info($"Send WoL for {TVMacAddress}");
+            using (UdpClient client = new UdpClient() { EnableBroadcast = true })
+			{
+				client.Connect(IPAddress.Broadcast, 9);
+				client.Send(bytes, bytes.Length);
+			}
+        }
+        else
+        {
+            RunCECControlProcess("on 0");
+        }
+
+        isOn = true;
     }
 
     /// <summary>
@@ -124,49 +118,60 @@ public static class Screen
     static bool TestScreenOn()
     {
 		logger.Info("TestScreenOn");
-		if (trayAppClient != null)
+		if (!String.IsNullOrEmpty(TVAddress))
 		{
-			try
+			using (Ping ping = new Ping())
 			{
-				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenIsOn").Result;
-				resp.EnsureSuccessStatusCode();
 
-				var result = resp.Content.ReadAsStringAsync().Result;
-				logger.Info($"TvScreenIsOn : {result}");
-				isOn = bool.Parse(result);
-			}
-			catch (System.Exception ex)
-			{
-				logger.Error(ex);
-				return isOn;
+				PingReply result = ping.Send(TVAddress, 500);
+                logger.Info($"Ping {TVAddress} returns {result.Status}");
+                return result.Status == IPStatus.Success;
 			}
 		}
-		else 
+		else
 		{
 			var result = RunCECControlProcess("pow 0", true);
 			logger.Info($"CEC returns {result}");
-			if (result.StartsWith("power status"))
+			if (result.Contains("power status"))
 			{
-				isOn = result == "power status: on";
+				isOn = result.Contains("power status: on");
 			}
 		}
 		return isOn;
 	}
 
-	/// <summary>
-	/// Wait for the screen to turn on before any further activity (such as starting a full-screen player
-	/// application that needs to know the screen size).
-	/// </summary>
-	public static void WaitForScreenOn()
+    /// <summary>
+    /// Turn the screen off by issuing the appropriate HDMI-CEC command to device 0 (which is always the TV screen).
+    /// </summary>
+	/// <remarks>
+	/// Unfortunately I have not found a way to do this over the network and must rely on CEC
+	/// </remarks>
+    static void TurnOff()
+    {
+        logger.Info("TurnOff");
+        // if we've just turned the screen on, wait for the transition
+        if (isOn)
+        {
+            WaitForScreenOn();
+        }
+
+        RunCECControlProcess("standby 0");
+        isOn = false;
+    }
+
+    /// <summary>
+    /// Wait for the screen to turn on before any further activity (such as starting a full-screen player
+    /// application that needs to know the screen size).
+    /// </summary>
+    public static void WaitForScreenOn()
     {
         logger.Info("WaitForScreenOn");
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 15; i++)
         {
             if (TestScreenOn())
             {
                 logger.Info("Screen is now on");
-
                 break;
             }
 			TurnOn();
@@ -207,37 +212,6 @@ public static class Screen
 		JRMC.CloseScreen();
 	}
 
-	/// <summary>
-	/// Turn the screen off by issuing the appropriate HDMI-CEC command to device 0 (which is always the TV screen).
-	/// </summary>
-	static void TurnOff()
-    {
-		logger.Info("TurnOff");
-		// if we've just turned the screen on, wait for the transition
-		if (isOn)
-        {
-            WaitForScreenOn();
-        }
-
-		if (trayAppClient != null)
-		{
-			try
-			{
-				HttpResponseMessage resp = trayAppClient.GetAsync("api/Desktop/TvScreenOff").Result;
-				resp.EnsureSuccessStatusCode();
-			}
-			catch (System.Exception ex)
-			{
-				logger.Error(ex);
-			}
-		}
-		else
-		{
-			RunCECControlProcess("standby 0");
-		}
-		isOn = false;
-    }
-
     /// <summary>
     /// Is the screen currently believed to be on?
     /// </summary>
@@ -245,5 +219,4 @@ public static class Screen
     {
         get { return isOn; }
     }
-    static bool isOn = false;
 }

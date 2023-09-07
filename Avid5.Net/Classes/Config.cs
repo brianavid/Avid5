@@ -83,6 +83,30 @@ public static class Config
     }
 
     /// <summary>
+    /// The TV's IP address
+    /// </summary>
+    public static string TVAddress
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("TVAddress");
+            return elAddr == null ? null : elAddr.Value;
+        }
+    }
+
+    /// <summary>
+    /// The TV's MAC address
+    /// </summary>
+    public static string TVMacAddress
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("TVMacAddress");
+            return elAddr == null ? "" : elAddr.Value;
+        }
+    }
+
+    /// <summary>
     /// The path to the directory in which JRMC recorded TV programmes are stored along with their sidecar XML files
     /// </summary>
     public static string RecordingsPath
@@ -171,7 +195,7 @@ public static class Config
     }
 
     /// <summary>
-    /// The (optional) path to the CEC-client program for direct use within Avid, by-passing Avid-CEC
+    /// The (optional) path to the CEC-client program
     /// </summary>
     public static string CECClientPath
 	{
