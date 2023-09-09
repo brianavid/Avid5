@@ -106,8 +106,8 @@ public static class Screen
 				client.Connect(IPAddress.Broadcast, 9);
 				client.Send(bytes, bytes.Length);
 			}
-        }
-        else
+		}
+		else
         {
             RunCECControlProcess("on 0");
         }
@@ -173,35 +173,37 @@ public static class Screen
     /// </summary>
     public static void WaitForScreenOn()
     {
-        logger.Info("WaitForScreenOn");
+#if false
+		logger.Info("WaitForScreenOn");
 
-        for (int i = 0; i < 15; i++)
-        {
-            if (TestScreenOn())
-            {
-                logger.Info("Screen is now on");
-                break;
-            }
+		for (int i = 0; i < 15; i++)
+		{
+			if (TestScreenOn())
+			{
+				logger.Info("Screen is now on");
+				break;
+			}
 			TurnOn();
 
-            System.Threading.Thread.Sleep(500);
-        }
+			System.Threading.Thread.Sleep(500);
+		}
 
 		if (!isOn)
 		{
 			logger.Info("Given up waiting");
 		}
+#endif    
 
 		if (Receiver.SelectedInput == "Computer")
 		{
 			JRMC.GoTheater();
 		}
-    }
+	}
 
-    /// <summary>
-    /// Ensure that the screen is on - we do this by turning it on!
-    /// </summary>
-    public static void EnsureScreenOn()
+		/// <summary>
+		/// Ensure that the screen is on - we do this by turning it on!
+		/// </summary>
+		public static void EnsureScreenOn()
 	{
 		logger.Info("EnsureScreenOn");
 
