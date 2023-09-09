@@ -297,9 +297,9 @@ public class VideoTV
                 Channel = AllChannels[xTimer.Element("ChannelKey").Value];
                 StartTime = DateTime.ParseExact(
                     xTimer.Element("StartTime").Value,
-                    new[] { "dd/MM/yyyy HH:mm" },
+                    new[] { "dd/MM/yyyy HH:mm", "dd/MM/yy hh:mm tt" },
                     CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal) + PrePad;
-                StopTime = StartTime.AddMinutes(int.Parse(xTimer.Element("Duration").Value)) - PrePad - PostPad;
+                StopTime = StartTime.AddSeconds(int.Parse(xTimer.Element("Duration").Value)) - PrePad - PostPad;
                 EventId = xTimer.Element("ProgKey") == null ? "" : xTimer.Element("ProgKey").Value;
                 IsRecording = xTimer.Element("IsRecordingNow").Value != "0";
                 InError = false;
