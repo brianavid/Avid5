@@ -187,7 +187,7 @@ public class VideoTV
     {
         public String Id { get; private set; }
         private string Name { get; set; }
-        private string Series { get; set; }
+		public string Series { get; private set; }
         public String Title { get 
             {
                 return Series != Name ? Series + ": " + Name : Name;
@@ -432,19 +432,10 @@ public class VideoTV
             }
         }
 
-        string StripNew(string title)
+        public bool MatchesProgrammeSeriesName(
+            string seriesName)
         {
-            return title.Length > 3 && title.StartsWith("New") && !Char.IsLetter(title[3]) ?
-                String.Concat(title.Substring(3).SkipWhile(c => !Char.IsLetter(c))) :
-                title;
-        }
-
-        public bool MatchesProgrammeTitle(
-            string title)
-        {
-            return WeakNaming ?
-                title.ToLower().Contains(Name.ToLower()) :
-                StripNew(title) == StripNew(Name);
+            return Name == seriesName;
         }
 
         public static Series Find(
@@ -489,9 +480,19 @@ public class VideoTV
         AllChannels = GetAllChannels();
         LoadOldRecordingInfo();
         LoadAllEpgProgrammes();
-    }
+		foreach (Series s in Series.All)
+		{
+			foreach (Programme p in GetEpgProgrammesInSeries(s))
+			{
+				if (!p.IsScheduled)
+				{
+					AddTimer(p);
+				}
+			}
+		}
+	}
 
-    static void LoadOldRecordingInfo()
+	static void LoadOldRecordingInfo()
     {
         var doc = XDocument.Load(System.IO.Path.Combine(Config.OldRecordingsPath, "Recordings.xml"));
         var recordings = doc.Element("recordings").Elements("recording")
@@ -907,12 +908,33 @@ public class VideoTV
             epgProgrammes.SkipWhile(p => p.StartTime <= startTime).TakeWhile(p => p.StartTime <= endTime);
     }
 
+	static bool ProgrammeInSeries(
+		Programme programme,
+		Series series)
+	{
+		return
+			series.MatchesProgrammeSeriesName(programme.Series) &&
+			programme.StartTime.DayOfWeek == series.StartTime.DayOfWeek &&
+			programme.StartTime.TimeOfDay >= series.StartTimeLow.TimeOfDay &&
+			(series.StartTimeLow.TimeOfDay > series.StartTimeHigh.TimeOfDay ||
+			 programme.StartTime.TimeOfDay <= series.StartTimeHigh.TimeOfDay);
+	}
 
-    /// <summary>
-    /// Schedule a recording for an identified programme from the EPG
-    /// </summary>
-    /// <param name="programmeId"></param>
-    public static void AddTimer(
+	static IEnumerable<Programme> GetEpgProgrammesInSeries(
+		Series series)
+	{
+		var epgProgrammes = GetEpgProgrammesForChannel(series.Channel);
+		return epgProgrammes == null ?
+			new Programme[0] :
+			epgProgrammes.Where(p => ProgrammeInSeries(p, series));
+	}
+
+
+	/// <summary>
+	/// Schedule a recording for an identified programme from the EPG
+	/// </summary>
+	/// <param name="programmeId"></param>
+	public static void AddTimer(
         String id,
         String channelName,
         bool isSeries = false)
@@ -945,7 +967,7 @@ public class VideoTV
                     Series series = Series.Find(timer.Name, timer.Channel, timer.StartTime);
                     if (series == null)
                     {
-                        Series.Add(timer.EventId, timer.Name, timer.Channel, timer.StartTime);
+                        Series.Add(timer.EventId, programme.Series, timer.Channel, timer.StartTime);
                     }
                 }
             }
