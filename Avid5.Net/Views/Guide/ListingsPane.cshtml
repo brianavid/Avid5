@@ -44,7 +44,7 @@
             {
                 VideoTV.LoadSchedule();
 
-                IEnumerable<VideoTV.Timer> timers = VideoTV.Schedule.Values;
+                IEnumerable<VideoTV.Timer> timers = VideoTV.Schedule.Values.OrderBy(t => t.StartTime);
                 bool anyFound = false;
                 <div class="guideItem guideHeader"><div class="guideTitle">Scheduled Recordings</div></div>
 
