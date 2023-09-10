@@ -99,15 +99,13 @@ function AddListingsHammerActions() {
         var programItem = this;
         $(".guideEpgProgrammeDescription").remove();
         $(".guideEpgProgrammeCancel").remove();
-        $(".guideEpgProgrammeRecord").remove();
-        $(".guideEpgProgrammeRecordSeries").remove();
+        $(".guideEpgRecordingControls").addClass("startHidden");
 
         $.ajax({
             url: "/Guide/Description?id=" + programItem.id + "&channelName=" + $("#ChannelName").text(),
             success: function (description) {
                 if (!hasClass(programItem, "guideEpgProgrammeScheduled")) {
-                    $(programItem).prepend('<img class="guideEpgProgrammeRecordSeries" id="' + programItem.id + '" src="/Content/Buttons/SmallRound/Transport.Rec.Series.png" />')
-                    $(programItem).prepend('<img class="guideEpgProgrammeRecord" id="' + programItem.id + '" src="/Content/Buttons/SmallRound/Transport.Rec.png" />')
+                    $(programItem).find(".guideEpgRecordingControls").removeClass("startHidden");
                 }
                 $(programItem).append('<div class="guideProgrammeInfo guideEpgProgrammeDescription">' + description + '</div>')
                 cache: false

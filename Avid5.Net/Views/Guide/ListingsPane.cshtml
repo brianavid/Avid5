@@ -24,6 +24,10 @@
                 {
                     var displayClass = "guideEpgProgramme" + (programme.IsScheduled ? " guideEpgProgrammeScheduled" : "");
                     <div class="@displayClass guideItem" id="@programme.Id">
+                        <span class="guideEpgRecordingControls startHidden">
+                            <img class="guideEpgProgrammeRecordSeries" id="@programme.Id" src="/Content/Buttons/SmallRound/Transport.Rec.Series.png" />
+                            <img class="guideEpgProgrammeRecord" id="@programme.Id" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
+                        </span>
                         <div class="guideProgrammeInfo">
                             <div>@(programme.StartTime.ToLocalTime().ToString("HH:mm")) [@JRMC.FormatDuration(programme.Duration.TotalMinutes.ToString())]</div>
                         </div>
