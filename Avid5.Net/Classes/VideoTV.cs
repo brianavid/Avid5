@@ -89,8 +89,9 @@ public class VideoTV
     public class Recording
     {
         public String Id { get; private set; }
-        public String Title { get; private set; }
-        public String Description { get; private set; }
+		public String Title { get; private set; }
+		public String Series { get; private set; }
+		public String Description { get; private set; }
         public Channel Channel { get; private set; }
         public DateTime StartTime { get; private set; }
         public TimeSpan Duration { get; private set; }
@@ -119,8 +120,9 @@ public class VideoTV
                 try
                 {
                     Id = xRecording.Attribute("id").Value;
-                    Title = xRecording.Element("title").Value;
-                    Description = xRecording.Element("info").Value;
+					Title = xRecording.Element("title").Value;
+					Series = Title; //  DVBViewer recordings did not identify series
+					Description = xRecording.Element("info").Value;
                     Channel = AllChannels.Values.FirstOrDefault(c => c.Name.Equals(xRecording.Element("channel").Value, StringComparison.CurrentCultureIgnoreCase));
                     ChannelDisplayName = xRecording.Element("channel").Value;
                     StartTime = DateTime.ParseExact(
@@ -152,8 +154,9 @@ public class VideoTV
 
                     Id = dict["Program ID"];
                     Filename = dict["Filename"];
-                    Title = (series != name && series != "") ? series + ": " + name : name;
-                    Description = dict["Description"];
+					Title = (series != name && series != "") ? series + ": " + name : name;
+					Series = (series != name && series != "") ? series : name;
+					Description = dict["Description"];
                     Channel = AllChannels.Values.FirstOrDefault(c => c.FullName.Equals(dict["Artist"], StringComparison.CurrentCultureIgnoreCase));
                     ChannelDisplayName = dict["Artist"];
                     StartTime = ParsePythonDateTimeString(dict["Date Recorded"]);
@@ -703,14 +706,14 @@ public class VideoTV
     }
 
     /// <summary>
-    /// All recordings sharing the same title, most recent first
+    /// All recordings sharing the same series, most recent first
     /// </summary>
-    /// <param name="title"></param>
+    /// <param name="series"></param>
     /// <returns></returns>
-    static public IEnumerable<Recording> AllRecordingsForTitle(
-        string title)
+    static public IEnumerable<Recording> AllRecordingsForSeries(
+        string series)
     {
-        return AllRecordingsInReverseTimeOrder.Where(r => r.Title == title);
+        return AllRecordingsInReverseTimeOrder.Where(r => r.Series == series);
     }
 
     internal static void DeleteRecording(Recording recording)
@@ -724,24 +727,24 @@ public class VideoTV
     }
 
     /// <summary>
-    /// All recordings as a collection of Lists, grouped with those sharing a title in the same List
+    /// All recordings as a collection of Lists, grouped with those sharing a series in the same List
     /// </summary>
-    static public IEnumerable<List<Recording>> AllRecordingsGroupedByTitle
+    static public IEnumerable<List<Recording>> AllRecordingsGroupedBySeries
     {
         get
         {
-            Dictionary<string, List<Recording>> recordingsForTitle = new Dictionary<string, List<Recording>>();
+            Dictionary<string, List<Recording>> recordingsForSeries = new Dictionary<string, List<Recording>>();
 
             foreach (Recording r in AllRecordingsInReverseTimeOrder)
             {
-                if (!recordingsForTitle.ContainsKey(r.Title))
+                if (!recordingsForSeries.ContainsKey(r.Series))
                 {
-                    recordingsForTitle[r.Title] = new List<Recording>();
+                    recordingsForSeries[r.Series] = new List<Recording>();
                 }
-                recordingsForTitle[r.Title].Add(r);
+                recordingsForSeries[r.Series].Add(r);
             }
 
-            return recordingsForTitle.Values;
+            return recordingsForSeries.Values;
         }
     }
 

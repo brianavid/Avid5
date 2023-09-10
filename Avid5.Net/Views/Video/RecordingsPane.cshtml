@@ -2,7 +2,7 @@
     VideoTV.LoadRecordings();
     if (ViewBag.GroupTitle != null)
     {
-        foreach (var recording in VideoTV.AllRecordingsForTitle(ViewBag.GroupTitle))
+        foreach (var recording in VideoTV.AllRecordingsForSeries(ViewBag.GroupSeries))
         {
             var beingRecordedClass = recording.IsRecording ? "tvRecordingBeingRecorded" : "";
             <div class="videoRecording @beingRecordedClass" id="@recording.Id">
@@ -19,18 +19,18 @@
     }
     else
     {
-        foreach (var recordings in VideoTV.AllRecordingsGroupedByTitle)
+        foreach (var recordings in VideoTV.AllRecordingsGroupedBySeries)
         {
             var lastRecording = recordings.First();
             var firstRecording = recordings.Last();
             if (recordings.Count > 1)
             {
-                <div class="videoRecordingGroup" id="@firstRecording.Title">
+                <div class="videoRecordingGroup" id="@firstRecording.Series">
                     <div class="videorecordinginfo">
                         <div class="videoRecordingWhen">@(firstRecording.StartTime.ToString(firstRecording.IsVeryOld ? "ddd dd MMM yyyy" : "ddd dd MMM")) .. @(lastRecording.StartTime.ToString("dd MMM")) [@(recordings.Count)]</div>
                         <div class="videoRecordingChannel">&nbsp;@lastRecording.ChannelName</div>
                     </div>
-                    <div class="videoRecordingName">@lastRecording.Title</div>
+                    <div class="videoRecordingName">@lastRecording.Series</div>
                     <div class="videoRecordingDescription">&nbsp;</div>
                 </div>
             }

@@ -353,7 +353,7 @@ function AddVideoRecordingsHammerActions() {
 
     videoRecordingsListHammer.on("tap", ".videoRecordingGroup", function (e) {
         e.gesture.preventDefault()
-        ReplacePane("videoRecordings", "/Video/RecordingsPane?title=" + encodeURIComponent(this.id), "push")
+        ReplacePane("videoRecordings", "/Video/RecordingsPane?series=" + encodeURIComponent(this.id), "push")
     });
 
     videoRecordingsListHammer.on("tap", "#videoRecordingPlayFromStart", function () {

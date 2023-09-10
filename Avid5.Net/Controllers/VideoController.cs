@@ -52,11 +52,11 @@ namespace Avid5.Net.Controllers
 
         // GET: /Video/RecordingsPane
         public ActionResult RecordingsPane(
-            string title)
+            string series)
         {
-            if (title != null)
+            if (series != null)
             {
-                ViewBag.GroupTitle = title;
+                ViewBag.GroupSeries = series;
             }
             return PartialView();
         }
