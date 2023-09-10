@@ -11,11 +11,11 @@
 <div class="spotifyPlaybackControls">
 	<table class='width100'>
 		<tr>
-			<td class="centeredButton"><img id="spotifyPrev" src="~/Content/Buttons/Transport.Prev.png"></td>
-	        <td class="centeredButton"><img id="spotifyMinus10" src="~/Content/Buttons/Minus10.png" /></td>
-			<td class="centeredButton"><img id="spotifyPlayPause" src="~/Content/Buttons/PlayPauseButton.png"></td>
-	        <td class="centeredButton"><img id="spotifyPlus10" src="~/Content/Buttons/Plus10.png" /></td>
-			<td class="centeredButton"><img id="spotifyNext" src="~/Content/Buttons/Transport.Next.png"></td>
+			<td class="centeredButton"><span id="spotifyPrev">@Html.Raw(Button.Square("Prev"))</span></td>
+	        <td class="centeredButton"><span id="spotifyMinus10">@Html.Raw(Button.Square("Minus10"))</span></td>
+			<td class="centeredButton"><span id="spotifyPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
+	        <td class="centeredButton"><span id="spotifyPlus10">@Html.Raw(Button.Square("Plus10"))</span></td>
+			<td class="centeredButton"><span id="spotifyNext">@Html.Raw(Button.Square("Next"))</span></td>
 		</tr>
 	</table>
 			  

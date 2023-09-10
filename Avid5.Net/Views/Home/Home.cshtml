@@ -10,25 +10,25 @@
 
 <table class="buttonGrid">
     <tr>
-        <td class="centeredButton"><img id="selectTV" src="~/Content/Buttons/Select.TV.Button.png"></td>
-        <td class="centeredButton"><img id="selectStream" src="~/Content/Buttons/Stream.png"></td>
-        <td class="centeredButton"><img id="selectVideo" src="~/Content/Buttons/Select.Video.Button.png"></td>
+        <td class="centeredButton"><span id="selectTV">@Html.Raw(Button.Rect("TV"))</span></td>
+        <td class="centeredButton"><span id="selectStream">@Html.Raw(Button.Rect("Stream"))</span></td>
+        <td class="centeredButton"><span id="selectVideo">@Html.Raw(Button.Rect("Video"))</span></td>
     </tr>
     <tr>
-        <td class="centeredButton"><img id="selectRadio" src="~/Content/Buttons/Select.Radio.Button.png"></td>
-        <td class="centeredButton"><img id="selectSpotify" src="~/Content/Buttons/Select.Spotify.Button.png"></td>
-        <td class="centeredButton"><img id="selectMusic" src="~/Content/Buttons/Select.Music.Button.png"></td>
+        <td class="centeredButton"><span id="selectRadio">@Html.Raw(Button.Rect("Radio"))</span></td>
+        <td class="centeredButton"><span id="selectSpotify">@Html.Raw(Button.Rect("Spotify"))</span></td>
+        <td class="centeredButton"><span id="selectMusic">@Html.Raw(Button.Rect("Music"))</span></td>
     </tr>
     <tr>
-        <td class="centeredButton"><img id="selectEpg" src="~/Content/Buttons/Select.Guide.Button.png"></td>
-        <td class="centeredButton"><img id="selectSecurity" src="~/Content/Buttons/Security.png"></td>
-        <td class="centeredButton"><img id="selectPhotos" src="~/Content/Buttons/Select.Photos.Button.png"></td>
+        <td class="centeredButton"><span id="selectEpg">@Html.Raw(Button.Rect("Guide"))</span></td>
+        <td class="centeredButton"><span id="selectSecurity">@Html.Raw(Button.Rect("Security"))</span></td>
+        <td class="centeredButton"><span id="selectPhotos">@Html.Raw(Button.Rect("Photos"))</span></td>
     </tr>
     @if (!Screen.IsOn || !(Receiver.SelectedInput == "Computer"))
     {
         <tr>
         <td class="centeredButton"></td>
-        <td class="centeredButton"><img id="selectPC" src="/Content/Buttons/PC.png" /></td>
+        <td class="centeredButton"><span id="selectPC">@Html.Raw(Button.Rect("PC"))</span></td>
         <td class="centeredButton"></td>
         </tr>
     }
@@ -48,23 +48,23 @@
                     <table class='width100'>
                         <tr>
                             <td>&nbsp;</td>
-                            <td class="centeredButton"><img class="playerActionButton" id="Up" src="/Content/Buttons/BigRound/Nav.Up.png"></td>
+                            <td class="centeredButton"><span class="playerActionButton" id="Up">@Html.Raw(Button.BigRound("Nav.Up"))</span></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td class="centeredButton"><img class="playerActionButton" id="Left" src="/Content/Buttons/BigRound/Nav.Left.png"></td>
-                            <td class="centeredButton"><img class="playerActionButton" id="Enter" src="/Content/Buttons/BigRound/OK.png"></td>
-                            <td class="centeredButton"><img class="playerActionButton" id="Right" src="/Content/Buttons/BigRound/Nav.Right.png"></td>
+                            <td class="centeredButton"><span class="playerActionButton" id="Left">@Html.Raw(Button.BigRound("Nav.Left"))</span></td>
+                            <td class="centeredButton"><span class="playerActionButton" id="Enter">@Html.Raw(Button.BigRound("OK"))</span></td>
+                            <td class="centeredButton"><span class="playerActionButton" id="Right">@Html.Raw(Button.BigRound("Nav.Right"))</span></td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
-                            <td class="centeredButton"><img class="playerActionButton" id="Down" src="/Content/Buttons/BigRound/Nav.Down.png"></td>
+                            <td class="centeredButton"><span class="playerActionButton" id="Down">@Html.Raw(Button.BigRound("Nav.Down"))</span></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
-                            <td class="centeredButton"><img class="playerActionButton" id="Backspace" src="/Content/Buttons/BigRound/Back.png"></td>
+                            <td class="centeredButton"><span class="playerActionButton" id="Backspace">@Html.Raw(Button.BigRound("Back"))</span></td>
                         </tr>
                     </table>
                 </div>

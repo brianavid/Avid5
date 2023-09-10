@@ -13,7 +13,7 @@
 	        <tr>
                 <td class='width75'><input id='SearchText' type='text' class='searchText width100' value='@(searchText)' /></td>
                 <td class="centeredButton width25">
-                    <img id="goMusicSearch" src="/Content/Buttons/MiniRound/Search.png" />
+                    <span id="goMusicSearch">@Html.Raw(Button.MiniRound("Search"))</span>
                 </td>
             </tr>
         </table>

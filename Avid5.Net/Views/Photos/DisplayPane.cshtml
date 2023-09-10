@@ -4,17 +4,17 @@
 		<table>
 			<tr>
 				<td>&nbsp;</td>
-				<td class="centeredButton"><img id="btnUp" alt="" src="/Content/Buttons/BigRound/Nav.Up.png"></td>
+				<td class="centeredButton"><span id="btnUp" alt="">@Html.Raw(Button.BigRound("Nav.Up"))</span></td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				<td class="centeredButton"><img id="btnLeft" alt="" src="/Content/Buttons/BigRound/Nav.Left.png"></td>
+				<td class="centeredButton"><span id="btnLeft" alt="">@Html.Raw(Button.BigRound("Nav.Left"))</span></td>
 				<td>&nbsp;</td>
-				<td class="centeredButton"><img id="btnRight" alt="" src="/Content/Buttons/BigRound/Nav.Right.png"></td>
+				<td class="centeredButton"><span id="btnRight" alt="">@Html.Raw(Button.BigRound("Nav.Right"))</span></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td class="centeredButton"><img id="btnDown" alt="" src="/Content/Buttons/BigRound/Nav.Down.png"></td>
+				<td class="centeredButton"><span id="btnDown" alt="">@Html.Raw(Button.BigRound("Nav.Down"))</span></td>
 				<td>&nbsp;</td>
 			</tr>
 		</table>
@@ -26,13 +26,13 @@
 				    <td>&nbsp;</td>
 			    </tr>
 			    <tr>
-				    <td class="centeredButton"><img id="btnPlus" alt="" src="/Content/Buttons/BigRound/Plus.png"></td>
+				    <td class="centeredButton"><span id="btnPlus" alt="">@Html.Raw(Button.BigRound("Plus"))</span></td>
 			    </tr>
 			    <tr>
 				    <td>&nbsp;</td>
 			    </tr>
 			    <tr>
-				    <td class="centeredButton"><img id="btnMinus" alt="" src="/Content/Buttons/BigRound/Minus.png"></td>
+				    <td class="centeredButton"><span id="btnMinus" alt="">@Html.Raw(Button.BigRound("Minus"))</span></td>
 			    </tr>
 		    </table>
 		</td>
@@ -42,8 +42,8 @@
 <br />
 <table class="width100">
 	  <tr>
-        <td class="centeredButton width25"><img id="btnPrev" alt="" src="/Content/Buttons/Transport.Prev.png"></td>
-        <td class="centeredButton width50"><img id="btnPlayPause" src="/Content/Buttons/PlayPauseButton.png"></td>
-        <td class="centeredButton width25"><img id="btnNext" alt="" src="/Content/Buttons/Transport.Next.png"></td>
+        <td class="centeredButton width25"><span id="btnPrev" alt="">@Html.Raw(Button.Square("Prev"))</span></td>
+		<td class="centeredButton width50"><span id="btnPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
+        <td class="centeredButton width25"><span id="btnNext" alt="">@Html.Raw(Button.Square("Next"))</span></td>
 	  </tr>
 </table>

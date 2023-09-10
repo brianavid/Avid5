@@ -17,20 +17,20 @@
             <tr>
                 <td class="centeredButton">
                     <div class="tvProgrammeIsRecord startHidden" id="IsRecording">Recording</div>
-                    <img class="tvProgrammeRecord" id="Record" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
+                    <span class="tvProgrammeRecord" id="Record">@Html.Raw(Button.SmallRound("Rec"))</span>
                 </td>
-                <td class="centeredButton"><img id="tvPlayPause" src="~/Content/Buttons/PlayPauseButton.png" /></td>
-                <td class="centeredButton"><img id="tvStop" src="~/Content/Buttons/Transport.Stop.png" /></td>
+                <td class="centeredButton"><span id="tvPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
+                <td class="centeredButton"><span id="tvStop">@Html.Raw(Button.Square("Stop"))</span></td>
             </tr>
         </table>
         <br />
         <br />
         <table class='width100'>
             <tr>
-                <td class="centeredButton"><img id="tvBack60" src="~/Content/Buttons/Minus60.png" /></td>
-                <td class="centeredButton"><img id="tvBack10" src="~/Content/Buttons/Minus10.png" /></td>
-                <td class="centeredButton"><img id="tvForward10" src="~/Content/Buttons/Plus10.png" /></td>
-                <td class="centeredButton"><img id="tvForward60" src="~/Content/Buttons/Plus60.png" /></td>
+                <td class="centeredButton"><span id="tvBack60">@Html.Raw(Button.Square("Minus60"))</span></td>
+                <td class="centeredButton"><span id="tvBack10">@Html.Raw(Button.Square("Minus10"))</span></td>
+                <td class="centeredButton"><span id="tvForward10">@Html.Raw(Button.Square("Plus10"))</span></td>
+                <td class="centeredButton"><span id="tvForward60">@Html.Raw(Button.Square("Plus60"))</span></td>
             </tr>
         </table>
         <br />

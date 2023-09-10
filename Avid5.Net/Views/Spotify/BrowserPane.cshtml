@@ -236,7 +236,7 @@
                                 <tr>
                                     <td class='width75'><input class='spotifyBrowserPlaylistRenamedName width95' id='spotifyBrowserPlaylistRenamedName' type='text' /></td>
                                     <td class="centeredButton width25">
-                                        <img id="goSpotifyRenamePlaylist" src="/Content/Buttons/SmallRound/OK.png" />
+                                        <span id="goSpotifyRenamePlaylist">@Html.Raw(Button.SmallRound("OK"))</span>
                                     </td>
                                 </tr>
                             </table>
@@ -493,7 +493,7 @@
                         <table class="buttonRow">
                             <tr>
                                 <td class="centeredButton width10">
-                                    <img id="@(actionClass)New" src="/Content/Buttons/MiniRound/Plus.png" />
+                                    <span id="@(actionClass)New">@Html.Raw(Button.MiniRound("Plus"))</span>
                                 </td>
                                 <td class="width90"><input class='spotifyBrowserPlaylistNewName width95' id='spotifyBrowserPlaylistNewName' type='text' /></td>
                             </tr>

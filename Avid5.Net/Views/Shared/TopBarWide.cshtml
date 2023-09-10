@@ -14,7 +14,7 @@
 
   <table class="topBar @(Running.RunningProgramTopBarClass)">
 	  <tr>
-		<td class="centeredButton"><img id="toggleSettings" src='~/Content/Buttons/SmallRound/Spanner.png'></td>
+		<td class="centeredButton"><span id="toggleSettings">@Html.Raw(Button.SmallRound("Spanner"))</span></td>
 		  <td class="width12 @screenDisplayClass">
 			<table align='center'>
 			<tr>
@@ -30,27 +30,27 @@
 		  </table>
 
 		  </td>
-		  <td class="centeredButton"><img id="volumeDown" src='~/Content/Buttons/SmallRound/Audio.Volume.Down.png'></td>
-		  <td class="centeredButton"><img id="volumeUp" src='~/Content/Buttons/SmallRound/Audio.Volume.Up.png'></td>
-		  <td class="centeredButton"><img id="volumeMute" src='~/Content/Buttons/SmallRound/Audio.Mute.On.png'></td>
-          <td class="centeredButton"><img id="selectTV" src="~/Content/Buttons/Select.TV.Button.png"></td>
-          <td class="centeredButton"><img id="selectMusic" src="~/Content/Buttons/Select.Music.Button.png"></td>
-		  <td class="centeredButton"><img id="selectSpotify" src="~/Content/Buttons/Select.Spotify.Button.png"></td>
-		  <td class="centeredButton"><img id="selectVideo" src="~/Content/Buttons/Select.Video.Button.png"></td>
-          <td class="centeredButton"><img id="selectStream" src="~/Content/Buttons/Stream.png"></td>
-		  <td class="centeredButton"><img id="selectPhotos" src="~/Content/Buttons/Select.Photos.Button.png"></td>
-		  <td class="centeredButton"><img id="selectEpg" src="~/Content/Buttons/Select.Guide.Button.png"></td>
+		  <td class="centeredButton"><span id="volumeDown">@Html.Raw(Button.SmallRound("Audio.Volume.Down"))</span></td>
+		  <td class="centeredButton"><span id="volumeUp">@Html.Raw(Button.SmallRound("Audio.Volume.Up"))</span></td>
+		  <td class="centeredButton"><span id="volumeMute">@Html.Raw(Button.SmallRound("Audio.Mute.On"))</span></td>
+          <td class="centeredButton"><span id="selectTV">@Html.Raw(Button.Rect("TV"))</span></td>
+          <td class="centeredButton"><span id="selectMusic">@Html.Raw(Button.Rect("Music"))</span></td>
+		  <td class="centeredButton"><span id="selectSpotify">@Html.Raw(Button.Rect("Spotify"))</span></td>
+		  <td class="centeredButton"><span id="selectVideo">@Html.Raw(Button.Rect("Video"))</span></td>
+          <td class="centeredButton"><span id="selectStream">@Html.Raw(Button.Rect("Stream"))</span></td>
+		  <td class="centeredButton"><span id="selectPhotos">@Html.Raw(Button.Rect("Photos"))</span></td>
+		  <td class="centeredButton"><span id="selectEpg">@Html.Raw(Button.Rect("Guide"))</span></td>
 		@if (ViewData.ContainsKey("IsHome"))
 		{
-		  <td class="centeredButton"><img id="allOffWide" src='~/Content/Buttons/SmallRound/Power.Off.png'></td>
+		  <td class="centeredButton"><span id="allOffWide">@Html.Raw(Button.SmallRound("Power.Off"))</span></td>
 		}
         else if (ViewData.ContainsKey("LinkBack"))
 		{
-		  <td class="centeredButton"><img id="goBack" src='~/Content/Buttons/SmallRound/Back.png'></td>
+		  <td class="centeredButton"><span id="goBack">@Html.Raw(Button.SmallRound("Back"))</span></td>
 		}
 		else
 		{
-		  <td class="centeredButton"><img id="goHomeWide" src='~/Content/Buttons/SmallRound/Home.png'></td>
+		  <td class="centeredButton"><span id="goHomeWide">@Html.Raw(Button.SmallRound("Home"))</span></td>
 		}
 	  </tr>
   </table>

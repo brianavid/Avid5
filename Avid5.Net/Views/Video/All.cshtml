@@ -13,9 +13,9 @@
     <div id ="videoLeftPane">
         <table class="buttonRow">
 	        <tr>
-                <td class="centeredButton">	<img id="displayVideoRecordings" src="/Content/Buttons/Select.TV.Button.png" /></td>
-                <td class="centeredButton">	<img id="displayVideos" src="/Content/Buttons/Select.Video.Button.png" /></td>
-	            <td class="centeredButton">	<img id="displayDVDs" src="/Content/Buttons/Select.DVD.Button.png" /></td>
+                <td class="centeredButton">	<span id="displayVideoRecordings">@Html.Raw(Button.Rect("TV"))</span></td>
+                <td class="centeredButton">	<span id="displayVideos">@Html.Raw(Button.Rect("Video"))</span></td>
+	            <td class="centeredButton">	<span id="displayDVDs">@Html.Raw(Button.Rect("DVD"))</span></td>
             </tr>
         </table>
 

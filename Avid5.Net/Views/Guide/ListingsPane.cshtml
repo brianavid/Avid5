@@ -25,8 +25,8 @@
                     var displayClass = "guideEpgProgramme" + (programme.IsScheduled ? " guideEpgProgrammeScheduled" : "");
                     <div class="@displayClass guideItem" id="@programme.Id">
                         <span class="guideEpgRecordingControls startHidden">
-                            <img class="guideEpgProgrammeRecordSeries" id="@programme.Id" src="/Content/Buttons/SmallRound/Transport.Rec.Series.png" />
-                            <img class="guideEpgProgrammeRecord" id="@programme.Id" src="/Content/Buttons/SmallRound/Transport.Rec.png" />
+                            <span class="guideEpgProgrammeRecordSeries" id="@programme.Id">@Html.Raw(Button.SmallRound("RecSeries"))</span>
+                            <span class="guideEpgProgrammeRecord" id="@programme.Id">@Html.Raw(Button.SmallRound("Rec"))</span>
                         </span>
                         <div class="guideProgrammeInfo">
                             <div>@(programme.StartTime.ToLocalTime().ToString("HH:mm")) [@JRMC.FormatDuration(programme.Duration.TotalMinutes.ToString())]</div>
@@ -56,7 +56,7 @@
                 {
                     var beingRecordedClass = timer.IsRecording ? "tvRecordingBeingRecorded" : "";
                     <div class="guideScheduledRecording guideItem @beingRecordedClass" id="@timer.Id">
-                        <img class="guideEpgProgrammeCancel startHidden" id="@timer.Id" src="/Content/Buttons/SmallRound/Exit.png" />
+                        <span class="guideEpgProgrammeCancel startHidden" id="@timer.Id">@Html.Raw(Button.SmallRound("Exit"))</span>
                         <div class="guideProgrammeInfo">
                             <span>@(timer.StartTime.ToLocalTime().ToString("ddd dd MMM HH:mm")) [@JRMC.FormatDuration(timer.Duration.TotalMinutes.ToString())] @(timer.InSeries ? "SERIES" : "")</span>
                             <span>@(timer.ChannelName)</span>
@@ -84,7 +84,7 @@
                 foreach (VideoTV.Series series in allSeries)
                 {
                     <div class="guideSeriesDefinitions guideItem" id="@series.Id">
-                        <img class="guideEpgSeriesCancel startHidden" id="@series.Id" src="/Content/Buttons/SmallRound/Exit.png" />
+                        <span class="guideEpgSeriesCancel startHidden" id="@series.Id">@Html.Raw(Button.SmallRound("Exit"))</span>
                         <div class="guideProgrammeInfo">
                             <span>@(series.StartTime.ToLocalTime().ToString("dddd")) starting between @(series.StartTimeLow.ToLocalTime().ToString("HH:mm")) and @(series.StartTimeHigh.ToLocalTime().ToString("HH:mm"))</span>
                             <span>@(series.ChannelName)</span>

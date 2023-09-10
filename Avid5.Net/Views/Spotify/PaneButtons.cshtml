@@ -1,9 +1,9 @@
 ﻿<script type="text/javascript">var HasAuthenticated = @(Spotify.HasAuthenticated ? 1 : 0);</script>
 <table class="buttonRow">
 	<tr>
-	    <td class="centeredButton">	<img id="goSpotifyPlaying" src="/Content/Buttons/PlayTab.png" /></td>
-	    <td class="centeredButton">	<img id="goSpotifyQueue" src="/Content/Buttons/ListTab.png" /></td>
-	    <td class="centeredButton">	<img id="goSpotifyLibrary" src="/Content/Buttons/LibraryTab.png" /></td>
+	    <td class="centeredButton">	<span id="goSpotifyPlaying">@Html.Raw(Button.Rect("PlayTab"))</span></td>
+	    <td class="centeredButton">	<span id="goSpotifyQueue">@Html.Raw(Button.Rect("ListTab"))</span></td>
+	    <td class="centeredButton">	<span id="goSpotifyLibrary">@Html.Raw(Button.Rect("LibraryTab"))</span></td>
     </tr>
 </table>
 

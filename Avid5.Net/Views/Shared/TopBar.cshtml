@@ -14,7 +14,7 @@
 
   <table class="topBar @(Running.RunningProgramTopBarClass)">
 	  <tr>
-		<td class="centeredButton"><img id="toggleSettings" src='~/Content/Buttons/SmallRound/Spanner.png'></td>
+		<td class="centeredButton"><span id="toggleSettings">@Html.Raw(Button.SmallRound("Spanner"))</span></td>
 	      <td class="width20 @screenDisplayClass">
 			<table align='center'>
 			<tr>
@@ -30,20 +30,20 @@
 		  </table>
 
 		  </td>
-		  <td class="centeredButton"><img id="volumeDown" src='~/Content/Buttons/SmallRound/Audio.Volume.Down.png'></td>
-		  <td class="centeredButton"><img id="volumeUp" src='~/Content/Buttons/SmallRound/Audio.Volume.Up.png'></td>
-		  <td class="centeredButton"><img id="volumeMute" src='~/Content/Buttons/SmallRound/Audio.Mute.On.png'></td>
+		  <td class="centeredButton"><span id="volumeDown">@Html.Raw(Button.SmallRound("Audio.Volume.Down"))</span></td>
+		  <td class="centeredButton"><span id="volumeUp">@Html.Raw(Button.SmallRound("Audio.Volume.Up"))</span></td>
+		  <td class="centeredButton"><span id="volumeMute">@Html.Raw(Button.SmallRound("Audio.Mute.On"))</span></td>
 		@if (ViewData.ContainsKey("IsHome"))
 		{
-		  <td class="centeredButton"><img id="allOff" src='~/Content/Buttons/SmallRound/Power.Off.png'></td>
+		  <td class="centeredButton"><span id="allOff">@Html.Raw(Button.SmallRound("Power.Off"))</span></td>
 		}
         else if (ViewData.ContainsKey("LinkBack"))
 		{
-		  <td class="centeredButton"><img id="goBack" src='~/Content/Buttons/SmallRound/Back.png'></td>
+		  <td class="centeredButton"><span id="goBack">@Html.Raw(Button.SmallRound("Back"))</span></td>
 		}
 		else
 		{
-		  <td class="centeredButton"><img id="goHome" src='~/Content/Buttons/SmallRound/Home.png'></td>
+		  <td class="centeredButton"><span id="goHome">@Html.Raw(Button.SmallRound("Home"))</span></td>
 		}
 	  </tr>
   </table>

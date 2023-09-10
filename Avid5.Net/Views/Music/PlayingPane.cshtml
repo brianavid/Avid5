@@ -14,11 +14,11 @@
 <div class="musicPlaybackControls">
 	<table class='width100'>
 		<tr>
-			<td class="centeredButton"><img id="musicPrev" src="~/Content/Buttons/Transport.Prev.png"></td>
-	        <td class="centeredButton"><img id="musicMinus10" src="~/Content/Buttons/Minus10.png" /></td>
-			<td class="centeredButton"><img id="musicPlayPause" src="~/Content/Buttons/PlayPauseButton.png"></td>
-	        <td class="centeredButton"><img id="musicPlus10" src="~/Content/Buttons/Plus10.png" /></td>
-			<td class="centeredButton"><img id="musicNext" src="~/Content/Buttons/Transport.Next.png"></td>
+			<td class="centeredButton"><span id="musicPrev">@Html.Raw(Button.Square("Prev"))</span></td>
+	        <td class="centeredButton"><span id="musicMinus10">@Html.Raw(Button.Square("Minus10"))</span></td>
+			<td class="centeredButton"><span id="musicPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
+	        <td class="centeredButton"><span id="musicPlus10">@Html.Raw(Button.Square("Plus10"))</span></td>
+			<td class="centeredButton"><span id="musicNext">@Html.Raw(Button.Square("Next"))</span></td>
 		</tr>
 	</table>
 			  

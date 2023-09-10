@@ -1,8 +1,8 @@
 ﻿<table class="buttonRow">
 	<tr>
-	    <td class="centeredButton">	<img id="goTvWatch" src="/Content/Buttons/Select.Live.Button.png" /></td>
-  	    <td class="centeredButton">	<img id="goTvTv" src="/Content/Buttons/Select.TV.Button.png" /></td>
-        <td class="centeredButton">	<img id="goTvRadio" src="/Content/Buttons/Select.Radio.Button.png" /></td>
+	    <td class="centeredButton">	<span id="goTvWatch">@Html.Raw(Button.Rect("Live"))</span></td>
+  	    <td class="centeredButton">	<span id="goTvTv">@Html.Raw(Button.Rect("TV"))</span></td>
+        <td class="centeredButton">	<span id="goTvRadio">@Html.Raw(Button.Rect("Radio"))</span></td>
     </tr>
 </table>
 

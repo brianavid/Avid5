@@ -6,25 +6,25 @@
             <td class="centeredButton">
                 @if (VideoTV.IsDvdMode)
                 {
-                    <img id="videoDvdMenu" src="/Content/Buttons/Select.Menu.Button.png" />
+                    <span id="videoDvdMenu">@Html.Raw(Button.Rect("Menu"))</span>
                 }
                 else
                 {
                     <text>&nbsp;</text>
                 }
             </td>
-            <td class="centeredButton"><img id="videoPlayPause" src="~/Content/Buttons/PlayPauseButton.png" /></td>
-            <td class="centeredButton"><img id="videoStop" src="~/Content/Buttons/Transport.Stop.png" /></td>
+            <td class="centeredButton"><span id="videoPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
+            <td class="centeredButton"><span id="videoStop">@Html.Raw(Button.Square("Stop"))</span></td>
         </tr>
     </table>
     <br />
     <br />
     <table class='width100'>
         <tr>
-            <td class="centeredButton"><img id="videoBack60" src="~/Content/Buttons/Minus60.png" /></td>
-            <td class="centeredButton"><img id="videoBack10" src="~/Content/Buttons/Minus10.png" /></td>
-            <td class="centeredButton"><img id="videoForward10" src="~/Content/Buttons/Plus10.png" /></td>
-            <td class="centeredButton"><img id="videoForward60" src="~/Content/Buttons/Plus60.png" /></td>
+            <td class="centeredButton"><span id="videoBack60">@Html.Raw(Button.Square("Minus60"))</span></td>
+            <td class="centeredButton"><span id="videoBack10">@Html.Raw(Button.Square("Minus10"))</span></td>
+            <td class="centeredButton"><span id="videoForward10">@Html.Raw(Button.Square("Plus10"))</span></td>
+            <td class="centeredButton"><span id="videoForward60">@Html.Raw(Button.Square("Plus60"))</span></td>
         </tr>
     </table>
 
@@ -49,21 +49,21 @@
     <table>
         <tr>
             <td>&nbsp;</td>
-            <td class="centeredButton"><img id="videoMenuUp" src="~/Content/Buttons/BigRound/Nav.Up.png" /></td>
+            <td class="centeredButton"><span id="videoMenuUp">@Html.Raw(Button.BigRound("Nav.Up"))</span></td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td class="centeredButton"><img id="videoMenuLeft" src="~/Content/Buttons/BigRound/Nav.Left.png" /></td>
-            <td class="centeredButton"><img id="videoMenuSelect" src="~/Content/Buttons/BigRound/OK.png" /></td>
-            <td class="centeredButton"><img id="videoMenuRight" src="~/Content/Buttons/BigRound/Nav.Right.png" /></td>
+            <td class="centeredButton"><span id="videoMenuLeft">@Html.Raw(Button.BigRound("Nav.Left"))</span></td>
+            <td class="centeredButton"><span id="videoMenuSelect">@Html.Raw(Button.BigRound("OK"))</span></td>
+            <td class="centeredButton"><span id="videoMenuRight">@Html.Raw(Button.BigRound("Nav.Right"))</span></td>
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td class="centeredButton"><img id="videoMenuDown" src="~/Content/Buttons/BigRound/Nav.Down.png" /></td>
+            <td class="centeredButton"><span id="videoMenuDown">@Html.Raw(Button.BigRound("Nav.Down"))</span></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="centeredButton"><img id="videoStop" src="~/Content/Buttons/Transport.Stop.png" /></td>
+            <td class="centeredButton"><span id="videoStop">@Html.Raw(Button.Square("Stop"))</span></td>
         </tr>
     </table>
 

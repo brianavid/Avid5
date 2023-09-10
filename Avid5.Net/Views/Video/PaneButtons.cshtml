@@ -1,12 +1,12 @@
 ﻿<table class="buttonRow">
 	<tr>
-	    <td class="centeredButton">	<img id="goVideoWatch" src="/Content/Buttons/Select.Watch.Button.png" /></td>
-	    <td class="centeredButton">	<img id="goVideoRecordings" src="/Content/Buttons/Select.TV.Button.png" /></td>
+	    <td class="centeredButton">	<span id="goVideoWatch">@Html.Raw(Button.Rect("Watch"))</span></td>
+	    <td class="centeredButton">	<span id="goVideoRecordings">@Html.Raw(Button.Rect("TV"))</span></td>
         @if (Config.VideoPath != null) {
-            <td class="centeredButton">	<img id="goVideoVideos" src="/Content/Buttons/Select.Video.Button.png" /></td>
+            <td class="centeredButton">	<span id="goVideoVideos">@Html.Raw(Button.Rect("Video"))</span></td>
         }
         @if (Config.DvdPath != null) {
-            <td class="centeredButton">	<img id="goVideoDVDs" src="/Content/Buttons/Select.DVD.Button.png" /></td>
+            <td class="centeredButton">	<span id="goVideoDVDs">@Html.Raw(Button.Rect("DVD"))</span></td>
         }
     </tr>
 </table>
