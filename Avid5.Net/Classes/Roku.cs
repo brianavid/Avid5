@@ -132,12 +132,12 @@ public static class Roku
             if (info.ContainsKey("position"))
             {
                 var ms = int.Parse(new string(info["position"].TakeWhile(c => char.IsDigit(c)).ToArray()));
-                positionDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString(@"mm\:ss");
+                positionDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString(ms >= 3600000 ? @"hh\:mm\:ss" : @"mm\:ss");
             }
             if (info.ContainsKey("duration"))
             {
                 var ms = int.Parse(info["duration"].TakeWhile(c => char.IsDigit(c)).ToArray());
-                durationDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString(@"mm\:ss");
+                durationDisplay = new TimeSpan(0, 0, 0, 0, ms).ToString(ms >= 3600000 ? @"hh\:mm\:ss" : @"mm\:ss");
             }
         }
         return new XElement("Info", new List<XAttribute> {
