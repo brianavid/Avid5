@@ -478,7 +478,7 @@ textarea {
     color: #000040;
     text-align: center;
     vertical-align: middle !important;
-    border: 2px solid #404040;
+    border: 1px solid #404040;
     text-shadow: 1px 1px 2px #808080;
     box-shadow: 2px 2px 2px rgba(0,0,0,0.3), 2px 2px 2px #ffffff inset;
 }
