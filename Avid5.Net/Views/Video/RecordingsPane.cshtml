@@ -1,6 +1,6 @@
 ﻿@{
     VideoTV.LoadRecordings();
-    if (ViewBag.GroupTitle != null)
+    if (ViewBag.GroupSeries != null)
     {
         foreach (var recording in VideoTV.AllRecordingsForSeries(ViewBag.GroupSeries))
         {
