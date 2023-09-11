@@ -15,20 +15,21 @@
   <table class="topBar @(Running.RunningProgramTopBarClass)">
 	  <tr>
 		<td class="centeredButton"><span id="toggleSettings">@Html.Raw(Button.SmallRound("Spanner"))</span></td>
-	      <td class="width20 @screenDisplayClass">
-			<table align='center'>
-			<tr>
-			  <td class='pageTitle' align='center'>
-				<div id=homeTitle>@Running.RunningProgram</div>
-			  </td>
-			</tr>
-			<tr>
-			  <td class='pageTitle' align='center'>
-				<div id=volumeDisplay>@Receiver.VolumeDisplay</div>
-			  </td>
-			</tr>
-		  </table>
-
+	      <td class="width20">
+			<div class="@screenDisplayClass">
+				<table align='center'>
+				<tr>
+				  <td class='pageTitle' align='center'>
+					<div id=homeTitle>@Running.RunningProgram</div>
+				  </td>
+				</tr>
+				<tr>
+				  <td class='pageTitle' align='center'>
+					<div id=volumeDisplay>@Receiver.VolumeDisplay</div>
+				  </td>
+				</tr>
+			  </table>
+		  </div>
 		  </td>
 		  <td class="centeredButton"><span id="volumeDown">@Html.Raw(Button.SmallRound("Audio.Volume.Down"))</span></td>
 		  <td class="centeredButton"><span id="volumeUp">@Html.Raw(Button.SmallRound("Audio.Volume.Up"))</span></td>
