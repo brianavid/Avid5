@@ -133,7 +133,7 @@ public static class Screen
 
 				PingReply result = ping.Send(TVAddress, 500);
                 logger.Info($"Ping {TVAddress} returns {result.Status}");
-                return result.Status == IPStatus.Success;
+                isOn = result.Status == IPStatus.Success;
 			}
 		}
 		else
