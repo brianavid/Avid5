@@ -497,26 +497,46 @@ public class VideoTV
 
 	static void LoadOldRecordingInfo()
     {
-        var doc = XDocument.Load(System.IO.Path.Combine(Config.OldRecordingsPath, "Recordings.xml"));
-        var recordings = doc.Element("recordings").Elements("recording")
-           .Select(r => new Recording(r, true, null))
-           .Where(r => !r.InError);
+        var xmlPath = System.IO.Path.Combine(Config.OldRecordingsPath, "Recordings.xml");
+        var doc = XDocument.Load(xmlPath);
+        var recordingsXml = doc.Element("recordings").Elements("recording");
 
-        foreach (var r in recordings)
+        var elementsToRemove = new List<XElement>();
+        
+        foreach (var recordingXml in recordingsXml)
         {
-            var filename = GetActualCaseForFileName(Config.OldRecordingsPath, Path.GetFileName(r.Filename));
+            var r = new Recording(recordingXml, true, null);
 
-			if (File.Exists(filename))
+            if (r.InError)
             {
-                var leaf = Path.GetFileNameWithoutExtension(filename).ToLower();
-                OldRecordings[leaf] = r;
-				r.Filename = filename;
+                elementsToRemove.Add(recordingXml);
             }
             else
             {
-				logger.Warn($"Missing old recording file {filename}");
-			}
-		}
+                var filename = GetActualCaseForFileName(Config.OldRecordingsPath, Path.GetFileName(r.Filename));
+
+                if (File.Exists(filename))
+                {
+                    var leaf = Path.GetFileNameWithoutExtension(filename).ToLower();
+                    OldRecordings[leaf] = r;
+                    r.Filename = filename;
+                }
+                else
+                {
+                    logger.Warn($"Missing old recording file {filename}");
+                    elementsToRemove.Add(recordingXml);
+                }
+            }
+        }
+
+        if (elementsToRemove.Any())
+        {
+            foreach (var el in elementsToRemove)
+            {
+                el.Remove();
+            }
+            doc.Save(xmlPath);
+        }
     }
 
 	private static string GetActualCaseForFileName(string directory, string filename)
