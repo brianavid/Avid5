@@ -2,7 +2,7 @@
 
 public class Button
 {
-    const bool UseCSS = true;
+    static bool UseCSS = true;
 
     internal class Mapping
     {
@@ -56,8 +56,8 @@ public class Button
                 mappings["Rec"] = new Mapping("Fiber_Manual_Record", "", "buttonRed");
                 mappings["RecSeries"] = new Mapping("Fiber_Smart_Record", "", "buttonRed");
                 mappings["Spanner"] = new Mapping("Settings");
-                mappings["ThumbsDown"] = new Mapping("Thumb_Down");
-                mappings["ThumbsUp"] = new Mapping("Thumb_Up");
+                mappings["ThumbsDown"] = new Mapping("Thumb_Down", "", "buttonRed");
+                mappings["ThumbsUp"] = new Mapping("Thumb_Up", "", "buttonGreen");
                 mappings["FastForward"] = new Mapping("Fast_Forward");
                 mappings["Rewind"] = new Mapping("Fast_Rewind");
                 mappings["Prev"] = new Mapping("Skip_Previous");
@@ -133,6 +133,18 @@ public class Button
         if (UseCSS)
         {
             return StyledButton(buttonName, "buttonRect", "buttonLargeIcon");
+        }
+        else
+        {
+            return Image(buttonName);
+        }
+    }
+
+    public static string LongRect(string buttonName)
+    {
+        if (UseCSS)
+        {
+            return StyledButton(buttonName, "buttonLongRect", "buttonLargeIcon");
         }
         else
         {

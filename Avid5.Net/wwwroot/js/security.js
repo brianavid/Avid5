@@ -43,9 +43,8 @@ function AddZonesHammerActions() {
     EnableDragScroll(zonesHammer)
 
     zonesHammer.on("tap", ".securityZoneItem", function (e) {
-        $(".securityZoneOn").addClass("startHidden");
-        $(".securityZoneOff").addClass("startHidden");
-        $(this).children("img").removeClass("startHidden");
+        $(".securityZoneButtons").addClass("startHidden");
+        $(this).children(".securityZoneButtons").removeClass("startHidden");
 
         return false;
     });

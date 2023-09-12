@@ -98,7 +98,6 @@ function AddListingsHammerActions() {
     listingsHammer.on("tap", ".guideEpgProgramme", function (e) {
         var programItem = this;
         $(".guideEpgProgrammeDescription").remove();
-        $(".guideEpgProgrammeCancel").remove();
         $(".guideEpgRecordingControls").addClass("startHidden");
 
         $.ajax({
@@ -150,15 +149,15 @@ function AddListingsHammerActions() {
     });
 
     listingsHammer.on("tap", ".guideScheduledRecording", function (e) {
-        $(".guideEpgProgrammeCancel").addClass("startHidden");
-        $(this).children("img").removeClass("startHidden");
+        $(".guideEpgRecordingControls").addClass("startHidden");
+        $(this).children(".guideEpgRecordingControls").removeClass("startHidden");
 
         return false;
     });
 
     listingsHammer.on("tap", ".guideSeriesDefinitions", function (e) {
-        $(".guideEpgSeriesCancel").addClass("startHidden");
-        $(this).children("img").removeClass("startHidden");
+        $(".guideEpgRecordingControls").addClass("startHidden");
+        $(this).children(".guideEpgRecordingControls").removeClass("startHidden");
 
         return false;
     });

@@ -2,8 +2,10 @@
     @foreach (var zone in Security.GetZoneNames())
     {
         <div class="securityZoneItem" id="@zone">
-            <span class="securityZoneOn startHidden" id="@zone">@Html.Raw(Button.SmallRound("ThumbsUp"))</span>
-            <span class="securityZoneOff startHidden" id="@zone">@Html.Raw(Button.SmallRound("ThumbsDown"))</span>
+            <span class="securityZoneButtons startHidden">
+                <span class="securityZoneOn" id="@zone">@Html.Raw(Button.MiniRound("ThumbsUp"))</span>
+                <span class="securityZoneOff" id="@zone">@Html.Raw(Button.MiniRound("ThumbsDown"))</span>
+            </span>
             <div class="securityZoneName">
                 @zone
             </div>
