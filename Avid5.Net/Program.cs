@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using NLog;
 using NLog.Web;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,7 @@ try
 	VideoTV.Initialise();
 	JRMC.CloseScreen();
 
-	logger.Info("Avid 5 Initialised");
+	logger.Info($"Avid 5 Initialised (build {Config.GetBuildDate(Assembly.GetExecutingAssembly())} UTC)");
 	initialisedSuccessfully = true;
 
     app.Start();

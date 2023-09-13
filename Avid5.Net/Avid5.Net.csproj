@@ -8,7 +8,11 @@
     <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup>
+    <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+  </PropertyGroup>
+
+ <ItemGroup>
     <PackageReference Include="NLog" Version="5.2.2" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.2" />
     <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
