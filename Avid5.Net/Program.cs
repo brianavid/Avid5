@@ -29,6 +29,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+logger.Info("-----------------------------------------------------------");
 logger.Info("Avid 5 Started");
 
 bool initialisedSuccessfully = false;
