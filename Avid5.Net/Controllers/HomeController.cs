@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace Avid5.Net.Controllers
 {
     public class HomeController : Controller
     {
+        static Logger logger = LogManager.GetCurrentClassLogger();
+
         //
         // GET: /Home/
 
@@ -32,6 +37,21 @@ namespace Avid5.Net.Controllers
         }
 
         //
+        // GET: /Home/Error
+
+        public ActionResult Error()
+        {
+            var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var error = feature?.Error;
+
+            if (error != null)
+            {
+                logger.Error(error);
+            }
+
+            return View();
+        }
+
         // GET: /Home/GoAway
 
         public ActionResult GoAway()

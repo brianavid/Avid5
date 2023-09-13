@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Diagnostics;
+@{
+    ViewBag.Title = "";
+}
+
+@await Html.PartialAsync("TopBar")
+@section scripts {
+    @Html.Raw(Render.Script("topBar"))
+}
+
+@{
+    var error = Context.Features.Get<IExceptionHandlerFeature>().Error;
+}
+<h2>An Internal error has occurred</h2>
+<p></p>
+<h3>@error.Message</h3>
+<p></p>
+@foreach (var line in error.StackTrace.Split(Environment.NewLine))
+{
+    @line<br>
+}
