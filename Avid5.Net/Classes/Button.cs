@@ -2,8 +2,6 @@
 
 public class Button
 {
-    static bool UseCSS = true;
-
     internal class Mapping
     {
         public string Glyph { get; private set; }
@@ -28,6 +26,9 @@ public class Button
         }
     }
 
+    //  The Mappings table maps the original(ish) names of PNG image files for buttons
+    //  onto the text or glyph(s) that should appear inside CSS-styled buttons
+    //  This avoids need to change all the places in views where buttons are used.
     private static Dictionary<string, Mapping> mappings = null;
     private static Dictionary<string, Mapping> Mappings
     {
@@ -79,77 +80,31 @@ public class Button
         get { return "<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0' />"; }
     }
 
-    static string Image(string buttonName)
-    {
-        return $"<img src='/Content/Buttons/{buttonName}.png'/>";
-    }
     public static string SmallRound(string buttonName)
     {
-        if (UseCSS)
-        {
-            return StyledButton(buttonName, "buttonSmallRound", "buttonRegularIcon");
-        }
-        else
-        {
-            return Image("SmallRound/" + buttonName);
-        }
+        return StyledButton(buttonName, "buttonSmallRound", "buttonRegularIcon");
     }
     public static string BigRound(string buttonName)
     {
-        if (UseCSS)
-        {
-            return StyledButton(buttonName, "buttonBigRound", "buttonLargeIcon");
-        }
-        else
-        {
-            return Image("BigRound/" + buttonName);
-        }
+        return StyledButton(buttonName, "buttonBigRound", "buttonLargeIcon");
     }
     public static string MiniRound(string buttonName)
     {
-        if (UseCSS)
-        {
-            return StyledButton(buttonName, "buttonMiniRound", "buttonMiniIcon");
-        }
-        else
-        {
-            return Image("MiniRound/" + buttonName);
-        }
+        return StyledButton(buttonName, "buttonMiniRound", "buttonMiniIcon");
     }
     public static string Square(string buttonName)
     {
-        if (UseCSS)
-        {
-            return StyledButton(buttonName, "buttonSquare", "buttonLargeIcon");
-        }
-        else
-        {
-            return Image("Square/" + buttonName);
-        }
+        return StyledButton(buttonName, "buttonSquare", "buttonLargeIcon");
     }
 
     public static string Rect(string buttonName)
     {
-        if (UseCSS)
-        {
-            return StyledButton(buttonName, "buttonRect", "buttonLargeIcon");
-        }
-        else
-        {
-            return Image(buttonName);
-        }
+        return StyledButton(buttonName, "buttonRect", "buttonLargeIcon");
     }
 
     public static string LongRect(string buttonName)
     {
-        if (UseCSS)
-        {
-            return StyledButton(buttonName, "buttonLongRect", "buttonLargeIcon");
-        }
-        else
-        {
-            return Image(buttonName);
-        }
+        return StyledButton(buttonName, "buttonLongRect", "buttonLargeIcon");
     }
 
     private static string StyledButton(string buttonName, string buttonStyle, string iconStyle)

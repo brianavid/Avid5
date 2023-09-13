@@ -426,6 +426,18 @@ public class JRMC
         return null;
     }
 
+    static DateTime lastReportedNoStatus = DateTime.MinValue;
+
+    static Dictionary<string, String> MakeDict(XElement x)
+    {
+        var items = x.Elements("Item");
+        if (items.First().HasAttributes)
+        {
+            return items.Select(f => (f.Attribute("Name").Value, f.Value)).ToDictionary(i => i.Item1, i => i.Item2);
+        }
+        return items.First().Elements("Field").Select(f => (f.Attribute("Name").Value, f.Value)).ToDictionary(i => i.Item1, i => i.Item2);
+    }
+
     /// <summary>
     /// Is the underlying player actually playing anything - not stopped or paused?
     /// </summary>
@@ -438,13 +450,31 @@ public class JRMC
             if (x != null)
             {
                 var status = x.Root.DescendantsAndSelf("Item").Where(el => el.Attribute("Name").Value == "Status");
-                return status != null && status.Count() != 0 && status.First().Value == "Playing";
+                if (status != null && status.Count() != 0)
+                {
+                    logger.Info($"IsActivelyPlaying: status = {status.First().Value}");
+                    lastReportedNoStatus = DateTime.MinValue;
+                    return status.First().Value == "Playing";
+                }
+                logger.Info($"IsActivelyPlaying: No status");
+                if (DateTime.Now > lastReportedNoStatus.AddMinutes(10))
+                {
+                    lastReportedNoStatus = DateTime.Now;
+                    var dict = MakeDict(x.Root);
+                    foreach (var name in dict.Keys)
+                    {
+                        logger.Info($"{name}: {dict[name]}");
+                    }
+                }
+                return false;
             }
 
+            logger.Info($"IsActivelyPlaying: No Playback/Info");
             return true;
         }
-        catch
+        catch (Exception ex )
         {
+            logger.Info($"IsActivelyPlaying: Exception '{ex.Message}");
             return true;
         }
     }
