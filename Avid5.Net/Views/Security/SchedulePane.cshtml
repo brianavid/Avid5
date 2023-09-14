@@ -4,9 +4,9 @@
         <p>
             @(zone.Key) 
             @{
-                String config; if (Security.ZoneConfig.TryGetValue(zone.Key, out config))
-                { <span>@config</span>}; if (zone.Value.Count() == 0)
-                { <span>: On</span> }
+                String config; 
+                if (Security.ZoneConfig.TryGetValue(zone.Key, out config)) { <span>@config</span> }; 
+                if (zone.Value.Count() == 0) { <span>: On</span> }
             }
 
             <ul>

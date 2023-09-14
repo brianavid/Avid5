@@ -147,10 +147,10 @@ public class VideoTV
                 try
                 {
                     var dict = MakeDict(xRecording);
-                    var series = "";
                     var name = "";
-                    dict.TryGetValue("Name", out name);
-                    dict.TryGetValue("Series", out series);
+                    var series = "";
+                    if (!dict.TryGetValue("Name", out name)) name = "";
+                    if (!dict.TryGetValue("Series", out series)) series = "";
 
                     Id = dict["Program ID"];
                     Filename = dict["Filename"];
@@ -254,9 +254,12 @@ public class VideoTV
         {
             get
             {
-                string series = Name;
-                Info.TryGetValue("Series", out series);
-                return series != Name ? series + ": " + Name : Name;
+                string series;
+                if (!Info.TryGetValue("Series", out series))
+                {
+                    series = Name;
+                }
+                return (series != Name && series != "") ? series + ": " + Name : Name;
             }
         }
         public Channel Channel { get; private set; }
