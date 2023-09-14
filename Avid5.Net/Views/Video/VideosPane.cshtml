@@ -1,21 +1,21 @@
 ﻿@{
-    var videoFiles = System.IO.Directory.GetFiles(Config.VideoPath, "*.*");
-    if (videoFiles.Length != 0)
+    if (!string.IsNullOrEmpty(Config.VideoPath) && Directory.Exists(Config.VideoPath))
     {
-        foreach (var file in videoFiles)
+        var videoFiles = System.IO.Directory.GetFiles(Config.VideoPath, "*.*");
+        if (videoFiles.Length != 0)
         {
-            if (System.IO.File.GetAttributes(file).HasFlag(System.IO.FileAttributes.Hidden))
+            foreach (var file in videoFiles)
             {
-                continue;
-            }
-            string leaf = System.IO.Path.GetFileName(file);
-            int lastDot = leaf.LastIndexOf('.');
-            if (lastDot > 0)
-            {
-                string title = leaf.Substring(0, lastDot);
-                <div class="videoVideo videoDvd" id="@file">
-                    <div class="videoRecordingName"><span class="playButton">&gt;&nbsp;</span><span class="videoRecordingTitle">@title</span></div>
-                </div>
+                if (System.IO.File.GetAttributes(file).HasFlag(System.IO.FileAttributes.Hidden))
+                {
+                    continue;
+                }
+                string title = System.IO.Path.GetFileNameWithoutExtension(file);
+                {
+                    <div class="videoVideo videoItem" id="@file">
+                        <div class="videoRecordingName"><span class="playButton">&gt;&nbsp;</span><span class="videoRecordingTitle">@title</span></div>
+                    </div>
+                }
             }
         }
     }

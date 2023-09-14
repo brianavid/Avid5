@@ -189,7 +189,7 @@ textarea {
     -webkit-overflow-scrolling: touch;
 }
 
-.musicPlaybackQueueItem, .musicBrowserItem, .guideItem, .spotifyPlaybackQueueItem, .spotifyBrowserItem, .photosBrowserItem, .rokuBrowserItem, .tvChannel, .videoRecording, .videoRecordingGroup, .videoDvd, .videoRecordingAction, .actionMenuItem, .securityProfileItem, .securityZoneItem {
+.musicPlaybackQueueItem, .musicBrowserItem, .guideItem, .spotifyPlaybackQueueItem, .spotifyBrowserItem, .photosBrowserItem, .rokuBrowserItem, .tvChannel, .videoRecording, .videoRecordingGroup, .videoItem, .videoRecordingAction, .actionMenuItem, .securityProfileItem, .securityZoneItem {
     width: 100%;
     border-width: thin;
     border-color: #3a5069;
@@ -213,7 +213,7 @@ textarea {
     background-color:#DDD;
 }
 
-.musicPlaybackQueueTitle, .musicBrowserTitle, .guideTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .actionMenuItem, .videoDvd, .videoRecordingAction, .tvPlayingInfo, .securityProfileItem, .securityZoneName {
+.musicPlaybackQueueTitle, .musicBrowserTitle, .guideTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .actionMenuItem, .videoItem, .videoRecordingAction, .tvPlayingInfo, .securityProfileItem, .securityZoneName {
     padding-top: 10px;
     padding-bottom: 10px;
 }

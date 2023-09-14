@@ -1,10 +1,13 @@
 ﻿@{
-    foreach (var dir in System.IO.Directory.GetDirectories(Config.DvdPath, "*.*"))
+    if (!string.IsNullOrEmpty(Config.DvdPath) && Directory.Exists(Config.DvdPath))
     {
-        string leaf = System.IO.Path.GetFileName(dir);
+        foreach (var dir in System.IO.Directory.GetDirectories(Config.DvdPath, "*.*"))
+        {
+            string leaf = System.IO.Path.GetFileName(dir);
 
-        <div class="videoDvdDirectory videoDvd" id="@dir" >
-            <div class="videoRecordingName"><span class="playButton">&gt;&nbsp;</span><span class="videoRecordingTitle">@leaf</span></div>
-        </div>
+            <div class="videoDvdDirectory videoItem" id="@dir">
+                <div class="videoRecordingName"><span class="playButton">&gt;&nbsp;</span><span class="videoRecordingTitle">@leaf</span></div>
+            </div>
+        }
     }
 }
