@@ -328,6 +328,27 @@ function AddVideoControlsHammerActions() {
         })
     });
 
+    videoControlHammer.on("touch", "#videoAudioBack", function (e) {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28044&Parameter=-50"),
+            cache: false
+        })
+    });
+
+    videoControlHammer.on("touch", "#videoAudioReset", function (e) {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28044&Parameter=0"),
+            cache: false
+        })
+    });
+
+    videoControlHammer.on("touch", "#videoAudioAdvance", function (e) {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28044&Parameter=50"),
+            cache: false
+        })
+    });
+
 }
 
 var videoRecordingsListHammer = null;
