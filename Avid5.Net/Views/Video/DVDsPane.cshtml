@@ -1,7 +1,7 @@
 ﻿@{
     if (!string.IsNullOrEmpty(Config.DvdPath) && Directory.Exists(Config.DvdPath))
     {
-        foreach (var dir in System.IO.Directory.GetDirectories(Config.DvdPath, "*.*"))
+        foreach (var dir in System.IO.Directory.GetDirectories(Config.DvdPath, "*.*").OrderBy(s => s))
         {
             string leaf = System.IO.Path.GetFileName(dir);
 

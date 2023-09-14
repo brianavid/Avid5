@@ -4,7 +4,7 @@
         var videoFiles = System.IO.Directory.GetFiles(Config.VideoPath, "*.*");
         if (videoFiles.Length != 0)
         {
-            foreach (var file in videoFiles)
+            foreach (var file in videoFiles.OrderBy(s => s))
             {
                 if (System.IO.File.GetAttributes(file).HasFlag(System.IO.FileAttributes.Hidden))
                 {
