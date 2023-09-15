@@ -529,6 +529,11 @@ function AddBrowserHammerActions() {
         return false;
     });
 
+    browserHammer.on("tap", "#musicBrowserLibraryTrackAlbum", function (e) {
+        ReplaceBrowserPane("/Music/BrowserPane?mode=AlbumsOfTrack&id=" + $("#TrackInfoId").text(), "push");
+        return false;
+    });
+
 }
 
 var searchHammer = null;
