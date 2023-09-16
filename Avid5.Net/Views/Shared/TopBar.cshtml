@@ -20,7 +20,7 @@
 				<table align='center'>
 				<tr>
 				  <td class='pageTitle' align='center'>
-					<div id=homeTitle>@Running.RunningProgram</div>
+					<div id=homeTitle>@(!string.IsNullOrEmpty(Running.RunningProgram) ? Running.RunningProgram : Security.CurrentSecurityProfileShortName)</div>
 				  </td>
 				</tr>
 				<tr>

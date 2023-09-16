@@ -1,8 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Xml.Linq;
 using NLog;
 
@@ -63,23 +59,26 @@ public class Security
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
+        public string ShortName { get; private set; }
         public string Description { get; private set; }
 
         public Profile(
             int id,
             string name,
+            string shortName,
             string description)
         {
             Id = id;
             Name = name;
+            ShortName = shortName;
             Description = description;
         }
-
     }
 
     public static Dictionary<string, String> ZoneConfig { get; private set; }
 
     static int CurrentSecurityProfileId;
+    public static string CurrentSecurityProfileShortName { get; private set; }
     static bool CurrentProfileIsDefault;
     static Schedules CurrentProfileSchedules;
     static Dictionary<string, IEnumerable<Device>> Zones;
@@ -362,6 +361,7 @@ public class Security
     {
         CurrentProfileSchedules = LoadSchedulesForToday(profile.Elements("Schedule"));
         CurrentSecurityProfileId = id;
+        CurrentSecurityProfileShortName = profile.Attribute("short").Value; ;
         CurrentProfileIsDefault = profile.Attribute("default") != null;
         DateLoaded = DateTime.Now.Date;
 
@@ -458,7 +458,7 @@ public class Security
         int id = 0;
         foreach (var profile in doc.Root.Elements("Profile"))
         {
-            yield return new Profile(id++, profile.Attribute("name").Value, profile.Attribute("description").Value);
+            yield return new Profile(id++, profile.Attribute("name").Value, profile.Attribute("short").Value, profile.Attribute("description").Value);
         }
     }
 
@@ -503,63 +503,66 @@ public class Security
     {
         if (CurrentProfileSchedules != null)
         {
-            //  If the date has changed, re-load the profile in order to get the new day's schedule
-            if (when.Date != DateLoaded)
+            lock (CurrentProfileSchedules)
             {
-                LoadProfile(CurrentSecurityProfileId, true);
-            }
-
-            if (CurrentProfileSchedules.radioSchedule.onPeriods.Count != 0)
-            {
-                try
+                //  If the date has changed, re-load the profile in order to get the new day's schedule
+                if (when.Date != DateLoaded)
                 {
-                    var radioOn = TestIfOn(when, CurrentProfileSchedules.radioSchedule.onPeriods);
-                    if (radioOn && RadioState != "on")
-                    {
-                        Receiver.Security();
-                        RadioState = "on";
-                    }
-                    else if (!radioOn && RadioState != "off")
-                    {
-                        Receiver.TurnOff();
-                        RadioState = "off";
-                    }
-
+                    LoadProfile(CurrentSecurityProfileId, true);
                 }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Can't schedule Radio: {0}", ex.ToString());
-                }
-            }
 
-            foreach (var zoneKV in CurrentProfileSchedules.zoneSchedules)
-            {
-                if (zoneKV.Value.onPeriods.Count != 0 && Zones.ContainsKey(zoneKV.Key))
+                if (CurrentProfileSchedules.radioSchedule.onPeriods.Count != 0)
                 {
                     try
                     {
-                        var zoneOn = TestIfOn(when, zoneKV.Value.onPeriods);
-                        if (zoneOn && (!ZoneStates.ContainsKey(zoneKV.Key) || ZoneStates[zoneKV.Key] != "on"))
+                        var radioOn = TestIfOn(when, CurrentProfileSchedules.radioSchedule.onPeriods);
+                        if (radioOn && RadioState != "on")
                         {
-                            foreach (Device d in Zones[zoneKV.Key])
-                            {
-                                TP_Link.TurnOn(d.ipAddress, d.name, d.isSocket);
-                            }
-                            ZoneStates[zoneKV.Key] = "on";
+                            Receiver.Security();
+                            RadioState = "on";
                         }
-                        if (!zoneOn && (!ZoneStates.ContainsKey(zoneKV.Key) || ZoneStates[zoneKV.Key] != "off"))
+                        else if (!radioOn && RadioState != "off")
                         {
-                            foreach (Device d in Zones[zoneKV.Key])
-                            {
-                                TP_Link.TurnOff(d.ipAddress, d.name, d.isSocket);
-                            }
-                            ZoneStates[zoneKV.Key] = "off";
+                            Receiver.TurnOff();
+                            RadioState = "off";
                         }
 
                     }
                     catch (Exception ex)
                     {
-                        logger.Error(ex, "Can't schedule Zone {0}: {1}", zoneKV.Key, ex.ToString());
+                        logger.Error(ex, "Can't schedule Radio: {0}", ex.ToString());
+                    }
+                }
+
+                foreach (var zoneKV in CurrentProfileSchedules.zoneSchedules)
+                {
+                    if (zoneKV.Value.onPeriods.Count != 0 && Zones.ContainsKey(zoneKV.Key))
+                    {
+                        try
+                        {
+                            var zoneOn = TestIfOn(when, zoneKV.Value.onPeriods);
+                            if (zoneOn && (!ZoneStates.ContainsKey(zoneKV.Key) || ZoneStates[zoneKV.Key] != "on"))
+                            {
+                                foreach (Device d in Zones[zoneKV.Key])
+                                {
+                                    TP_Link.TurnOn(d.ipAddress, d.name, d.isSocket);
+                                }
+                                ZoneStates[zoneKV.Key] = "on";
+                            }
+                            if (!zoneOn && (!ZoneStates.ContainsKey(zoneKV.Key) || ZoneStates[zoneKV.Key] != "off"))
+                            {
+                                foreach (Device d in Zones[zoneKV.Key])
+                                {
+                                    TP_Link.TurnOff(d.ipAddress, d.name, d.isSocket);
+                                }
+                                ZoneStates[zoneKV.Key] = "off";
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex, "Can't schedule Zone {0}: {1}", zoneKV.Key, ex.ToString());
+                        }
                     }
                 }
             }

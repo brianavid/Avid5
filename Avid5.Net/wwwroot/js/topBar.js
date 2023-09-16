@@ -1,12 +1,7 @@
 ﻿var panelSwitcher = null;
 
 $(function () {
-    $(window).bind('orientationchange', function (event) {
-        if (panelSwitcher != null)
-            window.location.reload(true);
-    });
-
-    window.onresize = WindowResized
+   window.onresize = WindowResized
 
    $("#volumeUp").mousedown(function () {
         $.ajax({
@@ -250,7 +245,7 @@ $(function () {
 
 var overlayVisible = false;
 var lastWake = new Date();
-var lastWidth = 0;
+var lastWidth = window.innerWidth;
 if (document.referrer == null || document.referrer == "")
 {
     lastWake = new Date(0);
@@ -273,7 +268,6 @@ function WindowResized() {
         $("#topBarTitle").text(" ")
         SwitchPanelAfterWake(window.innerWidth > 768)
     }
-    lastWidth = window.innerWidth;
 }
 
 function OverlayScreen() {
@@ -316,6 +310,7 @@ function SwitchPanelAfterWake(isWide) {
                 if (panelSwitcher != null && // in case the response arrives after the switcher has been cancelled
                     lastRunningProgram != newRunningProgram)
                 {
+                    $("#topBarTitle").text(newRunningProgram)
                     switch (newRunningProgram) {
                         default:
                             window.location = isWide ? "/Home/Wide" : "/Home/Home";

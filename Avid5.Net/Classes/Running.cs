@@ -15,7 +15,19 @@ public static class Running
     /// <summary>
     /// The currently running player application
     /// </summary>
-    public static String RunningProgram { get; private set; }
+    private static string _runningProgram;
+    public static String RunningProgram
+    {
+        get
+        {
+            return _runningProgram;
+        }
+        private set
+        {
+            _runningProgram = value;
+            Config.SaveValue("RunningProgram", _runningProgram);
+        }
+    }
 
     /// <summary>
     /// When was there last activity with the running program?
@@ -29,6 +41,8 @@ public static class Running
 	/// </summary>
 	public static void Initialize()
     {
+        RunningProgram = Config.ReadValue("RunningProgram") ?? "";
+
         if (Receiver.SelectedInput == "Roku")
         {
             RunningProgram = "Roku";
@@ -48,6 +62,11 @@ public static class Running
 		{
 			RunningProgram = "Spotify";
 		}
+
+        if (!string.IsNullOrEmpty(RunningProgram)) 
+        {
+            logger.Info($"RunningProgram is already {RunningProgram}");
+        }
 
 		//  Start a background thread to poll for an inactive screen-off player and so turn it off after
 		//  a short while
@@ -303,6 +322,9 @@ public static class Running
                 logger.Info("No activity from {0} since {1} - Exiting", RunningProgram, lastActive.ToLocalTime().ToShortTimeString());
                 ExitAllPrograms();
             }
+
+            //  As an incidental side-effect, once a minute, check whether a security change is needed
+            Security.Tick(DateTime.Now);
         }
     }
 
