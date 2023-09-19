@@ -441,8 +441,8 @@ public class JRMC
         {
             if (x != null)
 			{
-				var state = x.Root.DescendantsAndSelf().Where(el => el.Attribute("Name").Value == "State").FirstOrDefault()?.Value ?? "";
 				LogPlayingInfo(x.Root);
+				var state = x.Root.Elements().Where(e => e.Attribute("Name").Value == "State").FirstOrDefault()?.Value ?? "";
 				return state == "2";  // PlayerState_Play = 2
 			}
 			return true;
@@ -466,7 +466,7 @@ public class JRMC
 			var album = x.Elements().Where(e => e.Attribute("Name").Value == "Album").FirstOrDefault()?.Value ?? "";
 			var artist = x.Elements().Where(e => e.Attribute("Name").Value == "Artist").FirstOrDefault()?.Value ?? "";
 			var status = x.Elements().Where(e => e.Attribute("Name").Value == "Status").FirstOrDefault()?.Value ?? $"Status={state}";
-			logger.Info($"{status} '{name}' [{album}]");
+			logger.Info($"{status} '{name}' [{album}] ({artist})");
 		}
 	}
 
