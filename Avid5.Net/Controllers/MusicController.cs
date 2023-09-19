@@ -147,7 +147,7 @@ namespace Avid5.Net.Controllers
             { 
             }
 
-            return this.Content("/Content/JRMC.png");
+            return this.Redirect("/Content/JRMC.png");
         }
 
     }
