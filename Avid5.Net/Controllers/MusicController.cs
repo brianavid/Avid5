@@ -1,14 +1,17 @@
 ﻿using System.Net;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 using NLog.LayoutRenderers.Wrappers;
 
 namespace Avid5.Net.Controllers
 {
     public class MusicController : Controller
     {
-        // GET: /Music/All
-        public ActionResult All()
+		static Logger logger = LogManager.GetLogger("MusicController");
+
+		// GET: /Music/All
+		public ActionResult All()
         {
             ViewBag.Mode = "Library";
 
@@ -95,12 +98,14 @@ namespace Avid5.Net.Controllers
             {
                 if (info.HasElements)
                 {
+                    //  Re-write the URL for the album image from a MCWS URL to the Avid MVC URL (which will fetch the same content).
+                    //  This avoids problems in the client browser that will reject the MCWS URL for a "cross-site scripting" security risk
                     foreach (var xImageUrl in info.Elements().Where(e => e.Attribute("Name").Value == "ImageURL"))
                     {
                         xImageUrl.Value = xImageUrl.Value.Replace("MCWS/v1/File/GetImage?File=", "/Music/GetAlbumImage?id=");
                     }
-                }
-                info.Save(writer);
+				}
+				info.Save(writer);
             }
             return this.Content(writer.ToString(), @"text/xml", writer.Encoding);
         }
@@ -109,6 +114,7 @@ namespace Avid5.Net.Controllers
         public ContentResult SendMCWS(
             string url)
         {
+            logger.Info($"MCWS {url}");
             XDocument doc = JRMC.GetXml(JRMC.Url + url);
             return this.Content(doc == null ? "" : doc.ToString(), @"text/xml");
         }
@@ -141,7 +147,7 @@ namespace Avid5.Net.Controllers
             { 
             }
 
-            return this.Content("");
+            return this.Content("/Content/JRMC.png");
         }
 
     }
