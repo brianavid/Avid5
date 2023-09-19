@@ -1205,13 +1205,13 @@ public class JRMC
 	public static void GoFullScreen()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=2");   //  View
-        //SendCommand("Control/MCC?Command=10027");               //  Maximize
+        SendCommand("Control/MCC?Command=10027");               //  Maximize
 	}
 
 	public static void GoTheater()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=3");   //  View
-        //SendCommand("Control/MCC?Command=10027");               //  Maximize
+        SendCommand("Control/MCC?Command=10027");               //  Maximize
     }
 
     public static void GoShowUI()
