@@ -29,10 +29,11 @@ public static class Running
         }
     }
 
-    /// <summary>
-    /// When was there last activity with the running program?
-    /// </summary>
-    static DateTime lastActive = DateTime.UtcNow;
+	/// <summary>
+	/// When was there last activity with the running program?
+	/// </summary>
+	static DateTime lastActive = DateTime.UtcNow;
+	static DateTime startTime = DateTime.UtcNow;
 
 	private static ManualResetEvent StopActivityCheckingEvent = new ManualResetEvent(false);
 
@@ -325,7 +326,14 @@ public static class Running
 
             //  As an incidental side-effect, once a minute, check whether a security change is needed
             Security.Tick(DateTime.Now);
-        }
+
+            //  If we have been running at least a couple of hours and it's 3 in the morning, restart Avid
+            if ((DateTime.UtcNow- startTime).TotalHours > 2 && DateTime.Now.Hour == 3)
+            {
+                Config.StopApplication();
+            }
+
+		}
     }
 
     public static void Stop()
