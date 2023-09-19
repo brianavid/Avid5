@@ -1,13 +1,16 @@
 ﻿using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
+using NLog;
 
 namespace Avid5.Net.Controllers
 {
     public class VideoController : Controller
     {
-        // GET: /Video/Watch
-        public ActionResult Watch()
+		static Logger logger = LogManager.GetLogger("VideoController");
+
+		// GET: /Video/Watch
+		public ActionResult Watch()
         {
             return View();
         }
@@ -147,7 +150,8 @@ namespace Avid5.Net.Controllers
         public ContentResult SendMCWS(
             string url)
         {
-            XDocument doc = JRMC.GetXml(JRMC.Url + url);
+			logger.Info($"MCWS {url}");
+			XDocument doc = JRMC.GetXml(JRMC.Url + url);
             return this.Content(doc == null ? "" : doc.ToString(), @"text/xml");
         }
 
