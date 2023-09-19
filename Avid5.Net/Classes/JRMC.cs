@@ -418,29 +418,34 @@ public class JRMC
                     }
                 }
                 x.Root.Add(new XElement("Item", new XAttribute("Name", "ClassicalComposer"), composerDisplay));
-            }
+				LogPlayingInfo(x.Root);
+			}
 
-            return x.Root;
+			return x.Root;
         }
 
         return null;
     }
 
-    /// <summary>
-    /// Is the underlying player actually playing anything - not stopped or paused?
-    /// </summary>
-    /// <returns></returns>
-    public static Boolean IsActivelyPlaying()
+	static string lastState = "";
+	static string lastKey = "";
+
+	/// <summary>
+	/// Is the underlying player actually playing anything - not stopped or paused?
+	/// </summary>
+	/// <returns></returns>
+	public static Boolean IsActivelyPlaying()
     {
         var x = GetXml(Url + "Playback/Info");
         try
         {
             if (x != null)
-            {
-                var state = x.Root.DescendantsAndSelf("Item").Where(el => el.Attribute("Name").Value == "State");
-                return state != null && state.Any() && state.First().Value == "2";  // PlayerState_Play = 2
-            }
-            return true;
+			{
+				var state = x.Root.DescendantsAndSelf().Where(el => el.Attribute("Name").Value == "State").FirstOrDefault()?.Value ?? "";
+				LogPlayingInfo(x.Root);
+				return state == "2";  // PlayerState_Play = 2
+			}
+			return true;
         }
         catch
         {
@@ -448,13 +453,30 @@ public class JRMC
         }
     }
 
-    /// <summary>
-    /// Add or replace a track property value in the XML to be returned
-    /// </summary>
-    /// <param name="root"></param>
-    /// <param name="name"></param>
-    /// <param name="value"></param>
-    static void SetItemValueInInfo(
+	private static void LogPlayingInfo(XElement x)
+	{
+		var state = x.Elements().Where(e => e.Attribute("Name").Value == "State").FirstOrDefault()?.Value ?? "";
+		var key = x.Elements().Where(e => e.Attribute("Name").Value == "FileKey").FirstOrDefault()?.Value ?? "";
+		if (key != lastKey || state != lastState)
+		{
+			lastKey = key;
+			lastState = state;
+
+			var name = x.Elements().Where(e => e.Attribute("Name").Value == "Name").FirstOrDefault()?.Value ?? "";
+			var album = x.Elements().Where(e => e.Attribute("Name").Value == "Album").FirstOrDefault()?.Value ?? "";
+			var artist = x.Elements().Where(e => e.Attribute("Name").Value == "Artist").FirstOrDefault()?.Value ?? "";
+			var status = x.Elements().Where(e => e.Attribute("Name").Value == "Status").FirstOrDefault()?.Value ?? $"Status={state}";
+			logger.Info($"{status} '{name}' [{album}]");
+		}
+	}
+
+	/// <summary>
+	/// Add or replace a track property value in the XML to be returned
+	/// </summary>
+	/// <param name="root"></param>
+	/// <param name="name"></param>
+	/// <param name="value"></param>
+	static void SetItemValueInInfo(
         XElement root,
         string name,
         string value)
@@ -544,14 +566,15 @@ public class JRMC
             //  We are starting clean
             theJRMC = new JRMC();
 
-        //  IF we are explicitly refreshing the cache, delete the old one
+        //  If we are explicitly refreshing the cache, delete the old one and make sure auto-import is up-to-date
         if (refresh && File.Exists(CachePath))
         {
             File.Delete(CachePath);
-        }
+			SendCommand("Control/MCC?Command=23020");               //  MCC_IMPORT_AUTO_RUN_NOW
+		}
 
-        //  If we have a cache (which we normally will), use it by simple binary deserialization
-        if (File.Exists(CachePath))
+		//  If we have a cache (which we normally will), use it by simple binary deserialization
+		if (File.Exists(CachePath))
         {
             XDocument cacheXml = XDocument.Load(CachePath);
 
@@ -1182,13 +1205,13 @@ public class JRMC
 	public static void GoFullScreen()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=2");   //  View
-        SendCommand("Control/MCC?Command=10027");               //  Maximize
+        //SendCommand("Control/MCC?Command=10027");               //  Maximize
 	}
 
 	public static void GoTheater()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=3");   //  View
-        SendCommand("Control/MCC?Command=10027");               //  Maximize
+        //SendCommand("Control/MCC?Command=10027");               //  Maximize
     }
 
     public static void GoShowUI()
