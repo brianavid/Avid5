@@ -13,7 +13,7 @@
                 string title = System.IO.Path.GetFileNameWithoutExtension(file);
                 {
                     <div class="videoVideo videoItem" id="@file">
-                        <div class="videoRecordingName"><span class="playButton">&gt;&nbsp;</span><span class="videoRecordingTitle">@title</span></div>
+                        <div class="videoRecordingName">@Html.Raw(Button.DoubleTap())<span class="videoRecordingTitle">@title</span></div>
                     </div>
                 }
             }

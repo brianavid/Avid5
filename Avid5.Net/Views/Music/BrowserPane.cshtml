@@ -51,7 +51,7 @@
                     if (playlist["Path"].StartsWith("Avid" + System.IO.Path.DirectorySeparatorChar))
                     {
                         <div class="musicBrowserPlaylist musicBrowserItem" id="@playlist["ID"]">
-                            <div class="musicBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@playlist["Name"]</div>
+                            <div class="musicBrowserTitle">@Html.Raw(Button.DoubleTap())@playlist["Name"]</div>
                         </div>
                     }
                 }
@@ -148,7 +148,7 @@
                                     lastArtist = albumArtist;
                                 }
                             </div>
-                            <div class="musicBrowserTitle" id="@album.Track0.Info["Key"]"><span class="playButton">&gt;&nbsp;</span>@album.Track0.Info["Album"]</div>
+                            <div class="musicBrowserTitle" id="@album.Track0.Info["Key"]">@Html.Raw(Button.DoubleTap())@album.Track0.Info["Album"]</div>
                         </div>
                     }
                 }
@@ -323,7 +323,7 @@
                                     </div>
                                 }
 
-                                <div class="musicBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@track.Info["Name"]</div>
+                                <div class="musicBrowserTitle">@Html.Raw(Button.DoubleTap())@track.Info["Name"]</div>
                                 @if (!string.IsNullOrEmpty(duration))
                                 {
                                     <div class="musicBrowserDuration">@JRMC.FormatDuration(duration)</div>

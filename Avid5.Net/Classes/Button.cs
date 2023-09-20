@@ -1,4 +1,5 @@
 ﻿using SpotifyAPI.Web;
+using static Button;
 
 public class Button
 {
@@ -148,4 +149,9 @@ public class Button
         }
         return "";
     }
+
+    public static string DoubleTap(string iconStyle = "")  
+    { 
+        return $"<span class='material-symbols-rounded {iconStyle}'>touch_app</span>&nbsp;"; 
+    } 
 }

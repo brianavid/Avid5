@@ -5,7 +5,7 @@
         foreach (var album in albums.InAlbumOrder)
         {
             <div class="photosBrowserAlbum photosBrowserItem" id="@album.AlbumId">
-                <div class="photosBrowserTitle" id="@album.Track0.Info["Key"]"><span class="playButton">&gt;&nbsp;</span>@album.Track0.Info["Album"]</div>
+                <div class="photosBrowserTitle" id="@album.Track0.Info["Key"]">@Html.Raw(Button.DoubleTap())@album.Track0.Info["Album"]</div>
             </div>
         }
     }

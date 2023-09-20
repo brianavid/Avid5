@@ -42,7 +42,7 @@
                         foreach (var playlist in playlists)
                         {
                             <div class="spotifyBrowserPlaylist spotifyBrowserItem" id="@playlist.Id">
-                                <div class="spotifyBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@playlist.Name</div>
+                                <div class="spotifyBrowserTitle">@Html.Raw(Button.DoubleTap())@playlist.Name</div>
                             </div>
                         }
                     }
@@ -139,7 +139,7 @@
                                             lastArtist = album.ArtistName;
                                         }
                                     </div>
-                                    <div class="spotifyBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@album.Name</div>
+                                    <div class="spotifyBrowserTitle">@Html.Raw(Button.DoubleTap())@album.Name</div>
                                     <div class="spotifyBrowserReleaseYear">@album.Year [@album.TrackCount tracks]</div>
                                 </div>
                             }
@@ -200,7 +200,7 @@
                                         </div>
                                     }
 
-                                    <div class="spotifyBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@track.Name</div>
+                                    <div class="spotifyBrowserTitle">@Html.Raw(Button.DoubleTap())@track.Name</div>
                                     @if (!string.IsNullOrEmpty(duration))
                                     {
                                         <div class="spotifyBrowserDuration">@duration</div>
@@ -227,7 +227,7 @@
                        <div class="spotifyBrowserTitle">Playlist Albums</div>
                     </div>
                     <div class="spotifyBrowserLibrary spotifyBrowserItem" id="spotifyBrowserLibraryDeletePlaylist">
-                        <div class="spotifyBrowserTitle"><span class="playButton">&gt;&nbsp;</span>Delete Playlist</div>
+                        <div class="spotifyBrowserTitle">@Html.Raw(Button.DoubleTap())Delete Playlist</div>
                     </div>
                     <div class="spotifyBrowserLibrary spotifyBrowserItem" id="spotifyBrowserLibraryRenamePlaylist">
                         <div class="spotifyBrowserTitle">
@@ -390,7 +390,7 @@
                                         lastArtist = album.ArtistName;
                                     }
                                 </div>
-                                <div class="spotifyBrowserTitle"><span class="playButton">&gt;&nbsp;</span>@album.Name</div>
+                                <div class="spotifyBrowserTitle">@Html.Raw(Button.DoubleTap())@album.Name</div>
                                 <div class="spotifyBrowserReleaseYear">@album.Year [@album.TrackCount tracks]</div>
                             </div>
                         }

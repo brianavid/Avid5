@@ -6,7 +6,7 @@
             string leaf = System.IO.Path.GetFileName(dir);
 
             <div class="videoDvdDirectory videoItem" id="@dir">
-                <div class="videoRecordingName"><span class="playButton">&gt;&nbsp;</span><span class="videoRecordingTitle">@leaf</span></div>
+                <div class="videoRecordingName">@Html.Raw(Button.DoubleTap())<span class="videoRecordingTitle">@leaf</span></div>
             </div>
         }
     }
