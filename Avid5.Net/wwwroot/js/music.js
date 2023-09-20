@@ -536,19 +536,33 @@ function AddBrowserHammerActions() {
 
 }
 
-var searchHammer = null;
+var pendingSearch = null;
 
-function AddSearchHammerActions() {
-    if (!searchHammer) {
-        searchHammer = $(".musicBrowserSearchEntry").hammer();
-    }
-    searchHammer.on("tap", "#goMusicSearch", function (e) {
+$(".searchText").bind('input', function () {
+    if (pendingSearch != null) clearTimeout(pendingSearch);
+    pendingSearch = setTimeout(function () {
+        pendingSearch = null;
         var query = document.getElementById("SearchText").value
-        ReplaceBrowserPane("/Music/BrowserPane?mode=Search&query=" + encodeURIComponent(query), "push")
+        if (query.length >= 4)
+            ReplaceBrowserPane("/Music/BrowserPane?mode=Search&query=" + encodeURIComponent(query), "push")
         return false;
-    });
+    }, 700)
+})
 
-}
+
+//var searchHammer = null;
+
+//function AddSearchHammerActions() {
+//    if (!searchHammer) {
+//        searchHammer = $(".musicBrowserSearchEntry").hammer();
+//    }
+//    searchHammer.on("tap", "#goMusicSearch", function (e) {
+//        var query = document.getElementById("SearchText").value
+//        ReplaceBrowserPane("/Music/BrowserPane?mode=Search&query=" + encodeURIComponent(query), "push")
+//        return false;
+//    });
+
+//}
 
 $(function () {
     var controlHeight = 0;

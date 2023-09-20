@@ -9,13 +9,9 @@
             searchText = System.Web.HttpUtility.UrlDecode(searchQuery);
         }
 
-        <table class="buttonRow">
-	        <tr>
-                <td class='width75'><input id='SearchText' type='text' class='searchText width100' value='@(searchText)' /></td>
-                <td class="centeredButton width25">
-                    <span id="goMusicSearch">@Html.Raw(Button.MiniRound("Search"))</span>
-                </td>
-            </tr>
-        </table>
+        <div class="musicBrowserItem musicBrowserPlaylistHeader"><div class="musicBrowserTitle">Search tracks ...</div></div>
+        <div class="centered">
+	        <input id='SearchText' type='text' class='searchText width90' value='@(searchText)' />
+        </div>
     }
 </div>
