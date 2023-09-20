@@ -214,6 +214,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/RebootSystems
         public ActionResult RebootSystems()
         {
+            Running.ExitAllPrograms();
             Receiver.Reboot();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
