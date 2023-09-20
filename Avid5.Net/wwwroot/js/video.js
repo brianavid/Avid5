@@ -328,9 +328,16 @@ function AddVideoControlsHammerActions() {
         })
     });
 
-    videoControlHammer.on("touch", "#videoAudioBack", function (e) {
+    videoControlHammer.on("touch", "#videoAudioBack50", function (e) {
         $.ajax({
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28036&Parameter=-50"),
+            cache: false
+        })
+    });
+
+    videoControlHammer.on("touch", "#videoAudioBack10", function (e) {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28036&Parameter=-10"),
             cache: false
         })
     });
@@ -342,7 +349,14 @@ function AddVideoControlsHammerActions() {
         })
     });
 
-    videoControlHammer.on("touch", "#videoAudioAdvance", function (e) {
+    videoControlHammer.on("touch", "#videoAudioAdvance10", function (e) {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28036&Parameter=10"),
+            cache: false
+        })
+    });
+
+    videoControlHammer.on("touch", "#videoAudioAdvance50", function (e) {
         $.ajax({
             url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=28036&Parameter=50"),
             cache: false
