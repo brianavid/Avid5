@@ -6,7 +6,12 @@
 	
 	<ReceiverAddress>192.168.1.194</ReceiverAddress>
 	<RokuAddress>192.168.1.200</RokuAddress>
+	<TVAddress>192.168.1.192</TVAddress>
+	<TVMacAddress>B0:37:95:1C:28:7F</TVMacAddress>
 	
 	<SpotifyMarket>GB</SpotifyMarket>
+	<SpotifyClientUrl>PATH TO SPOTIFY AUTHENTICATOR</SpotifyClientUrl>
+	<SpotifyClientId>CLIENT ID FOR SPOTIFY AUTHENTICATOR</SpotifyClientId>
+	
 	<CECClientPath>/usr/bin/cec-client</CECClientPath>
 </Config>
