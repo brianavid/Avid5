@@ -550,20 +550,6 @@ $(".searchText").bind('input', function () {
 })
 
 
-//var searchHammer = null;
-
-//function AddSearchHammerActions() {
-//    if (!searchHammer) {
-//        searchHammer = $(".musicBrowserSearchEntry").hammer();
-//    }
-//    searchHammer.on("tap", "#goMusicSearch", function (e) {
-//        var query = document.getElementById("SearchText").value
-//        ReplaceBrowserPane("/Music/BrowserPane?mode=Search&query=" + encodeURIComponent(query), "push")
-//        return false;
-//    });
-
-//}
-
 $(function () {
     var controlHeight = 0;
 
@@ -589,7 +575,6 @@ $(function () {
 
     AddControlHammerActions()
     AddBrowserHammerActions();
-    AddSearchHammerActions();
     AddQueueHammerActions(controlHeight)
 
     // update information once now
