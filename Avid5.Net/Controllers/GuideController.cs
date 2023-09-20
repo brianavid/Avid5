@@ -53,7 +53,7 @@ namespace Avid5.Net.Controllers
             return PartialView();
         }
 
-        // GET: /Guide/Listings
+        // GET: /Guide/ListingsPane
         public ActionResult ListingsPane(
             string mode,
             string id,
