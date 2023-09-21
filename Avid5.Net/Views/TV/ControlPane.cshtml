@@ -17,20 +17,20 @@
             <tr>
                 <td class="centeredButton">
                     <div class="tvProgrammeIsRecord startHidden" id="IsRecording">Recording</div>
-                    <span class="tvProgrammeRecord" id="Record">@Html.Raw(Button.SmallRound("Rec"))</span>
+                    <span class="tvProgrammeRecord" id="Record">@Html.Raw(Button.SmallRound("[[Fiber_Manual_Record]]", "buttonRed"))</span>
                 </td>
-                <td class="centeredButton"><span id="tvPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
-                <td class="centeredButton"><span id="tvStop">@Html.Raw(Button.Square("Stop"))</span></td>
+                <td class="centeredButton"><span id="tvPlayPause">@Html.Raw(Button.Rect("[[Play_Arrow]][[Pause]]"))</span></td>
+                <td class="centeredButton"><span id="tvStop">@Html.Raw(Button.Square("[[Stop]]"))</span></td>
             </tr>
         </table>
         <br />
         <br />
         <table class='width100'>
             <tr>
-                <td class="centeredButton"><span id="tvBack60">@Html.Raw(Button.Square("Minus60"))</span></td>
-                <td class="centeredButton"><span id="tvBack10">@Html.Raw(Button.Square("Minus10"))</span></td>
-                <td class="centeredButton"><span id="tvForward10">@Html.Raw(Button.Square("Plus10"))</span></td>
-                <td class="centeredButton"><span id="tvForward60">@Html.Raw(Button.Square("Plus60"))</span></td>
+                <td class="centeredButton"><span id="tvBack60">@Html.Raw(Button.Square("-60"))</span></td>
+                <td class="centeredButton"><span id="tvBack10">@Html.Raw(Button.Square("-10"))</span></td>
+                <td class="centeredButton"><span id="tvForward10">@Html.Raw(Button.Square("+10"))</span></td>
+                <td class="centeredButton"><span id="tvForward60">@Html.Raw(Button.Square("+60"))</span></td>
             </tr>
         </table>
         <br />

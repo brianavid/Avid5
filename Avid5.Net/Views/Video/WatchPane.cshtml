@@ -13,18 +13,18 @@
                     <text>&nbsp;</text>
                 }
             </td>
-            <td class="centeredButton"><span id="videoPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
-            <td class="centeredButton"><span id="videoStop">@Html.Raw(Button.Square("Stop"))</span></td>
+            <td class="centeredButton"><span id="videoPlayPause">@Html.Raw(Button.Rect("[[Play_Arrow]][[Pause]]"))</span></td>
+            <td class="centeredButton"><span id="videoStop">@Html.Raw(Button.Square("[[Stop]]"))</span></td>
         </tr>
     </table>
     <br />
     <br />
     <table class='width100'>
         <tr>
-            <td class="centeredButton"><span id="videoBack60">@Html.Raw(Button.Square("Minus60"))</span></td>
-            <td class="centeredButton"><span id="videoBack10">@Html.Raw(Button.Square("Minus10"))</span></td>
-            <td class="centeredButton"><span id="videoForward10">@Html.Raw(Button.Square("Plus10"))</span></td>
-            <td class="centeredButton"><span id="videoForward60">@Html.Raw(Button.Square("Plus60"))</span></td>
+            <td class="centeredButton"><span id="videoBack60">@Html.Raw(Button.Square("-60"))</span></td>
+            <td class="centeredButton"><span id="videoBack10">@Html.Raw(Button.Square("-10"))</span></td>
+            <td class="centeredButton"><span id="videoForward10">@Html.Raw(Button.Square("+10"))</span></td>
+            <td class="centeredButton"><span id="videoForward60">@Html.Raw(Button.Square("+60"))</span></td>
         </tr>
     </table>
 
@@ -64,21 +64,21 @@
     <table>
         <tr>
             <td>&nbsp;</td>
-            <td class="centeredButton"><span id="videoMenuUp">@Html.Raw(Button.BigRound("Nav.Up"))</span></td>
+            <td class="centeredButton"><span id="videoMenuUp">@Html.Raw(Button.BigRound("[[Arrow_Upward]]"))</span></td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td class="centeredButton"><span id="videoMenuLeft">@Html.Raw(Button.BigRound("Nav.Left"))</span></td>
+            <td class="centeredButton"><span id="videoMenuLeft">@Html.Raw(Button.BigRound("[[Arrow_Back]]"))</span></td>
             <td class="centeredButton"><span id="videoMenuSelect">@Html.Raw(Button.BigRound("OK"))</span></td>
-            <td class="centeredButton"><span id="videoMenuRight">@Html.Raw(Button.BigRound("Nav.Right"))</span></td>
+            <td class="centeredButton"><span id="videoMenuRight">@Html.Raw(Button.BigRound("[[Arrow_Forward]]"))</span></td>
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td class="centeredButton"><span id="videoMenuDown">@Html.Raw(Button.BigRound("Nav.Down"))</span></td>
+            <td class="centeredButton"><span id="videoMenuDown">@Html.Raw(Button.BigRound("[[Arrow_Downward]]"))</span></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="centeredButton"><span id="videoStop">@Html.Raw(Button.Square("Stop"))</span></td>
+            <td class="centeredButton"><span id="videoStop">@Html.Raw(Button.Square("[[Stop]]"))</span></td>
         </tr>
     </table>
 

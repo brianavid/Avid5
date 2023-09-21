@@ -8,17 +8,17 @@
                 <table>
                     <tr>
                         <td>&nbsp;</td>
-                        <td class="centeredButton"><span id="btnUp" alt="">@Html.Raw(Button.BigRound("Nav.Up"))</span></td>
+                        <td class="centeredButton"><span id="btnUp" alt="">@Html.Raw(Button.BigRound("[[Arrow_Upward]]"))</span></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td class="centeredButton"><span id="btnLeft" alt="">@Html.Raw(Button.BigRound("Nav.Left"))</span></td>
+                        <td class="centeredButton"><span id="btnLeft" alt="">@Html.Raw(Button.BigRound("[[Arrow_Back]]"))</span></td>
                         <td class="centeredButton"><span id="btnOk">@Html.Raw(Button.BigRound("OK"))</span></td>
-                        <td class="centeredButton"><span id="btnRight" alt="">@Html.Raw(Button.BigRound("Nav.Right"))</span></td>
+                        <td class="centeredButton"><span id="btnRight" alt="">@Html.Raw(Button.BigRound("[[Arrow_Forward]]"))</span></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td class="centeredButton"><span id="btnDown" alt="">@Html.Raw(Button.BigRound("Nav.Down"))</span></td>
+                        <td class="centeredButton"><span id="btnDown" alt="">@Html.Raw(Button.BigRound("[[Arrow_Downward]]"))</span></td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
@@ -30,13 +30,13 @@
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td class="centeredButton"><span id="btnHome">@Html.Raw(Button.BigRound("Home"))</span></td>
+                        <td class="centeredButton"><span id="btnHome">@Html.Raw(Button.BigRound("[[Home]]", "buttonGreen"))</span></td>
                     </tr>
                     <tr>
-                        <td class="centeredButton"><span id="btnStar">@Html.Raw(Button.BigRound("Star"))</span></td>
+                        <td class="centeredButton"><span id="btnStar">@Html.Raw(Button.BigRound("[[Star]]"))</span></td>
                     </tr>
                     <tr>
-                        <td class="centeredButton"><span id="btnBack">@Html.Raw(Button.BigRound("Back"))</span></td>
+                        <td class="centeredButton"><span id="btnBack">@Html.Raw(Button.BigRound("[[Undo]]"))</span></td>
                     </tr>
                 </table>
             </td>
@@ -46,10 +46,10 @@
     <br />
     <table class="width100">
         <tr>
-            <td class="centeredButton width30"><span id="btnRepeat" alt="">@Html.Raw(Button.Square("Repeat"))</span></td>
-            <td class="centeredButton width20"><span id="btnPrev" alt="">@Html.Raw(Button.Square("Rewind"))</span></td>
-            <td class="centeredButton width30"><span id="btnPlayPause">@Html.Raw(Button.Rect("PlayPause"))</span></td>
-            <td class="centeredButton width20"><span id="btnNext" alt="">@Html.Raw(Button.Square("FastForward"))</span></td>
+            <td class="centeredButton width30"><span id="btnRepeat" alt="">@Html.Raw(Button.Square("[[Replay]]"))</span></td>
+            <td class="centeredButton width20"><span id="btnPrev" alt="">@Html.Raw(Button.Square("[[Fast_Rewind]]"))</span></td>
+            <td class="centeredButton width30"><span id="btnPlayPause">@Html.Raw(Button.Rect("[[Play_Arrow]][[Pause]]"))</span></td>
+            <td class="centeredButton width20"><span id="btnNext" alt="">@Html.Raw(Button.Square("[[Fast_Forward]]"))</span></td>
         </tr>
     </table>
 

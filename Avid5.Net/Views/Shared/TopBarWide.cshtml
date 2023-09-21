@@ -14,7 +14,7 @@
 
   <table class="topBar @(Running.RunningProgramTopBarClass)">
 	  <tr>
-		<td class="centeredButton"><span id="toggleSettings">@Html.Raw(Button.SmallRound("Spanner"))</span></td>
+		<td class="centeredButton"><span id="toggleSettings">@Html.Raw(Button.SmallRound("[[Settings]]"))</span></td>
 		<td class="width20">
 			<div class="@screenDisplayClass">
 				<table align='center'>
@@ -31,9 +31,9 @@
 				</table>
 			</div>
 		  </td>
-		  <td class="centeredButton"><span id="volumeDown">@Html.Raw(Button.SmallRound("Audio.Volume.Down"))</span></td>
-		  <td class="centeredButton"><span id="volumeUp">@Html.Raw(Button.SmallRound("Audio.Volume.Up"))</span></td>
-		  <td class="centeredButton"><span id="volumeMute">@Html.Raw(Button.SmallRound("Audio.Mute.On"))</span></td>
+		  <td class="centeredButton"><span id="volumeDown">@Html.Raw(Button.SmallRound("[[volume_down]]"))</span></td>
+		  <td class="centeredButton"><span id="volumeUp">@Html.Raw(Button.SmallRound("[[volume_up]]"))</span></td>
+		  <td class="centeredButton"><span id="volumeMute">@Html.Raw(Button.SmallRound("[[volume_off]]"))</span></td>
           <td class="centeredButton"><span id="selectTV">@Html.Raw(Button.Rect("TV"))</span></td>
           <td class="centeredButton"><span id="selectMusic">@Html.Raw(Button.Rect("Music"))</span></td>
 		  <td class="centeredButton"><span id="selectSpotify">@Html.Raw(Button.Rect("Spotify"))</span></td>
@@ -43,15 +43,15 @@
 		  <td class="centeredButton"><span id="selectEpg">@Html.Raw(Button.Rect("Guide"))</span></td>
 		@if (ViewData.ContainsKey("IsHome"))
 		{
-		  <td class="centeredButton"><span id="allOffWide">@Html.Raw(Button.SmallRound("Power.Off"))</span></td>
+		  <td class="centeredButton"><span id="allOffWide">@Html.Raw(Button.SmallRound("[[Bolt]]", "buttonRed"))</span></td>
 		}
         else if (ViewData.ContainsKey("LinkBack"))
 		{
-		  <td class="centeredButton"><span id="goBack">@Html.Raw(Button.SmallRound("Back"))</span></td>
+		  <td class="centeredButton"><span id="goBack">@Html.Raw(Button.SmallRound("[[Undo]]"))</span></td>
 		}
 		else
 		{
-		  <td class="centeredButton"><span id="goHomeWide">@Html.Raw(Button.SmallRound("Home"))</span></td>
+		  <td class="centeredButton"><span id="goHomeWide">@Html.Raw(Button.SmallRound("[[Home]]", "buttonGreen"))</span></td>
 		}
 	  </tr>
   </table>
