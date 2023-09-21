@@ -301,10 +301,7 @@ public class VideoTV
                 PrePad = TimeSpan.FromMinutes(5);
                 PostPad = TimeSpan.FromMinutes(10);
                 Channel = AllChannels[xTimer.Element("ChannelKey").Value];
-                StartTime = DateTime.ParseExact(
-                    xTimer.Element("StartTime").Value,
-                    new[] { "dd/MM/yyyy HH:mm", "dd/MM/yy hh:mm tt" },
-                    CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal) + PrePad;
+                StartTime = ParsePythonDateTimeString(xTimer.Element("StartTime").Value) + PrePad;
                 StopTime = StartTime.AddSeconds(int.Parse(xTimer.Element("Duration").Value)) - PrePad - PostPad;
                 EventId = xTimer.Element("ProgKey") == null ? "" : xTimer.Element("ProgKey").Value;
                 IsRecording = xTimer.Element("IsRecordingNow").Value != "0";
@@ -667,7 +664,7 @@ public class VideoTV
     /// </summary>
     public static void LoadSchedule()
     {
-        var xml = JRMC.GetXml(JRMC.Url + "Television/GetRecordingScheduleXML", mayFail: true);
+        var xml = JRMC.GetXml(JRMC.Url + "Television/GetRecordingScheduleXML?FormatDateTime=0", mayFail: true);
         if (xml != null && xml.Root.Elements("Item").Count() > 0)
         {
             var scheduleXml = XDocument.Parse("<Item>\n" + xml.Root.Element("Item").Value + "\n</Item>");
