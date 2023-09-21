@@ -268,7 +268,7 @@ function WindowResized() {
         $("#topBarTitle").text(" ")
         SwitchPanelAfterWake(window.innerWidth >= 1080)
     }
-    $("#homeTitle").text(window.innerWidth + "x" + window.innerHeight);
+    //$("#homeTitle").text(window.innerWidth + "x" + window.innerHeight);
 }
 
 function OverlayScreen() {
