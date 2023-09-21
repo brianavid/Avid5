@@ -263,11 +263,12 @@ else
 }
 
 function WindowResized() {
-    if ((lastWidth > 768) != (window.innerWidth > 768)) {
+    if ((lastWidth >= 1080) != (window.innerWidth >= 1080)) {
         lastWake = new Date(0);
         $("#topBarTitle").text(" ")
-        SwitchPanelAfterWake(window.innerWidth > 768)
+        SwitchPanelAfterWake(window.innerWidth >= 1080)
     }
+    $("#homeTitle").text(window.innerWidth + "x" + window.innerHeight);
 }
 
 function OverlayScreen() {

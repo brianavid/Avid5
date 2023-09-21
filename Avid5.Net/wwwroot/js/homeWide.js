@@ -1,6 +1,6 @@
 ﻿
 $(function () {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth < 1080) {
         LinkTo("/Home/Home");
     }
 

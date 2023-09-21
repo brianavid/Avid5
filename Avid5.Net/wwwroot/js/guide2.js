@@ -2,7 +2,7 @@
 
 function GuideWindowResized() {
     StopSwitching();
-    LinkTo(window.innerWidth > 768 ? "/Guide/BrowserWide?mode=GuideRoot" : "/Guide/Browser?mode=GuideRoot");
+    LinkTo(window.innerWidth >= 1080 ? "/Guide/BrowserWide?mode=GuideRoot" : "/Guide/Browser?mode=GuideRoot");
 }
 
 var selectorDateHammer = null;
