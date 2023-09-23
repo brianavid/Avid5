@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using NLog;
-using NLog.Targets;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
-using static Avid.Spotify.SpotifyData;
 
 /// <summary>
 /// The JRMC class encapsulates all access to the J River Media Center player which is used for
