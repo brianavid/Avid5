@@ -426,10 +426,10 @@ function AddBrowserHammerActions() {
     browserHammer.on("doubletap", ".musicBrowserAlbum", function (e) {
         var playButton = $(".playButton:first").text();
         var url = "Playback/PlayByKey?Album=1&Key=";
-        //var playNow = playButton[0] == '>'
-        //if (!playNow) {
-        //    url = "Playback/PlayByKey?Album=1&Location=End&Key="
-        //}
+        var playAppend = playButton[0] == '+'
+        if (playAppend) {
+            url = "Playback/PlayByKey?Location=End&Key="
+        }
 
         $.ajax({
             url: "/Music/SendMCWS?url=" + encodeURIComponent(url + this.id),
@@ -480,10 +480,10 @@ function AddBrowserHammerActions() {
     browserHammer.on("doubletap", ".musicBrowserTrack", function (e) {
         var playButton = $(".playButton:first").text();
         var url = "Playback/PlayByKey?Key=";
-        //var playNow = playButton[0] == '>'
-        //if (!playNow) {
-        //    url = "Playback/PlayByKey?Location=End&Key="
-        //}
+        var playAppend = playButton[0] == '+'
+        if (playAppend) {
+            url = "Playback/PlayByKey?Location=End&Key="
+        }
 
         $.ajax({
             url: "/Music/SendMCWS?url=" + encodeURIComponent(url + this.id),
