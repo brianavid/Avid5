@@ -9,6 +9,8 @@ using NLog;
 [Serializable]
 public class JRMC
 {
+    const string MinimumVersion = "31.0.56";
+
     static Logger logger = LogManager.GetCurrentClassLogger();
     public static readonly HttpClient httpClient = new HttpClient();
 
@@ -270,6 +272,31 @@ public class JRMC
         if (alive == null)
         {
             throw new Exception("Can't connect to JRMC");
+        }
+        var version = alive.Root.Elements().Where(e => e.Attribute("Name").Value == "ProgramVersion").FirstOrDefault()?.Value ?? "";
+        CheckVersion(version);
+    }
+
+    //  Throw an exception if the current version is not at least the minimum version
+    static void CheckVersion(string version)
+    {
+        var versionLevels = version.Split('.').Select(n=>int.Parse(n)).ToArray();
+        var minumumVersionLevels = MinimumVersion.Split('.').Select(n => int.Parse(n)).ToArray();
+
+        if (versionLevels.Length < minumumVersionLevels.Length)
+        {
+            throw new Exception($"Require JRMC version {MinimumVersion}");
+        }
+        for (int i = 0; i < minumumVersionLevels.Length; i++)
+        {
+            if (versionLevels[i] > minumumVersionLevels[i])
+            {
+                return;
+            }
+            if (versionLevels[i] < minumumVersionLevels[i])
+            {
+                throw new Exception($"Require JRMC version {MinimumVersion}");
+            }
         }
     }
 
