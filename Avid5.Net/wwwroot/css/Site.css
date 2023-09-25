@@ -492,64 +492,72 @@ textarea {
 }
 
 .buttonBigRound {
-    height: 40px;
-    line-height: 40px;
-    width: 40px;
+    height: 36px;
+    line-height: 36px;
+    width: 36px;
     border-radius: 50%;
     font-size: 24px;
 }
 
 .buttonSmallRound {
-    line-height: 32px;
-    height: 32px;
-    width: 32px;
+    line-height: 30px;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .buttonMiniRound {
-    line-height: 28px;
-    height: 28px;
-    width: 28px;
+    line-height: 25px;
+    height: 25px;
+    width: 25px;
     border-radius: 50%;
     font-size: 16px;
 }
 
 .buttonSquare {
-    line-height: 36px;
-    height: 36px;
-    width: 36px;
+    line-height: 32px;
+    height: 32px;
+    width: 32px;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
 }
 
 .buttonRect {
-    line-height: 36px;
-    height: 36px;
-    width: 72px;
+    line-height: 32px;
+    height: 32px;
+    width: 64px;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .buttonLongRect {
-    line-height: 36px;
-    height: 36px;
-    width: 90px;
+    line-height: 32px;
+    height: 32px;
+    width: 80px;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 18px;
+}
+
+.buttonShortRect {
+    line-height: 32px;
+    height: 32px;
+    width: 60px;
+    border-radius: 10px;
+    font-size: 18px;
 }
 
 .buttonLargeIcon {
-    font-size: 36px !important;
+    font-size: 32px !important;
 }
 
 .buttonRegularIcon {
-    font-size: 30px !important;
+    font-size: 28px !important;
 }
 
 .buttonMiniIcon {
-    font-size: 24px !important;
+    font-size: 20px !important;
 }
 
 .buttonRed {
