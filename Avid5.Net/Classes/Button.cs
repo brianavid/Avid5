@@ -31,6 +31,11 @@ public class Button
         return StyledButton(buttonName, "buttonRect", "buttonLargeIcon", additionalStyle);
     }
 
+    public static string ShortRect(string buttonName, string additionalStyle = "")
+    {
+        return StyledButton(buttonName, "buttonShortRect", "buttonLargeIcon", additionalStyle);
+    }
+
     public static string LongRect(string buttonName, string additionalStyle = "")
     {
         return StyledButton(buttonName, "buttonLongRect", "buttonLargeIcon", additionalStyle);
