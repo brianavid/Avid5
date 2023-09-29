@@ -13,6 +13,14 @@ public class VideoTV
     static Dictionary<string, String> MakeDict(XElement x)
     {
         var items = x.Elements("Item");
+        if (!items.Any())
+        {
+            items = x.Elements("Tag");
+        }
+        if (!items.Any())
+        {
+            return new Dictionary<string, String>();
+        }
         if (items.First().HasAttributes)
         {
             return items.Select(f => (f.Attribute("Name").Value, f.Value)).ToDictionary(i => i.Item1, i => i.Item2);
@@ -227,12 +235,13 @@ public class VideoTV
         {
             try
             {
+                var info = MakeDict(xProg);
                 Id = xProg.Attribute("Key").Value;
-                Name = xProg.Element("Name").Value;
-                Channel = AllChannels[xProg.Element("TV_Channel").Value];
-                StartTime = ParsePythonDateTimeString(xProg.Element("Date_Recorded").Value);
-                StopTime = StartTime.AddSeconds(int.Parse(xProg.Element("Duration").Value));
-                Series = xProg.Elements("Series").Any() ? xProg.Element("Series").Value : Name;
+                Name = info["Name"];
+                Channel = AllChannels[info["TV Channel"]];
+                StartTime = ParsePythonDateTimeString(info["Date Recorded"]);
+                StopTime = StartTime.AddSeconds(int.Parse(info["Duration"]));
+                Series = info.ContainsKey("Series") ? info["Series"] : Name;
                 InError = false;
             }
             catch (System.Exception ex)
@@ -770,43 +779,6 @@ public class VideoTV
 
     static List<Programme> allProgrammes;
 
-    static string RepairBrokenXml(string xmlText)
-    {
-        var ss = xmlText.Split('\n');
-        var sb = new StringBuilder();
-        foreach (var sl in ss)
-        {
-            if ( sl.Contains("="))
-            {
-                sb.Append(sl);
-            }
-            else 
-            {
-                bool isTag = false;
-                foreach (char c in sl)
-                {
-                    var c1 = c;
-                    switch (c)
-                    {
-                        case ' ':
-                            if (isTag) c1 = '_';
-                            break;
-                        case '<':
-                            isTag = true;
-                            break;
-                        case '>':
-                            isTag = false;
-                            break;
-                        default: break;
-                    }
-                    sb.Append(c1);
-                }
-                sb.Append('\n');
-            }
-        }
-        return sb.ToString();
-    }
-
     static void LoadAllEpgProgrammes()
     {
         allProgrammes = new List<Programme>();
@@ -824,7 +796,7 @@ public class VideoTV
                 else
                 {
                     var programsItem = xml.Root.Element("Item");
-                    var xmlText = RepairBrokenXml(programsItem.Value);
+                    var xmlText = programsItem.Value;
                     var programmesXml = XDocument.Parse("<Item>\n" + xmlText + "\n</Item>");
                     allProgrammes.AddRange(programmesXml.Root.Elements("Prog").Select(x => new Programme(x)));
                     break;
