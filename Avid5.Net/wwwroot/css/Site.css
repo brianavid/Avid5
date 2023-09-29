@@ -567,3 +567,67 @@ textarea {
 .buttonGreen {
     color: #008000;
 }
+
+@media (min-width: 420px)
+{
+    .buttonBigRound {
+        height: 40px;
+        line-height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        font-size: 24px;
+    }
+
+    .buttonSmallRound {
+        line-height: 32px;
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        font-size: 20px;
+    }
+
+    .buttonMiniRound {
+        line-height: 28px;
+        height: 28px;
+        width: 28px;
+        border-radius: 50%;
+        font-size: 16px;
+    }
+
+    .buttonSquare {
+        line-height: 36px;
+        height: 36px;
+        width: 36px;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .buttonRect {
+        line-height: 36px;
+        height: 36px;
+        width: 72px;
+        border-radius: 10px;
+        font-size: 20px;
+    }
+
+    .buttonLongRect {
+        line-height: 36px;
+        height: 36px;
+        width: 90px;
+        border-radius: 10px;
+        font-size: 20px;
+    }
+
+    .buttonLargeIcon {
+        font-size: 36px !important;
+    }
+
+    .buttonRegularIcon {
+        font-size: 30px !important;
+    }
+
+    .buttonMiniIcon {
+        font-size: 24px !important;
+    }
+}
