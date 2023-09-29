@@ -9,7 +9,7 @@ using NLog;
 [Serializable]
 public class JRMC
 {
-    const string MinimumVersion = "31.0.56";
+    const string MinimumVersion = "31.0.58";
 
     static Logger logger = LogManager.GetCurrentClassLogger();
     public static readonly HttpClient httpClient = new HttpClient();
