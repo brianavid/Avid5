@@ -579,12 +579,6 @@ public class JRMC
             //  We are starting clean
             theJRMC = new JRMC();
 
-        //  If we are explicitly refreshing the cache, delete the old one and make sure auto-import is up-to-date
-        if (refresh && File.Exists(CachePath))
-        {
-            File.Delete(CachePath);
-			SendCommand("Control/MCC?Command=23020");               //  MCC_IMPORT_AUTO_RUN_NOW
-		}
 
 		//  If we have a cache (which we normally will), use it by simple binary deserialization
 		if (File.Exists(CachePath))
@@ -1235,7 +1229,7 @@ public class JRMC
 
 	public static void CloseScreen()
 	{
-        SendCommand("Control/MCC?Command=22009&Parameter=1");   //  View
+        SendCommand("Control/MCC?Command=22009&Parameter=2");   //  View
         SendCommand("Control/MCC?Command=10014");               //  Minimise
 	}
 
