@@ -583,7 +583,6 @@ public class JRMC
         if (refresh && File.Exists(CachePath))
         {
             File.Delete(CachePath);
-			SendCommand("Control/MCC?Command=23020");               //  MCC_IMPORT_AUTO_RUN_NOW
 		}
 
 		//  If we have a cache (which we normally will), use it by simple binary deserialization
