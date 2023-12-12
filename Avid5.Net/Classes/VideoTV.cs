@@ -673,7 +673,7 @@ public class VideoTV
     /// </summary>
     public static void LoadSchedule()
     {
-        var xml = JRMC.GetXml(JRMC.Url + "Television/GetRecordingScheduleXML?FormatDateTime=0", mayFail: true);
+        var xml = JRMC.GetXml(JRMC.Url + "Television/GetRecordingScheduleXML?FormatDateTime=0&RangeInHours=336", mayFail: true);
         if (xml != null && xml.Root.Elements("Item").Count() > 0)
         {
             var scheduleXml = XDocument.Parse("<Item>\n" + xml.Root.Element("Item").Value + "\n</Item>");
