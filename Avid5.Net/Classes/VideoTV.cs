@@ -259,16 +259,24 @@ public class VideoTV
     {
         public String Id { get; private set; }
         public String Name { get; private set; }
-        public String Title
+        public String SeriesName
         {
             get
             {
                 string series;
                 if (!Info.TryGetValue("Series", out series))
                 {
-                    series = Name;
+                    series = "";
                 }
-                return (series != Name && series != "") ? series + ": " + Name : Name;
+                return series;
+            }
+        }
+
+        public String Title
+        {
+            get
+            {
+                return (SeriesName != Name && SeriesName != "") ? SeriesName + ": " + Name : Name;
             }
         }
         public Channel Channel { get; private set; }
@@ -278,7 +286,7 @@ public class VideoTV
         public TimeSpan PostPad { get; private set; }
         public TimeSpan Duration { get { return StopTime - StartTime; } }
         public String EventId { get; private set; }
-        public bool InSeries { get { return Series.Find(Name, Channel, StartTime) != null; } }
+        public bool InSeries { get { return Series.Find(SeriesName, Channel, StartTime) != null; } }
         public bool IsRecording { get; private set; }
         public bool InError { get; internal set; }
         public String ChannelName { get { return Channel == null ? Channel.UnknownName : Channel.Name; } }
@@ -959,7 +967,7 @@ public class VideoTV
 
                 if (timer != null)
                 {
-                    Series series = Series.Find(timer.Name, timer.Channel, timer.StartTime);
+                    Series series = Series.Find(programme.Series, timer.Channel, timer.StartTime);
                     if (series == null)
                     {
                         Series.Add(timer.EventId, programme.Series, timer.Channel, timer.StartTime);
