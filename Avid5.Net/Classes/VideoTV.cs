@@ -717,7 +717,7 @@ public class VideoTV
         {
             var sidecar = XDocument.Load(sidecarPath);
             var r = new Recording(sidecar.Root, false, sidecarPath);
-            if (File.Exists(r.Filename))
+            if (File.Exists(r.Filename) && !AllRecordings.ContainsKey(r.Id))
             {
                 AllRecordings.Add(r.Id, r);
             }
