@@ -60,7 +60,7 @@ function AddSelectorHammerActions() {
         if (selectedDate != null) {
             $(".guideOverlayListings").show()
             $(".guideOverlaySelectors").html("")
-            ReplacePane("guideBrowserItems", "/Guide/ListingsPane?mode=GuideProgrammes&date=" + selectedDate + "&channel=" + selectedChannel, "clear", ScrollListingsToEnd)
+            ReplacePane("guideBrowserItems", "/Guide/ListingsPane?mode=GuideProgrammes&date=" + selectedDate + "&channel=" + encodeURIComponent(selectedChannel), "clear", ScrollListingsToEnd)
         }
         return false;
     });
@@ -73,7 +73,7 @@ function AddSelectorHammerActions() {
         if (selectedChannel != null) {
             $(".guideOverlayListings").show()
             $(".guideOverlaySelectors").html("")
-            ReplacePane("guideBrowserItems", "/Guide/ListingsPane?mode=GuideProgrammes&date=" + selectedDate + "&channel=" + selectedChannel, "clear", ScrollListingsToEnd)
+            ReplacePane("guideBrowserItems", "/Guide/ListingsPane?mode=GuideProgrammes&date=" + selectedDate + "&channel=" + encodeURIComponent(selectedChannel), "clear", ScrollListingsToEnd)
         }
         return false;
     });
