@@ -101,7 +101,7 @@ function AddListingsHammerActions() {
         $(".guideEpgRecordingControls").addClass("startHidden");
 
         $.ajax({
-            url: "/Guide/Description?id=" + programItem.id + "&channelName=" + $("#ChannelName").text(),
+            url: "/Guide/Description?id=" + programItem.id + "&channelName=" + encodeURIComponent($("#ChannelName").text()),
             success: function (description) {
                 if (!hasClass(programItem, "guideEpgProgrammeScheduled")) {
                     $(programItem).find(".guideEpgRecordingControls").removeClass("startHidden");
@@ -116,7 +116,7 @@ function AddListingsHammerActions() {
         var programItem = this;
 
         $.ajax({
-            url: "/Guide/Record?id=" + programItem.id + "&channelName=" + $("#ChannelName").text(),
+            url: "/Guide/Record?id=" + programItem.id + "&channelName=" + encodeURIComponent($("#ChannelName").text()),
             success: function (error) {
                 if (error == "") {
                     $(".guideSelectorItems").html("")
@@ -134,7 +134,7 @@ function AddListingsHammerActions() {
         var programItem = this;
 
         $.ajax({
-            url: "/Guide/RecordSeries?id=" + programItem.id + "&channelName=" + $("#ChannelName").text(),
+            url: "/Guide/RecordSeries?id=" + programItem.id + "&channelName=" + encodeURIComponent($("#ChannelName").text()),
             success: function (error) {
                 if (error == "") {
                     $(".guideSelectorItems").html("")
