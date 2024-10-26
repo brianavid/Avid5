@@ -723,13 +723,18 @@ public class VideoTV
             }
         }
 
-        var oldVideoFiles = System.IO.Directory.GetFiles(Config.OldRecordingsPath, "*.ts");
-
         foreach (var r in OldRecordings.Values)
         {
             if (File.Exists(r.Filename))
             {
-                AllRecordings.Add(r.Id, r);
+                try
+                {
+                    AllRecordings.Add(r.Id, r);
+                }
+                catch (Exception ex)
+                {
+                    logger.Warn($"Error '{ex.Message}' adding old recording id {r.Id} path {r.Filename}");
+                }
             }
         }
     }
