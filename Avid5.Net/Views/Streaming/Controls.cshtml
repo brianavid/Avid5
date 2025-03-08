@@ -9,11 +9,6 @@
     @await Html.PartialAsync("PaneButtons")
 </div>
 <div id="rokuControlsPane">
-    <div id="rokuSearchPane" class="rokuSearchPane @(ViewBag.HideRokuClass ?? "")">
-        <div class="rokuSearch">
-            @await Html.PartialAsync("RokuSearchPane")
-        </div>
-    </div>
     <div id="rokuControlsPane" class="rokuControlsPane @(ViewBag.HideRokuClass ?? "")">
         <div class="rokuControls">
             @await Html.PartialAsync("RokuControlsPane")

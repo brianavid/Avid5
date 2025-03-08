@@ -122,18 +122,6 @@ function AddRokuSearchHammerActions() {
     if (!rokuSearchHammer) {
         rokuSearchHammer = $(".rokuSearch").hammer({ prevent_default: true });
     }
-
-    rokuSearchHammer.on("tap", "#rokuText", function (e) {
-        this.blur()
-        this.focus()
-        return false;
-    });
-
-    rokuSearchHammer.on("tap", "#goRokuText", function (e) {
-        var text = document.getElementById("rokuText").value
-        $.get("/Streaming/SendText?text=" + encodeURIComponent(text))
-        return false;
-    });
 }
 
 var smartControlHammer = null;

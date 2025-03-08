@@ -31,16 +31,23 @@ $(function () {
         LaunchProgram("Spotify", "/Spotify/Playing");
     });
 
-    $("#selectStream").mousedown(function () {
+    $("#selectRoku").mousedown(function () {
         StopSwitching();
-        var lastRunningProgram = $("#homeTitle").text();
-        $.ajax({
-            url: "/Action/StartStream",
-            success: function () {
-                LinkTo(lastRunningProgram == "Roku" || lastRunningProgram == "SmartTv" ? "/Streaming/Controls" : "/Streaming/Browser");
-            },
-            cache: false
-        });
+        if (document.getElementById("isWide") == null &&
+            $("#homeTitle").text() == "Roku") {
+            LinkTo("/Streaming/Controls")
+        } else {
+            $.get("/Action/GoRoku", null, function () {
+                LinkTo(document.getElementById("isWide") != null ? "/Streaming/All" : "/Streaming/Browser")
+            })
+        }
+    });
+
+    $("#selectCast").mousedown(function () {
+        StopSwitching();
+        $.get("/Action/GoChromecast", null, function () {
+            LinkTo(document.getElementById("isWide") != null ? "/Streaming/All" : "/Streaming/Browser")
+        })
     });
 
     $("#selectPhotos").mousedown(function () {

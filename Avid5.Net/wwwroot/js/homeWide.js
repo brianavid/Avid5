@@ -24,10 +24,10 @@ $(function () {
         LaunchProgram("Spotify", "/Spotify/All");
     });
 
-    $("#selectStream").mousedown(function () {
+    $("#selectRoku").mousedown(function () {
         StopSwitching();
         $.ajax({
-            url: "/Action/StartStream",
+            url: "/Action/GoRoku",
             success: function () {
                 LinkTo("/Streaming/All");
             },

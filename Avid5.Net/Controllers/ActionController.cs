@@ -118,6 +118,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/GoChromecast
         public ActionResult GoChromecast()
         {
+            Receiver.TurnOn();
             Receiver.SelectChromecastInput();
             Receiver.SelectTVOutput();
             Screen.EnsureScreenOn();
@@ -153,6 +154,7 @@ namespace Avid5.Net.Controllers
         public ActionResult GoRoku()
         {
             Roku.KeyPress("Home");
+            Receiver.TurnOn();
             Receiver.SelectRokuInput();
             Receiver.SelectTVOutput();
             Screen.EnsureScreenOn();

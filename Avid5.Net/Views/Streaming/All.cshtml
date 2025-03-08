@@ -8,25 +8,6 @@
 
 <div id="streamingPanes">
     <div id="streamingLeftPane">
-        <table class="buttonRow">
-            <tr>
-                <td class="centeredButton"><span id="goRokuSelect">@Html.Raw(Button.ShortRect("Roku"))</span></td>
-                <td class="centeredButton"><span id="goChromecastSelect">@Html.Raw(Button.ShortRect("Cast"))</span></td>
-                <td class="centeredButton"><span id="goChromecastAudioSelect">@Html.Raw(Button.ShortRect("Audio"))</span></td>
-                <td class="centeredButton"><span id="goSmartTvSelect">@Html.Raw(Button.ShortRect("Smart"))</span></td>
-            </tr>
-        </table>
-
-        <div class="@(ViewBag.HideStreamGuidanceClass ?? "")">
-            <p>Recommendations:</p>
-            <ul>
-                <li>Use <strong>Roku</strong> for Amazon Prime, Netflix and TV catchup services</li>
-                <li>Use <strong>Cast</strong> for YouTube, Curzon Home Cinema and other video content sent to Chromecast from a player on the phone or tablet</li>
-                <li>Use <strong>Audio</strong> for audio-only content sent to Chromecast from a player on the phone or tablet</li>
-                <li>Use <strong>Smart</strong> for controlling the TV with its own remote control</li>
-            </ul>
-        </div>
-
         <div id="rokuBrowserPane" class="rokuBrowserPane @(ViewBag.HideRokuClass ?? "")">
             <div class="rokuBrowserItems" id="rokuBrowserItems">
                 @await Html.PartialAsync("BrowserPane")
@@ -35,11 +16,6 @@
     </div>
 
     <div id="streamingRightPane">
-        <div id="rokuSearchPane" class="rokuSearchPane @(ViewBag.HideRokuClass ?? "")">
-            <div class="rokuSearch">
-                @await Html.PartialAsync("RokuSearchPane")
-            </div>
-        </div>
         <div id="rokuControlsPane" class="rokuControlsPane @(ViewBag.HideRokuClass ?? "")">
             <div class="rokuControls">
                 @await Html.PartialAsync("RokuControlsPane")
