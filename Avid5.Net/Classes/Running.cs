@@ -97,6 +97,8 @@ public static class Running
                     return "topBarSmartTv";
                 case "Chromecast":
                     return "topBarChromecast";
+                case "Bluetooth":
+                    return "topBarBluetooth";
                 case "Spotify":
                     return "topBarSpotify";
                 case "Video":

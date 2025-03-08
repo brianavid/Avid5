@@ -112,6 +112,10 @@ textarea {
     color: white;
 }
 
+.topBarBluetooth {
+    background-color: #0283FC;
+}
+
 .buttonGrid {
     width:100%;
     border-spacing:25px;

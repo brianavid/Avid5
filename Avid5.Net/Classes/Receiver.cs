@@ -466,6 +466,21 @@ public static class Receiver
     }
 
     /// <summary>
+    /// Set the Receiver to play from Bluetooth on Zone2
+    /// </summary>
+    public static void BlueTooth()
+    {
+        if (Receiver.SelectedInput != "Bluetooth")
+        {
+            logger.Info("Bluetooth");
+            SelectedInput = "Bluetooth";
+            GetXml("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>Standby</Power></Power_Control></Main_Zone></YAMAHA_AV>");
+            GetXml("<YAMAHA_AV cmd=\"PUT\"><Zone_2><Power_Control><Power>On</Power></Power_Control></Zone_2></YAMAHA_AV>");
+            GetXml("<YAMAHA_AV cmd=\"PUT\"><Zone_2><Input><Input_Sel>Bluetooth</Input_Sel></Input></Zone_2></YAMAHA_AV>");
+        }
+    }
+
+    /// <summary>
     /// Reboot the Receiver
     /// </summary>
     public static void Reboot()

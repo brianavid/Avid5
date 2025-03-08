@@ -50,6 +50,13 @@ $(function () {
         })
     });
 
+    $("#selectBluetooth").mousedown(function () {
+        StopSwitching();
+        $.get("/Action/GoBluetooth", null, function () {
+            LinkTo(document.getElementById("isWide") != null ? "/Streaming/All" : "/Streaming/Browser")
+        })
+    });
+
     $("#selectPhotos").mousedown(function () {
         StopSwitching();
         var lastRunningProgram = $("#homeTitle").text();

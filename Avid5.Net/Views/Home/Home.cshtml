@@ -10,19 +10,19 @@
 
 <table class="buttonGrid">
     <tr>
-        <td class="centeredButton"><span id="selectCast">@Html.Raw(Button.Rect("Cast"))</span></td>
-        <td class="centeredButton"><span id="selectRoku">@Html.Raw(Button.Rect("Roku"))</span></td>
-        <td class="centeredButton"><span id="selectVideo">@Html.Raw(Button.Rect("Video"))</span></td>
+        <td class="centeredButton"><span id="selectCast">@Html.Raw(Button.LongRect("Cast"))</span></td>
+        <td class="centeredButton"><span id="selectRoku">@Html.Raw(Button.LongRect("Roku"))</span></td>
+        <td class="centeredButton"><span id="selectVideo">@Html.Raw(Button.LongRect("Video"))</span></td>
     </tr>
     <tr>
-        <td class="centeredButton"><span id="selectRadio">@Html.Raw(Button.Rect("Radio"))</span></td>
-        <td class="centeredButton"><span id="selectSpotify">@Html.Raw(Button.Rect("Spotify"))</span></td>
-        <td class="centeredButton"><span id="selectMusic">@Html.Raw(Button.Rect("Music"))</span></td>
+        <td class="centeredButton"><span id="selectBluetooth">@Html.Raw(Button.LongRect("Bluetooth"))</span></td>
+        <td class="centeredButton"><span id="selectSpotify">@Html.Raw(Button.LongRect("Spotify"))</span></td>
+        <td class="centeredButton"><span id="selectMusic">@Html.Raw(Button.LongRect("Music"))</span></td>
     </tr>
     <tr>
-        <td class="centeredButton"><span id="selectEpg">@Html.Raw(Button.Rect("Guide"))</span></td>
-        <td class="centeredButton"><span id="selectSecurity">@Html.Raw(Button.Rect("Security"))</span></td>
-        <td class="centeredButton"><span id="selectTV">@Html.Raw(Button.Rect("TV"))</span></td>
+        <td class="centeredButton"><span id="selectEpg">@Html.Raw(Button.LongRect("Guide"))</span></td>
+        <td class="centeredButton"><span id="selectSecurity">@Html.Raw(Button.LongRect("Security"))</span></td>
+        <td class="centeredButton"><span id="selectTV">@Html.Raw(Button.LongRect("TV"))</span></td>
     </tr>
     @if (!Screen.IsOn || !(Receiver.SelectedInput == "Computer"))
     {

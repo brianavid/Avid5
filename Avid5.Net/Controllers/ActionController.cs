@@ -115,6 +115,18 @@ namespace Avid5.Net.Controllers
             return Content("");
         }
 
+        // GET: /Action/GoBluetooth
+        public ActionResult GoBluetooth()
+        {
+            Receiver.TurnOn();
+            Receiver.SelectRoomsOutput();
+            Receiver.BlueTooth();
+            Screen.EnsureScreenOff();
+            Running.StartStream("Bluetooth");
+
+            return Content("");
+        }
+
         // GET: /Action/GoChromecast
         public ActionResult GoChromecast()
         {
@@ -123,9 +135,9 @@ namespace Avid5.Net.Controllers
             Receiver.SelectTVOutput();
             Screen.EnsureScreenOn();
             Running.StartStream("Chromecast");
-			Screen.WaitForScreenOn();
+            Screen.WaitForScreenOn();
 
-			return Content("");
+            return Content("");
         }
 
         // GET: /Action/GoChromecastAudio
