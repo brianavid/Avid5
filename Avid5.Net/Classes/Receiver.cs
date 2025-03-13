@@ -485,6 +485,21 @@ public static class Receiver
     /// </summary>
     public static void Reboot()
     {
+        logger.Info("Reboot");
         GetXml("<YAMAHA_AV cmd=\"PUT\"><System><Service><System_Reboot>Reboot</System_Reboot></Service></System></YAMAHA_AV>");
+
+        for (int i = 0; i < 10; i++)
+        {
+            try
+            {
+                Initialize();
+                break;
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(2000);
+            }
+        }
+        logger.Info("Rebooted");
     }
 }
