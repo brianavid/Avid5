@@ -212,7 +212,8 @@ namespace Avid5.Net.Controllers
 		// GET: /Action/RecycleApp
 		public ActionResult RecycleApp()
 		{
-			Config.StopApplication();
+            Receiver.Reboot();
+            Config.StopApplication();
 			return Content("");
 		}
 
