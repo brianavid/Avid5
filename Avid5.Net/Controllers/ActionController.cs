@@ -178,6 +178,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/GoSmart
         public ActionResult GoSmart()
         {
+            Receiver.TurnOn();
             Receiver.SelectTvInput();
             Receiver.SelectTVOutput();
             Screen.EnsureScreenOn();
@@ -212,7 +213,7 @@ namespace Avid5.Net.Controllers
 		// GET: /Action/RecycleApp
 		public ActionResult RecycleApp()
 		{
-            Receiver.Reboot();
+            //Receiver.Reboot();
             Config.StopApplication();
 			return Content("");
 		}

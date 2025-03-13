@@ -149,6 +149,7 @@ public static class Receiver
     /// </remarks>
     public static void Initialize()
     {
+        logger.Info("Initialize");
         httpClient = new HttpClient();
 
         XDocument state = GetXml(String.Format(
@@ -163,6 +164,7 @@ public static class Receiver
             switchedOn = powerString == "On";
 
             MainZoneInput = basicStatus.Element("Input").Element("Input_Sel").Value;
+            logger.Info($"Initialized: MainZoneInput={MainZoneInput}");
         }
 
         SelectComputerInput();
@@ -490,18 +492,18 @@ public static class Receiver
         logger.Info("Reboot");
         GetXml("<YAMAHA_AV cmd=\"PUT\"><System><Service><System_Reboot>Reboot</System_Reboot></Service></System></YAMAHA_AV>");
 
-        for (int i = 0; i < 10; i++)
-        {
-            try
-            {
-                Initialize();
-                break;
-            }
-            catch (Exception)
-            {
-                Thread.Sleep(2000);
-            }
-        }
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    try
+        //    {
+        //        Initialize();
+        //        break;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        Thread.Sleep(2000);
+        //    }
+        //}
         logger.Info("Rebooted");
     }
 }
