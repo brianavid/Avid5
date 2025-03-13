@@ -16,7 +16,7 @@ public static class Receiver
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-    static HttpClient httpClient = new HttpClient();
+    static HttpClient httpClient = null;
 
 	/// <summary>
 	/// The HTTP Url through which the receiver is accessed
@@ -149,6 +149,8 @@ public static class Receiver
     /// </remarks>
     public static void Initialize()
     {
+        httpClient = new HttpClient();
+
         XDocument state = GetXml(String.Format(
             "<YAMAHA_AV cmd=\"GET\"><{0}><Basic_Status>GetParam</Basic_Status></{0}></YAMAHA_AV>",
             "Main_Zone"));
