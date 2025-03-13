@@ -16,9 +16,23 @@ $(function () {
         LaunchProgram( "Video", lastRunningProgram == "Video" ? "/Video/Watch" : "/Video/Recordings");
     });
 
-    $("#selectTV").mousedown(function () {
+    var timeoutId = 0;
+
+    $('#selectTV').on('mousedown touchstart', function (event) {
+        event.stopPropagation();
         StopSwitching();
-        LaunchProgram("TV", "/TV/Channels")
+        timeoutId = setTimeout(function () {
+            timeoutId = 0;
+            $.get("/Action/GoSmart", null, function () {
+                LinkTo(document.getElementById("isWide") != null ? "/Streaming/All" : "/Streaming/Controls")
+            })
+        }, 1000);
+    }).on('mouseup mouseleave touchend', function () {
+        if (timeoutId != 0) {
+            clearTimeout(timeoutId);
+            timeoutId = 0;
+            LaunchProgram("TV", "/TV/Channels")
+        }
     });
 
     $("#selectRadio").mousedown(function () {
