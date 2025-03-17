@@ -227,6 +227,13 @@ namespace Avid5.Net.Controllers
 			return Content("");
 		}
 
+        // GET: /Action/RebootReceiver
+        public ActionResult RebootReceiver()
+        {
+            Receiver.Reboot();
+            return Content("");
+        }
+
         // GET: /Action/RebootSystems
         public ActionResult RebootSystems()
         {
@@ -265,6 +272,13 @@ namespace Avid5.Net.Controllers
                         break;
                 }
             }
+            return Content("");
+        }
+
+        // GET: /Action/ClientLog
+        public ActionResult ClientLog(string text)
+        {
+            logger.Info($"Client Log: {text}");
             return Content("");
         }
 

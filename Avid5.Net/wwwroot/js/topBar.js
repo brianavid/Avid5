@@ -209,6 +209,18 @@ $(function () {
         });
     });
 
+    $("#actionMenuRebootReceiver").click(function () {
+        $(".actionMenu").hide()
+        $.ajax({
+            url: "/Action/RebootReceiver",
+            success: function (data) {
+                setInterval(waitForServerToRestart, 1000);
+            },
+            error: HideActionMenu,
+            cache: false
+        });
+    });
+
     $("#actionMenuRebootSystems").click(function () {
         $(".actionMenu").hide()
         var answer = confirm("Do you really want to reboot Avid? This may interrupt any ongoing recordings")
@@ -302,7 +314,7 @@ function SwitchPanelAfterWake(isWide) {
             cache: false,
             success: function (newRunningProgram) {
                 lastWake = now;
-                //$("#homeTitle").text("OK");
+                $("#homeTitle").text(newRunningProgram);
                 if (overlayVisible) {
                     overlayVisible = false;
                     document.body.removeChild(document.getElementById("overlay"));
@@ -343,7 +355,7 @@ function SwitchPanelAfterWake(isWide) {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                //$("#homeTitle").text("Error");
+                $("#homeTitle").text("*" + textStatus + "*" + ~~((now.getTime() - lastWake.getTime()) / 1000));
                 OverlayScreen();
             }
         });
