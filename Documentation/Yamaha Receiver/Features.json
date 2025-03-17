@@ -1,0 +1,602 @@
+{
+    "ccs": {
+        "supported": true
+    },
+    "distribution": {
+        "client_max": 19,
+        "compatible_client": [
+            2
+        ],
+        "mc_surround": {
+            "func_list": [
+                "mcss_error_info"
+            ],
+            "master_role": {
+                "stereo_pair": false,
+                "subwoofer_pair": true,
+                "surround_pair": true
+            },
+            "slave_role": {
+                "subwoofer_pair": false,
+                "surround_pair_l_or_r": false,
+                "surround_pair_lr": false
+            },
+            "version": 1.0
+        },
+        "server_zone_list": [
+            "main",
+            "zone2"
+        ],
+        "version": 2.0
+    },
+    "netusb": {
+        "func_list": [
+            "recent_info",
+            "play_queue",
+            "mc_playlist",
+            "streaming_service_use",
+            "previous_force"
+        ],
+        "mc_playlist": {
+            "num": 5,
+            "size": 200
+        },
+        "net_radio_type": "airable",
+        "play_queue": {
+            "size": 200
+        },
+        "preset": {
+            "num": 40
+        },
+        "qobuz": {
+            "login_type": "oauth"
+        },
+        "recent_info": {
+            "num": 40
+        },
+        "tidal": {
+            "mode": "airable"
+        }
+    },
+    "response_code": 0,
+    "system": {
+        "bluetooth": {
+            "tx_connectivity_type_max": 3,
+            "update_cancelable": true
+        },
+        "func_list": [
+            "wired_lan",
+            "wireless_lan",
+            "network_standby",
+            "network_standby_auto",
+            "bluetooth_standby",
+            "bluetooth_tx_setting",
+            "bluetooth_tx_connectivity_type",
+            "dfs_option",
+            "headphone",
+            "hdmi_out_1",
+            "airplay",
+            "disklavier_settings",
+            "background_download",
+            "remote_info",
+            "network_reboot",
+            "system_reboot",
+            "ypao_volume",
+            "party_mode",
+            "party_volume",
+            "party_mute",
+            "name_text_avr",
+            "hdmi_standby_through",
+            "analytics"
+        ],
+        "hdmi_standby_through_list": [
+            "off",
+            "on",
+            "auto"
+        ],
+        "input_list": [
+            {
+                "account_enable": true,
+                "distribution_enable": true,
+                "id": "napster",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "spotify",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": true,
+                "distribution_enable": true,
+                "id": "qobuz",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": true,
+                "distribution_enable": true,
+                "id": "tidal",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": true,
+                "distribution_enable": true,
+                "id": "deezer",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": true,
+                "distribution_enable": true,
+                "id": "amazon_music",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "alexa",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": false,
+                "id": "airplay",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": false,
+                "id": "mc_link",
+                "play_info_type": "netusb",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "server",
+                "play_info_type": "netusb",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "net_radio",
+                "play_info_type": "netusb",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "bluetooth",
+                "play_info_type": "netusb",
+                "rename_enable": false
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "usb",
+                "play_info_type": "netusb",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "tuner",
+                "play_info_type": "tuner",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi1",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi2",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi3",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi4",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi5",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi6",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "hdmi7",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "tv",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "audio1",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "audio2",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "audio3",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "audio4",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "audio5",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "phono",
+                "play_info_type": "none",
+                "rename_enable": true
+            },
+            {
+                "account_enable": false,
+                "distribution_enable": true,
+                "id": "main_sync",
+                "play_info_type": "none",
+                "rename_enable": true
+            }
+        ],
+        "party_volume_list": [
+            "up",
+            "down"
+        ],
+        "web_control_url": "/AdvancedSettings.html?mc=true",
+        "zone_num": 2
+    },
+    "tuner": {
+        "func_list": [
+            "fm",
+            "rds",
+            "dab"
+        ],
+        "preset": {
+            "num": 40,
+            "type": "separate"
+        },
+        "range_step": [
+            {
+                "id": "fm",
+                "max": 108000,
+                "min": 87500,
+                "step": 50
+            }
+        ]
+    },
+    "zone": [
+        {
+            "actual_volume_mode_list": [
+                "db",
+                "numeric"
+            ],
+            "ccs_supported": [
+                "connected_speaker"
+            ],
+            "cursor_list": [
+                "up",
+                "down",
+                "left",
+                "right",
+                "select",
+                "return"
+            ],
+            "func_list": [
+                "power",
+                "sleep",
+                "volume",
+                "mute",
+                "sound_program",
+                "pure_direct",
+                "enhancer",
+                "tone_control",
+                "dialogue_level",
+                "dialogue_lift",
+                "subwoofer_volume",
+                "signal_info",
+                "prepare_input_change",
+                "link_control",
+                "link_audio_delay",
+                "scene",
+                "contents_display",
+                "cursor",
+                "menu",
+                "actual_volume",
+                "surr_decoder_type",
+                "extra_bass",
+                "adaptive_drc",
+                "dts_dialogue_control",
+                "adaptive_dsp_level"
+            ],
+            "id": "main",
+            "input_list": [
+                "napster",
+                "spotify",
+                "qobuz",
+                "tidal",
+                "deezer",
+                "amazon_music",
+                "alexa",
+                "airplay",
+                "mc_link",
+                "server",
+                "net_radio",
+                "bluetooth",
+                "usb",
+                "tuner",
+                "hdmi1",
+                "hdmi2",
+                "hdmi3",
+                "hdmi4",
+                "hdmi5",
+                "hdmi6",
+                "hdmi7",
+                "tv",
+                "audio1",
+                "audio2",
+                "audio3",
+                "audio4",
+                "audio5",
+                "phono"
+            ],
+            "link_audio_delay_list": [
+                "audio_sync",
+                "balanced",
+                "lip_sync"
+            ],
+            "link_control_list": [
+                "speed",
+                "standard",
+                "stability"
+            ],
+            "menu_list": [
+                "on_screen",
+                "top_menu",
+                "menu",
+                "option",
+                "display",
+                "help",
+                "home",
+                "mode",
+                "red",
+                "green",
+                "yellow",
+                "blue"
+            ],
+            "range_step": [
+                {
+                    "id": "volume",
+                    "max": 161,
+                    "min": 0,
+                    "step": 1
+                },
+                {
+                    "id": "tone_control",
+                    "max": 12,
+                    "min": -12,
+                    "step": 1
+                },
+                {
+                    "id": "dialogue_level",
+                    "max": 3,
+                    "min": 0,
+                    "step": 1
+                },
+                {
+                    "id": "dialogue_lift",
+                    "max": 5,
+                    "min": 0,
+                    "step": 1
+                },
+                {
+                    "id": "subwoofer_volume",
+                    "max": 12,
+                    "min": -12,
+                    "step": 1
+                },
+                {
+                    "id": "actual_volume_db",
+                    "max": 16.5,
+                    "min": -80.5,
+                    "step": 0.5
+                },
+                {
+                    "id": "actual_volume_numeric",
+                    "max": 97.0,
+                    "min": 0.0,
+                    "step": 0.5
+                },
+                {
+                    "id": "dts_dialogue_control",
+                    "max": 6,
+                    "min": 0,
+                    "step": 1
+                }
+            ],
+            "scene_num": 8,
+            "sound_program_list": [
+                "munich",
+                "vienna",
+                "chamber",
+                "cellar_club",
+                "roxy_theatre",
+                "bottom_line",
+                "sports",
+                "action_game",
+                "roleplaying_game",
+                "music_video",
+                "standard",
+                "spectacle",
+                "sci-fi",
+                "adventure",
+                "drama",
+                "mono_movie",
+                "2ch_stereo",
+                "all_ch_stereo",
+                "surr_decoder",
+                "straight"
+            ],
+            "surr_decoder_type_list": [
+                "toggle",
+                "auto",
+                "dolby_surround",
+                "dts_neural_x",
+                "dts_neo6_cinema",
+                "dts_neo6_music"
+            ],
+            "tone_control_mode_list": [
+                "manual"
+            ]
+        },
+        {
+            "actual_volume_mode_list": [
+                "db",
+                "numeric"
+            ],
+            "func_list": [
+                "power",
+                "sleep",
+                "volume",
+                "mute",
+                "enhancer",
+                "tone_control",
+                "balance",
+                "prepare_input_change",
+                "link_control",
+                "scene",
+                "actual_volume",
+                "extra_bass",
+                "mono"
+            ],
+            "id": "zone2",
+            "input_list": [
+                "napster",
+                "spotify",
+                "qobuz",
+                "tidal",
+                "deezer",
+                "amazon_music",
+                "alexa",
+                "airplay",
+                "mc_link",
+                "server",
+                "net_radio",
+                "bluetooth",
+                "usb",
+                "tuner",
+                "audio1",
+                "audio2",
+                "audio3",
+                "audio4",
+                "audio5",
+                "phono",
+                "main_sync"
+            ],
+            "link_control_list": [
+                "speed",
+                "standard",
+                "stability"
+            ],
+            "range_step": [
+                {
+                    "id": "volume",
+                    "max": 161,
+                    "min": 0,
+                    "step": 1
+                },
+                {
+                    "id": "tone_control",
+                    "max": 12,
+                    "min": -12,
+                    "step": 1
+                },
+                {
+                    "id": "balance",
+                    "max": 20,
+                    "min": -20,
+                    "step": 1
+                },
+                {
+                    "id": "actual_volume_db",
+                    "max": 10.0,
+                    "min": -80.5,
+                    "step": 0.5
+                },
+                {
+                    "id": "actual_volume_numeric",
+                    "max": 90.5,
+                    "min": 0.0,
+                    "step": 0.5
+                }
+            ],
+            "scene_num": 8,
+            "tone_control_mode_list": [
+                "manual",
+                "auto",
+                "bypass"
+            ],
+            "zone_b": false
+        }
+    ]
+}
