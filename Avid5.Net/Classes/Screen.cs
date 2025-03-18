@@ -126,17 +126,19 @@ public static class Screen
     static bool TestScreenOn()
     {
 		logger.Info("TestScreenOn");
+#if false
 		if (!String.IsNullOrEmpty(TVAddress))
 		{
 			using (Ping ping = new Ping())
 			{
 
 				PingReply result = ping.Send(TVAddress, 500);
-                logger.Info($"Ping {TVAddress} returns {result.Status}");
-                isOn = result.Status == IPStatus.Success;
+				logger.Info($"Ping {TVAddress} returns {result.Status}");
+				isOn = result.Status == IPStatus.Success;
 			}
 		}
 		else
+#endif
 		{
 			var result = RunCECControlProcess("pow 0", true);
 			logger.Info($"CEC returns {result}");
