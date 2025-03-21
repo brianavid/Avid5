@@ -15,7 +15,7 @@ public static class Roku
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
 
-	static HttpClient httpClient = new HttpClient();
+	public static readonly HttpClient httpClient = new HttpClient();
 
 	/// <summary>
 	/// The HTTP Url of the Roku service
