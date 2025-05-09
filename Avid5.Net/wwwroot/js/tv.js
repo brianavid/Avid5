@@ -362,5 +362,5 @@ $(function () {
 
     // update again every few seconds
     UpdateTvDisplayPlayingInformation();
-    setInterval("UpdateTvDisplayPlayingInformation()", 2000);
+    setInterval("UpdateTvDisplayPlayingInformation()", 1000);
 })

@@ -770,5 +770,5 @@ $(function () {
     UpdateSpotifyDisplayPlayingInformation();
 
     // update again every little bit
-    setInterval("UpdateSpotifyDisplayPlayingInformation()", 2000);
+    setInterval("UpdateSpotifyDisplayPlayingInformation()", 1000);
 });

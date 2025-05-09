@@ -522,5 +522,5 @@ $(function () {
     UpdateJrmcDisplayPlayingInformation();
 
     // update again every little bit
-    jrmcRepeater = setInterval("UpdateJrmcDisplayPlayingInformation()", 2000);
+    jrmcRepeater = setInterval("UpdateJrmcDisplayPlayingInformation()", 1000);
 })

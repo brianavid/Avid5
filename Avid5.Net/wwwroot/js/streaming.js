@@ -230,7 +230,7 @@ $(function () {
     UpdateStreamingDisplayPlayingInformation();
 
     // update again every little bit
-    streamingRepeater = setInterval("UpdateStreamingDisplayPlayingInformation()", 2000);
+    streamingRepeater = setInterval("UpdateStreamingDisplayPlayingInformation()", 1000);
 
    $("#goStreamSourceSelect").click(function () {
         LinkTo("/Streaming/Browser")
