@@ -67,6 +67,7 @@ public static class Running
         if (!string.IsNullOrEmpty(RunningProgram)) 
         {
             logger.Info($"RunningProgram is already {RunningProgram}");
+            Receiver.GetState();
         }
 
 		//  Start a background thread to poll for an inactive screen-off player and so turn it off after
