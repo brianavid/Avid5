@@ -1,4 +1,5 @@
 ﻿var panelSwitcher = null;
+var restartWaiter = null;
 
 $(function () {
    window.onresize = WindowResized
@@ -190,7 +191,7 @@ $(function () {
         $.ajax({
             url: "/Action/RecycleApp",
             success: function (data) {
-                setInterval(waitForServerToRestart, 1000);
+                restartWaiter = setInterval(waitForServerToRestart, 1000);
             },
             error: HideActionMenu,
             cache: false
@@ -202,7 +203,7 @@ $(function () {
         $.ajax({
             url: "/Action/RecycleApp",
             success: function (data) {
-                setInterval(waitForServerToRestart, 1000);
+                restartWaiter = setInterval(waitForServerToRestart, 1000);
             },
             error: HideActionMenu,
             cache: false
@@ -214,7 +215,7 @@ $(function () {
         $.ajax({
             url: "/Action/RebootReceiver",
             success: function (data) {
-                setInterval(waitForServerToRestart, 1000);
+                restartWaiter = setInterval(waitForServerToRestart, 1000);
             },
             error: HideActionMenu,
             cache: false
@@ -229,10 +230,10 @@ $(function () {
             $.ajax({
                 url: "/Action/RebootSystems",
                 success: function (data) {
-                    setInterval(waitForServerToRestart, 10000);
+                    restartWaiter = setInterval(waitForServerToRestart, 10000);
                 },
                 error: function (data) {
-                    setInterval(waitForServerToRestart, 10000);
+                    restartWaiter = setInterval(waitForServerToRestart, 10000);
                 },
                 cache: false
             });
@@ -245,7 +246,10 @@ $(function () {
     function waitForServerToRestart() {
         $.ajax({
             url: "/Action/GetRunning",
+            timeout: 700,
+            cache: false,
             success: function (result) {
+                clearInterval(restartWaiter);
                 window.location.reload(true);
             },
             cache: false
@@ -256,7 +260,9 @@ $(function () {
 
 
 var overlayVisible = false;
+var overlayTime = new Date();
 var lastWake = new Date();
+var pendingError = null;
 var lastWidth = window.innerWidth;
 if (document.referrer == null || document.referrer == "")
 {
@@ -286,6 +292,7 @@ function WindowResized() {
 function OverlayScreen() {
     if (!overlayVisible) {
         overlayVisible = true
+        overlayTime = new Date();
         var overlay = document.createElement("div");
         overlay.setAttribute("id", "overlay");
         overlay.setAttribute("class", "overlay");
@@ -299,13 +306,19 @@ function OverlayScreen() {
 //  switched to a suitable default view for the currently running player application, 
 //  as the view displayed when the device last update may no longer be appropriate.
 function SwitchPanelAfterWake(isWide) {
+    if (document.hidden) return;
+
     var now = new Date();
     if (!navigator.onLine) {
+        $("#homeTitle").text("Offline");
         OverlayScreen();
         return;
     }
     //$("#homeTitle").text(now.getSeconds() % 2 == 0 ? "Tick": "Tock");
     if (overlayVisible || now.getTime() - lastWake.getTime() > 1 * 60 * 1000) {
+        //if (pendingError != null) {
+        //    $("#homeTitle").text(pendingError);
+        //}
         //$("#homeTitle").text("Wait");
         $.ajax({
             type: "GET",
@@ -314,6 +327,13 @@ function SwitchPanelAfterWake(isWide) {
             cache: false,
             success: function (newRunningProgram) {
                 lastWake = now;
+                if (pendingError != null) {
+                    $.ajax({
+                        url: "/Action/ClientLog?text=" + encodeURIComponent(pendingError),
+                        cache: false
+                    });
+                    pendingError = null;
+                }
                 $("#homeTitle").text(newRunningProgram);
                 if (overlayVisible) {
                     overlayVisible = false;
@@ -337,6 +357,7 @@ function SwitchPanelAfterWake(isWide) {
                             window.location = isWide ? "/Streaming/All" : "/Streaming/Controls";
                             break;
                         case "Chromecast":
+                        case "Bluetooth":
                             window.location = isWide ? "/Streaming/All" : "/Streaming/Browser";
                             break;
                         case "Music":
@@ -355,8 +376,10 @@ function SwitchPanelAfterWake(isWide) {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                $("#homeTitle").text("*" + textStatus + "*" + ~~((now.getTime() - lastWake.getTime()) / 1000));
                 OverlayScreen();
+                var endTime = new Date();
+                pendingError = now.toLocaleTimeString() + ":" + overlayTime.toLocaleTimeString() + ":" + endTime.toLocaleTimeString() + " " + textStatus + "." + errorThrown;
+                //$("#homeTitle").text(pendingError);
             }
         });
     }
