@@ -255,6 +255,7 @@ $(function () {
             cache: false
         });
     }
+
     panelSwitcher = setInterval('SwitchPanelAfterWake(' + (document.getElementById("isWide") != null) + ')', 1000);
 });
 
@@ -273,8 +274,7 @@ else
     var viewedRunningProgram = $("#topBarTitle").text()
     var currentRunningProgram = $("#homeTitle").text();
 
-    if (viewedRunningProgram != "" &&
-        viewedRunningProgram != currentRunningProgram)
+    if (viewedRunningProgram != currentRunningProgram)
     {
         lastWake = new Date(0);
     }
