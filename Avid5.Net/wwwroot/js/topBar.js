@@ -186,8 +186,14 @@ $(function () {
         });
     });
 
-    $("#actionMenuRecycleApp").click(function () {
+    $("#actionMenuProblems").click(function () {
         $(".actionMenu").hide()
+        location.href = '/Home/Problems';
+    });
+
+    $("#problemRecycleAvid").click(function () {
+        $(".actionMenu").hide()
+        OverlayScreen()
         $.ajax({
             url: "/Action/RecycleApp",
             success: function (data) {
@@ -198,8 +204,9 @@ $(function () {
         });
     });
 
-    $("#actionMenuRecycleAppWide").click(function () {
+    $("#problemRecycleAvidWide").click(function () {
         $(".actionMenu").hide()
+        OverlayScreen()
         $.ajax({
             url: "/Action/RecycleApp",
             success: function (data) {
@@ -210,8 +217,9 @@ $(function () {
         });
     });
 
-    $("#actionMenuRebootReceiver").click(function () {
+    $("#problemRestartReceiver").click(function () {
         $(".actionMenu").hide()
+        OverlayScreen()
         $.ajax({
             url: "/Action/RebootReceiver",
             success: function (data) {
@@ -222,7 +230,7 @@ $(function () {
         });
     });
 
-    $("#actionMenuRebootSystems").click(function () {
+    $("#problemRebootSystem").click(function () {
         $(".actionMenu").hide()
         var answer = confirm("Do you really want to reboot Avid? This may interrupt any ongoing recordings")
         if (answer) {

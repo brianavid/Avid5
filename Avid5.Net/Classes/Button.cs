@@ -41,6 +41,11 @@ public class Button
         return StyledButton(buttonName, "buttonLongRect", "buttonLargeIcon", additionalStyle);
     }
 
+    public static string UltraLongRect(string buttonName, string additionalStyle = "")
+    {
+        return StyledButton(buttonName, "buttonUltraLongRect", "buttonLargeIcon", additionalStyle);
+    }
+
     private static string StyledButton(string buttonName, string buttonStyle, string iconStyle, string additionalStyle)
     {
         var buttonContents = ButtonContents(buttonName, iconStyle);

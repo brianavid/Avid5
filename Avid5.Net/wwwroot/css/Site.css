@@ -401,6 +401,10 @@ textarea {
     display:none;
 }
 
+.problemText {
+    font-size: 1.2em;
+}
+
 #videoMenu {
 }
 
@@ -544,6 +548,14 @@ textarea {
     font-size: 18px;
 }
 
+.buttonUltraLongRect {
+    line-height: 32px;
+    height: 32px;
+    width: 180px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
 .buttonShortRect {
     line-height: 32px;
     height: 32px;
@@ -619,6 +631,14 @@ textarea {
         line-height: 36px;
         height: 36px;
         width: 90px;
+        border-radius: 10px;
+        font-size: 20px;
+    }
+
+    .buttonUltraLongRect {
+        line-height: 36px;
+        height: 36px;
+        width: 200px;
         border-radius: 10px;
         font-size: 20px;
     }

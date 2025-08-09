@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Diagnostics;
+@{
+    ViewBag.Title = "";
+}
+
+@await Html.PartialAsync("TopBar")
+@section scripts {
+    @Html.Raw(Render.Script("topBar"))
+}
+
+<h2>Resolving problems</h2>
+<p></p>
+<p class="problemText">
+    The simplest action is to recycle the Avid software alone.
+    This restarts the software which manages the control behaviour.
+    Recycling this may resolve issues in control responsiveness.
+    It is also the mechanism to restart after the software is updated.
+    When the Avid software is recycled, nothing stops playing or recording.
+</p>
+<p><span id="problemRecycleAvid@(ViewBag.Wide ?? "")">@Html.Raw(Button.UltraLongRect("Recycle Avid"))</span></p>
+<p></p>
+<hr />
+<p></p>
+<p class="problemText">
+    There is an occasional problem in the Yamaha AV receiver which causes the screen to blank every few seconds.
+    Restarting the receiver fixes this. 
+    The audio and video outputs stop briefly when restarting, but anything playing or recording will continue to do so.
+</p>
+<p><span id="problemRestartReceiver">@Html.Raw(Button.UltraLongRect("Restart Receiver"))</span></p>
+<p></p>
+<hr />
+<p></p>
+<p class="problemText">
+    For all other problems, where playing becomes unreliable, it may be necessary to reboot the entire Avid media PC.
+    Rebooting will halt all playing and will also stop any TV recordings in progress.
+    You will need to confirm that you are OK with this.
+</p>
+<p><span id="problemRebootSystem">@Html.Raw(Button.UltraLongRect("Reboot System"))</span></p>
+
