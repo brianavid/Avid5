@@ -259,13 +259,13 @@ namespace Avid5.Net.Controllers
                 switch (view)
                 {
                     case "Standard":
-                        JRMC.GoShowUI();
+                        JRMC.GoShowUIScreen();
                         break;
                     case "Display":
-                        JRMC.GoFullScreen();
+                        JRMC.GoDisplayScreen();
                         break;
                     case "Theater":
-                        JRMC.GoTheater();
+                        JRMC.GoTheaterScreen();
                         break;
                     case "Closed":
                         JRMC.CloseScreen();

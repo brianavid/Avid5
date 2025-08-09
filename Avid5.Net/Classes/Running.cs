@@ -174,14 +174,15 @@ public static class Running
 				Screen.EnsureScreenOn();
 				Receiver.SelectTVOutput();
 				Screen.WaitForScreenOn();
-                JRMC.GoFullScreen();
+                JRMC.GoDisplayScreen();
 				logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 
 			case "Music":
 				Screen.EnsureScreenOff();
 				Receiver.SelectRoomsOutput();
-				logger.Info("LaunchProgram OK {0}", RunningProgram);
+                JRMC.GoDisplayScreen();
+                logger.Info("LaunchProgram OK {0}", RunningProgram);
 				return true;
 
 			case "Spotify":

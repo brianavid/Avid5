@@ -116,6 +116,11 @@ namespace Avid5.Net.Controllers
         {
             logger.Info($"MCWS {url}");
             XDocument doc = JRMC.GetXml(JRMC.Url + url);
+            // When starting to play something, go to "Display" mode
+            if (url.Contains("Playback/PlayBy"))
+            {
+                JRMC.GoDisplayScreen();
+            }
             return this.Content(doc == null ? "" : doc.ToString(), @"text/xml");
         }
 

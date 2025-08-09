@@ -1214,19 +1214,19 @@ public class JRMC
 		SendCommand("Playback/ClearPlaylist");
 	}
 
-	public static void GoFullScreen()
+	public static void GoDisplayScreen()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=2");   //  View
         SendCommand("Control/MCC?Command=10027");               //  Maximize
 	}
 
-	public static void GoTheater()
+	public static void GoTheaterScreen()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=3");   //  View
         SendCommand("Control/MCC?Command=10027");               //  Maximize
     }
 
-    public static void GoShowUI()
+    public static void GoShowUIScreen()
 	{
         SendCommand("Control/MCC?Command=22009&Parameter=4");   //  View
         SendCommand("Control/MCC?Command=10027");               //  Maximize

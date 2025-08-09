@@ -1016,7 +1016,7 @@ public class VideoTV
     public static void WatchLive()
     {
         JRMC.GetXml(JRMC.Url + "Control/MCC?Command=30002");
-        JRMC.GoFullScreen();
+        JRMC.GoDisplayScreen();
 
 	}
 

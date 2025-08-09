@@ -198,7 +198,7 @@ public static class Screen
 
 		if (Receiver.SelectedInput == "Computer")
 		{
-			JRMC.GoTheater();
+			JRMC.GoTheaterScreen();
 		}
 	}
 
@@ -211,7 +211,7 @@ public static class Screen
 
 		if (Receiver.SelectedInput == "Computer")
 		{
-			JRMC.GoFullScreen();
+			JRMC.GoDisplayScreen();
 		}
         TurnOn();
 	}
