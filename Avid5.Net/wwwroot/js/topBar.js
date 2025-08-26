@@ -1,6 +1,13 @@
 ﻿var panelSwitcher = null;
 var restartWaiter = null;
 
+var overlayVisible = false;
+var overlayTime = new Date();
+var lastWake = new Date();
+var pendingError = null;
+var lastWidth = window.innerWidth;
+var isWide = false;
+
 $(function () {
    window.onresize = WindowResized
 
@@ -264,37 +271,24 @@ $(function () {
         });
     }
 
-    panelSwitcher = setInterval('SwitchPanelAfterWake(' + (document.getElementById("isWide") != null) + ')', 1000);
-});
-
-
-var overlayVisible = false;
-var overlayTime = new Date();
-var lastWake = new Date();
-var pendingError = null;
-var lastWidth = window.innerWidth;
-if (document.referrer == null || document.referrer == "")
-{
-    lastWake = new Date(0);
-}
-else
-{
     var viewedRunningProgram = $("#topBarTitle").text()
     var currentRunningProgram = $("#homeTitle").text();
 
-    if (viewedRunningProgram != currentRunningProgram)
-    {
+    if (viewedRunningProgram != currentRunningProgram && viewedRunningProgram != "") {
         lastWake = new Date(0);
     }
-}
+
+    panelSwitcher = setTimeout('SwitchPanelAfterWake()', 1000);
+});
+
 
 function WindowResized() {
     if ((lastWidth >= 1080) != (window.innerWidth >= 1080)) {
         lastWake = new Date(0);
         $("#topBarTitle").text(" ")
-        SwitchPanelAfterWake(window.innerWidth >= 1080)
+        isWide = (window.innerWidth >= 1080)
     }
-    //$("#homeTitle").text(window.innerWidth + "x" + window.innerHeight);
+    $("#tracing").text(window.innerWidth + "x" + window.innerHeight);
 }
 
 function OverlayScreen() {
@@ -313,21 +307,27 @@ function OverlayScreen() {
 //  controlling device is awoken from its sleeping state. When this case occurs, the view is automatically 
 //  switched to a suitable default view for the currently running player application, 
 //  as the view displayed when the device last update may no longer be appropriate.
-function SwitchPanelAfterWake(isWide) {
-    if (document.hidden) return;
+function SwitchPanelAfterWake() {
+    if (document.hidden) {
+        panelSwitcher = setTimeout('SwitchPanelAfterWake()', 1000);
+        return;
+    }
 
-    var now = new Date();
     if (!navigator.onLine) {
         $("#homeTitle").text("Offline");
         OverlayScreen();
+        panelSwitcher = setTimeout('SwitchPanelAfterWake()', 1000);
         return;
     }
-    //$("#homeTitle").text(now.getSeconds() % 2 == 0 ? "Tick": "Tock");
-    if (overlayVisible || now.getTime() - lastWake.getTime() > 1 * 60 * 1000) {
-        //if (pendingError != null) {
-        //    $("#homeTitle").text(pendingError);
-        //}
-        //$("#homeTitle").text("Wait");
+
+    var now = new Date();
+    $("#tracing").text((now.getSeconds() % 2 == 0 ? "Tick": "Tock"));
+    if (overlayVisible || now.getTime() - lastWake.getTime() > 1 * 20 * 1000) {
+        if (pendingError != null) {
+            $("#tracing").text("!" + pendingError);
+        } else {
+            $("#tracing").text("Wait");
+        }
         $.ajax({
             type: "GET",
             url: "/Action/GetRunning",
@@ -343,14 +343,14 @@ function SwitchPanelAfterWake(isWide) {
                     pendingError = null;
                 }
                 $("#homeTitle").text(newRunningProgram);
-                if (overlayVisible) {
-                    overlayVisible = false;
-                    document.body.removeChild(document.getElementById("overlay"));
+                $("#tracing").text("(" + newRunningProgram + ")");
+                let overlay = document.getElementById("overlay");
+                if (overlay) {
+                    document.body.removeChild(overlay);
                 }
+                overlayVisible = false;
                 var lastRunningProgram = $("#topBarTitle").text()
-                if (panelSwitcher != null && // in case the response arrives after the switcher has been cancelled
-                    lastRunningProgram != newRunningProgram)
-                {
+                if (lastRunningProgram != newRunningProgram) {
                     $("#topBarTitle").text(newRunningProgram)
                     switch (newRunningProgram) {
                         default:
@@ -381,22 +381,27 @@ function SwitchPanelAfterWake(isWide) {
                             window.location = isWide ? "/Photos/All" : "/Photos/Display";
                             break;
                     }
+                } else {
+                    panelSwitcher = setTimeout('SwitchPanelAfterWake()', 1000);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 OverlayScreen();
                 var endTime = new Date();
                 pendingError = now.toLocaleTimeString() + ":" + overlayTime.toLocaleTimeString() + ":" + endTime.toLocaleTimeString() + " " + textStatus + "." + errorThrown;
-                //$("#homeTitle").text(pendingError);
+                $("#tracing").text(" " + pendingError);
+                panelSwitcher = setTimeout('SwitchPanelAfterWake()', 5000);
             }
         });
+    } else {
+        panelSwitcher = setTimeout('SwitchPanelAfterWake()', 1000);
     }
 }
 
 function StopSwitching() {
     if (panelSwitcher != null)
     {
-        clearInterval(panelSwitcher)
+        clearTimeout(panelSwitcher)
         panelSwitcher = null;
     }
 }

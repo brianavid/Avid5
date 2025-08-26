@@ -14,8 +14,9 @@ namespace Avid5.Net.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.Title = "INIT";
             ViewBag.IsHome = true;
-            return View("Wide");
+            return View("Home");
         }
 
         //
@@ -23,6 +24,7 @@ namespace Avid5.Net.Controllers
 
         public ActionResult Home()
         {
+            ViewBag.Title = "";
             ViewBag.IsHome = true;
             return View();
         }
@@ -32,6 +34,7 @@ namespace Avid5.Net.Controllers
 
         public ActionResult Wide()
         {
+            ViewBag.Title = "";
             ViewBag.IsHome = true;
             return View();
         }
@@ -56,6 +59,7 @@ namespace Avid5.Net.Controllers
 
         public ActionResult Problems()
         {
+            ViewBag.Title = "";
             return View();
         }
 

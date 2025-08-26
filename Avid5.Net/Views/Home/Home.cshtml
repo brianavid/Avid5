@@ -1,8 +1,4 @@
-﻿@{
-    ViewBag.Title = "";
-}
-
-@await Html.PartialAsync("TopBar")
+﻿@await Html.PartialAsync("TopBar")
 @section scripts {
     @Html.Raw(Render.Script("topBar"))
     @Html.Raw(Render.Script("home"))

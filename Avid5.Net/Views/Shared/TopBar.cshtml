@@ -11,7 +11,7 @@
 <script type="text/javascript">var JrmcUrl = '@JRMC.Url'; var JrmcHost = '@JRMC.Host';</script>
 
 <div id='TopBar'>
-
+  <div id="tracing">&nbsp;</div>
   <table class="topBar @(Running.RunningProgramTopBarClass)">
 	  <tr>
 		<td class="centeredButton"><span id="toggleSettings">@Html.Raw(Button.SmallRound("[[Settings]]"))</span></td>
@@ -20,7 +20,7 @@
 				<table align='center'>
 				<tr>
 				  <td class='pageTitle' align='center'>
-					<div id=homeTitle>@(!string.IsNullOrEmpty(Running.RunningProgram) ? Running.RunningProgram : Security.CurrentSecurityProfileShortName)</div>
+					<div id=homeTitle>@(!string.IsNullOrEmpty(Running.RunningProgram) ? Running.RunningProgram : " ")</div>
 				  </td>
 				</tr>
 				<tr>
