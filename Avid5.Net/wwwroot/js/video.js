@@ -363,6 +363,13 @@ function AddVideoControlsHammerActions() {
         })
     });
 
+    videoControlHammer.on("touch", "#videoToggleSubtitles", function (e) {
+        $.ajax({
+            url: "/Video/SendMCWS?url=" + encodeURIComponent("Control/MCC?Command=10052&Parameter=-1"),
+            cache: false
+        })
+    });
+
 }
 
 var videoRecordingsListHammer = null;
