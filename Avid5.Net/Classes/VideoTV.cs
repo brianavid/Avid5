@@ -725,7 +725,7 @@ public class VideoTV
 
         foreach (var r in OldRecordings.Values)
         {
-            if (File.Exists(r.Filename))
+            if (File.Exists(r.Filename) && !AllRecordings.ContainsKey(r.Id))
             {
                 try
                 {
