@@ -1,5 +1,5 @@
 ﻿function UpdateStreamingDisplayPlayingInformation() {
-    if (overlayVisible || !navigator.onLine) {
+    if (overlayVisible || !navigator.onLine || document.hidden) {
         return;
     }
 

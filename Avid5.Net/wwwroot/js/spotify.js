@@ -36,7 +36,7 @@ function UpdateSpotifyDisplayPlayingInformation() {
     }
 
     lastDisplayUpdate = now;
-    if (overlayVisible || !navigator.onLine) {
+    if (overlayVisible || !navigator.onLine || document.hidden) {
         return;
     }
 
