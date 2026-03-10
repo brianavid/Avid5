@@ -232,7 +232,11 @@ $(function () {
     // update again every little bit
     streamingRepeater = setInterval("UpdateStreamingDisplayPlayingInformation()", 1000);
 
-   $("#goStreamSourceSelect").click(function () {
+    $("#goStreamControlsSelect").click(function () {
+        LinkTo("/Streaming/Controls")
+    });
+
+    $("#goStreamSourceSelect").click(function () {
         LinkTo("/Streaming/Browser")
     });
 

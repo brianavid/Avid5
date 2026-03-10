@@ -5,6 +5,9 @@
     @Html.Raw(Render.Script("streaming"))
 }
 
+<div class="@(ViewBag.HideRokuClass ?? "")">
+    @await Html.PartialAsync("PaneButtons")
+</div>
 <div id="rokuBrowserPane" class="rokuBrowserPane @(ViewBag.HideRokuClass ?? "")">
     <div class="rokuBrowserItems" id="rokuBrowserItems">
         @await Html.PartialAsync("BrowserPane")
