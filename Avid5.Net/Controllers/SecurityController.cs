@@ -70,6 +70,20 @@ namespace Avid5.Net.Controllers
             return Content("OK");
         }
 
+        // GET: Security/RadioOn
+        public ActionResult RadioOn()
+        {
+            Receiver.Security();
+            return Content("OK");
+        }
+
+        // GET: Security/RadioOff
+        public ActionResult RadioOff()
+        {
+            Receiver.TurnOff();
+            return Content("OK");
+        }
+
         public ActionResult IsDefault()
         {
             return Content(Security.IsDefaultProfile() ? "Yes" : "No");
