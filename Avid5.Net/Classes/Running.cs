@@ -279,7 +279,7 @@ public static class Running
     /// Is the currently running player showing signs of activity?
     /// </summary>
     /// <returns></returns>
-    static Boolean IsActive()
+    public static Boolean IsActive()
     {
         //  If a music player is stopped or paused, it may have been forgotten
         switch (RunningProgram)

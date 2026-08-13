@@ -16,6 +16,12 @@ namespace Avid5.Net.Controllers
             return this.Content(Running.RunningProgram);
         }
 
+        // GET: /Action/IsActive
+        public ContentResult IsActive()
+        {
+            return this.Content(Running.IsActive().ToString());
+        }
+
         // GET: /Action/VolumeUp
         public ActionResult VolumeUp()
         {
@@ -95,6 +101,20 @@ namespace Avid5.Net.Controllers
         {
             Screen.EnsureScreenOn();
             return Content("");
+        }
+
+        // GET: /Action/RadioOn
+        public ActionResult RadioOn()
+        {
+            Receiver.Security();
+            return Content("OK");
+        }
+
+        // GET: /Action/RadioOff
+        public ActionResult RadioOff()
+        {
+            Receiver.TurnOff();
+            return Content("OK");
         }
 
         // GET: /Action/StartStream
