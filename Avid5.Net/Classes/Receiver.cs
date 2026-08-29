@@ -457,12 +457,12 @@ public static class Receiver
     /// <summary>
     /// Set the Receiver to play the Tuner on Zone2 for security
     /// </summary>
-    public static void Security()
+    public static void RadioOn()
     {
-        if (Receiver.SelectedInput != "Security")
+        if (Receiver.SelectedInput != "Radio")
         {
-            logger.Info("Security");
-            SelectedInput = "Security";
+            logger.Info("Radio");
+            SelectedInput = "Radio";
             GetXml("<YAMAHA_AV cmd=\"PUT\"><Main_Zone><Power_Control><Power>Standby</Power></Power_Control></Main_Zone></YAMAHA_AV>");
             GetXml("<YAMAHA_AV cmd=\"PUT\"><Zone_2><Power_Control><Power>On</Power></Power_Control></Zone_2></YAMAHA_AV>");
             GetXml("<YAMAHA_AV cmd=\"PUT\"><Zone_2><Input><Input_Sel>TUNER</Input_Sel></Input></Zone_2></YAMAHA_AV>");

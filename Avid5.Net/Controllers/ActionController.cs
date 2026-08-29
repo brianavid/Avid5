@@ -54,8 +54,6 @@ namespace Avid5.Net.Controllers
             string name,
             string args)
         {
-            Security.ClearSavedProfile();
-
             if (String.IsNullOrEmpty(Running.RunningProgram))
             {
             }
@@ -77,8 +75,6 @@ namespace Avid5.Net.Controllers
         {
             try
             {
-                Security.ClearSavedProfile();
-
                 Running.ExitAllPrograms();
 	            return Content(Receiver.VolumeDisplay);
             }
@@ -106,7 +102,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/RadioOn
         public ActionResult RadioOn()
         {
-            Receiver.Security();
+            Receiver.RadioOn();
             return Content("OK");
         }
 

@@ -187,13 +187,13 @@ textarea {
     margin-left:5%;
 }
 
-.musicPlaybackQueueItems, .musicBrowserItems, .guideBrowserItems, .guideChannels, .guideDates, .spotifyPlaybackQueueItems, .spotifyBrowserItems, .photosImagesGrid, .photosBrowserItems, .rokuBrowserItems, .tvButtons, .tvChannels, .videoRecordings, .videoVideos, .videoDvds, .securityProfileItems, .securityZoneItems, .securityScheduleItems {
+.musicPlaybackQueueItems, .musicBrowserItems, .guideBrowserItems, .guideChannels, .guideDates, .spotifyPlaybackQueueItems, .spotifyBrowserItems, .photosImagesGrid, .photosBrowserItems, .rokuBrowserItems, .tvButtons, .tvChannels, .videoRecordings, .videoVideos, .videoDvds {
     position: relative;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
-.musicPlaybackQueueItem, .musicBrowserItem, .guideItem, .spotifyPlaybackQueueItem, .spotifyBrowserItem, .photosBrowserItem, .rokuBrowserItem, .tvChannel, .videoRecording, .videoRecordingGroup, .videoItem, .videoRecordingAction, .actionMenuItem, .securityProfileItem, .securityZoneItem {
+.musicPlaybackQueueItem, .musicBrowserItem, .guideItem, .spotifyPlaybackQueueItem, .spotifyBrowserItem, .photosBrowserItem, .rokuBrowserItem, .tvChannel, .videoRecording, .videoRecordingGroup, .videoItem, .videoRecordingAction, .actionMenuItem {
     width: 100%;
     border-width: thin;
     border-color: #3a5069;
@@ -201,7 +201,7 @@ textarea {
     border-bottom-style: solid;
 }
 
-.musicPlaybackQueueTitle, .musicBrowserTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .tvChannelName, .videoRecordingName, .videoRecordingAction, .guideTitle, .actionMenuItem, .securityProfileName, .securityZoneName {
+.musicPlaybackQueueTitle, .musicBrowserTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .tvChannelName, .videoRecordingName, .videoRecordingAction, .guideTitle, .actionMenuItem {
     color: #3a5069;
     display: block;
     padding-right: 0;
@@ -209,7 +209,7 @@ textarea {
     font-size: 1.2em;
 }
 
-.musicPlaybackQueueTitle, .musicBrowserTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .tvChannelName, .videoRecordingName, .videoRecordingAction, .actionMenuItem, .securityZoneItem {
+.musicPlaybackQueueTitle, .musicBrowserTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .tvChannelName, .videoRecordingName, .videoRecordingAction, .actionMenuItem {
     clear: both;
 }
 
@@ -217,7 +217,7 @@ textarea {
     background-color:#DDD;
 }
 
-.musicPlaybackQueueTitle, .musicBrowserTitle, .guideTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .actionMenuItem, .videoItem, .videoRecordingAction, .tvPlayingInfo, .securityProfileItem, .securityZoneName {
+.musicPlaybackQueueTitle, .musicBrowserTitle, .guideTitle, .spotifyPlaybackQueueTitle, .spotifyBrowserTitle, .photosBrowserTitle, .rokuBrowserTitle, .actionMenuItem, .videoItem, .videoRecordingAction, .tvPlayingInfo {
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -242,11 +242,11 @@ textarea {
     background-color: #eee;
 }
 
-.musicProgrammeInfo, .guideProgrammeInfo, .ProgrammeInfo, .tvProgrammeInfo, .videoRecordingInfo, .videoRecordingDescription, .videoTimelineInfo, securityProfileDescription {
+.musicProgrammeInfo, .guideProgrammeInfo, .ProgrammeInfo, .tvProgrammeInfo, .videoRecordingInfo, .videoRecordingDescription, .videoTimelineInfo {
     font-size: small;
 }
 
-.musicProgrammeDescription, .guideEpgProgrammeDescription, .securityProfileDescription {
+.musicProgrammeDescription, .guideEpgProgrammeDescription {
     font-style: italic;
     padding-bottom: 10px;
 }
@@ -413,7 +413,7 @@ textarea {
 }
 
 
-.guideEpgProgrammeRecord, .guideEpgProgrammeRecordSeries, .guideEpgProgrammeCancel, .guideEpgSeriesCancel, #remoteExit, .securityZoneOn, .securityZoneOff {
+.guideEpgProgrammeRecord, .guideEpgProgrammeRecordSeries, .guideEpgProgrammeCancel, .guideEpgSeriesCancel, #remoteExit {
     float: right;
 }
 
