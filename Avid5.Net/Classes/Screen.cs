@@ -1,13 +1,18 @@
-﻿using NLog;
+﻿#define USE_HOME_ASST
+
+using NLog;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Web;
 using System.Xml.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 /// <summary>
 /// Class to control the screen, using unofficially documented discrete power on/off IR Codes
@@ -15,25 +20,80 @@ using System.Xml.Linq;
 public static class Screen
 {
     static Logger logger = LogManager.GetCurrentClassLogger();
+    static bool isOn = false;
+#if USE_CEC
 	static string ClientPath;
     static string TVAddress;
     static string TVMacAddress;
-    static bool isOn = false;
+#endif
+#if USE_HOME_ASST
+    static HttpClient httpClient = null;
+#endif
+
 
     public static void Initialise()
 	{
 		logger.Info($"Initialise");
+#if USE_CEC
         ClientPath = Config.CECClientPath;
         TVAddress = Config.TVAddress;
         TVMacAddress = string.Concat(Config.TVMacAddress.Where(char.IsLetterOrDigit));
         logger.Info($"ClientPath = {ClientPath}");
         logger.Info($"TVAddress = {TVAddress}");
         logger.Info($"TVMacAddress = {TVMacAddress}");
+#endif
+#if USE_HOME_ASST
+        httpClient = new HttpClient();
+#endif
         TestScreenOn();
     }
 
+#if USE_HOME_ASST
+    /// <summary>
+    /// Get a JSON response from an HTTP GET from Home Assistant
+    /// </summary>
+    /// <param name="state"></param>
+    /// <returns></returns>
+    static string  GetHaState(
+        string state)
+    {
+        Uri requestUri = new Uri("http://" + Config.HaIpAddress + ":8123/api/" + state);
 
-    static string RunCECControlProcess(string command, bool wait = false)
+        //make the sync POST request
+        using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
+        {
+            request.Headers.Add("Authorization", "Bearer " + Config.HaToken);
+            var response = httpClient.Send(request);
+            response.EnsureSuccessStatusCode();
+            return new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+        }
+    }
+
+    /// <summary>
+    /// Post an action with a JSON body to an HTTP POST to Home Assistant
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="body"></param>
+    /// <returns></returns>
+    static void PostHaAction(
+        string action,
+		string body)
+    {
+        Uri requestUri = new Uri("http://" + Config.HaIpAddress + ":8123/api/" + action);
+
+        //make the sync POST request
+        using (var request = new HttpRequestMessage(HttpMethod.Post, requestUri))
+        {
+            request.Headers.Add("Authorization", "Bearer " + Config.HaToken);
+            request.Content = new StringContent(body, System.Text.Encoding.UTF8);
+            var response = httpClient.Send(request);
+            response.EnsureSuccessStatusCode();
+        }
+    }
+#endif
+
+#if USE_CEC
+static string RunCECControlProcess(string command, bool wait = false)
 	{
 		if (!String.IsNullOrEmpty(ClientPath))
 		{
@@ -71,7 +131,7 @@ public static class Screen
 
 		return "";
 	}
-
+#endif
     /// <summary>
     /// Turn the screen on
     /// </summary>
@@ -82,6 +142,7 @@ public static class Screen
     static void TurnOn()
     {
 		logger.Info("TurnOn");
+#if USE_CEC
 		if ( !String.IsNullOrEmpty(TVMacAddress) && TVMacAddress.Length == 12)
 		{
             //	Construct WOL packet
@@ -111,34 +172,22 @@ public static class Screen
         {
             RunCECControlProcess("on 0");
         }
+#endif
 
+#if USE_HOME_ASST
+        PostHaAction("services/media_player/turn_on", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
+#endif
         isOn = true;
     }
 
     /// <summary>
     /// Is the screen really on (irrespective of our state)?
     /// </summary>
-	/// <remarks>
-	/// If possible, ping the TV's IP address to see of it it running
-	/// Otherwise fall back to CEC
-	/// </remarks>
     /// <returns></returns>
     static bool TestScreenOn()
     {
 		logger.Info("TestScreenOn");
-#if false
-		if (!String.IsNullOrEmpty(TVAddress))
-		{
-			using (Ping ping = new Ping())
-			{
-
-				PingReply result = ping.Send(TVAddress, 500);
-				logger.Info($"Ping {TVAddress} returns {result.Status}");
-				isOn = result.Status == IPStatus.Success;
-			}
-		}
-		else
-#endif
+#if USE_CEC
 		{
 			var result = RunCECControlProcess("pow 0", true);
 			logger.Info($"CEC returns {result}");
@@ -147,7 +196,16 @@ public static class Screen
 				isOn = result.Contains("power status: on");
 			}
 		}
-		return isOn;
+#endif
+
+#if USE_HOME_ASST
+        var result = GetHaState("states/" + Config.HaTvEntityId);
+        JObject obj = JObject.Parse(result);
+        string state = (string)obj["state"];
+        logger.Info($"HA returns state =  {state}");
+        isOn = (state ?? "") == "on";
+#endif
+        return isOn;
 	}
 
     /// <summary>
@@ -165,7 +223,13 @@ public static class Screen
             WaitForScreenOn();
         }
 
-        RunCECControlProcess("standby 0");
+#if USE_CEC
+       RunCECControlProcess("standby 0");
+#endif
+
+#if USE_HOME_ASST
+        PostHaAction("services/media_player/turn_off", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
+#endif
         isOn = false;
     }
 
@@ -175,37 +239,16 @@ public static class Screen
     /// </summary>
     public static void WaitForScreenOn()
     {
-#if false
-		logger.Info("WaitForScreenOn");
-
-		for (int i = 0; i < 15; i++)
-		{
-			if (TestScreenOn())
-			{
-				logger.Info("Screen is now on");
-				break;
-			}
-			TurnOn();
-
-			System.Threading.Thread.Sleep(500);
-		}
-
-		if (!isOn)
-		{
-			logger.Info("Given up waiting");
-		}
-#endif    
-
 		if (Receiver.SelectedInput == "Computer")
 		{
 			JRMC.GoTheaterScreen();
 		}
 	}
 
-		/// <summary>
-		/// Ensure that the screen is on - we do this by turning it on!
-		/// </summary>
-		public static void EnsureScreenOn()
+	/// <summary>
+	/// Ensure that the screen is on - we do this by turning it on!
+	/// </summary>
+	public static void EnsureScreenOn()
 	{
 		logger.Info("EnsureScreenOn");
 

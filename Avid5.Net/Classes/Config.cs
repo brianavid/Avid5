@@ -109,6 +109,42 @@ public static class Config
     }
 
     /// <summary>
+    /// The Home Assistant IP address
+    /// </summary>
+    public static string HaIpAddress
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("HaIpAddress");
+            return elAddr == null ? "" : elAddr.Value;
+        }
+    }
+
+    /// <summary>
+    /// The Home Assistant API bearer token
+    /// </summary>
+    public static string HaToken
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("HaToken");
+            return elAddr == null ? "" : elAddr.Value;
+        }
+    }
+
+    /// <summary>
+    /// The Home Assistant Entity ID for the TV
+    /// </summary>
+    public static string HaTvEntityId
+    {
+        get
+        {
+            XElement elAddr = Doc.Root.Element("HaTvEntityId");
+            return elAddr == null ? "" : elAddr.Value;
+        }
+    }
+
+    /// <summary>
     /// The path to the directory in which JRMC recorded TV programmes are stored along with their sidecar XML files
     /// </summary>
     public static string RecordingsPath
