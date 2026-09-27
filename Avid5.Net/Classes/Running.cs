@@ -204,9 +204,9 @@ public static class Running
 
         lastActive = DateTime.UtcNow;
 
-        Screen.EnsureScreenOff();
 		Receiver.SelectComputerInput();
 		Receiver.TurnOff();
+        Screen.EnsureScreenOff();
 
 		NothingRunning();
 

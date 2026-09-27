@@ -76,7 +76,11 @@ namespace Avid5.Net.Controllers
             try
             {
                 Running.ExitAllPrograms();
-	            return Content(Receiver.VolumeDisplay);
+                Thread.Sleep(10000);
+                Screen.EnsureScreenOff();
+                Thread.Sleep(10000);
+                Screen.EnsureScreenOff();
+                return Content(Receiver.VolumeDisplay);
             }
             catch (System.Exception ex)
             {
