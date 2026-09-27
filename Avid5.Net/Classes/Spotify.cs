@@ -358,15 +358,9 @@ public static class Spotify
     /// </summary>
     /// <param name="rawDuration"></param>
     /// <returns></returns>
-    public static string FormatDuration(int seconds)
-    {
-        return seconds < 0 ? "<0:00" : string.Format("{0}:{1:00}", seconds / 60, seconds % 60);
-    }
+    public static string FormatDuration(int seconds) => seconds < 0 ? "<0:00" : string.Format("{0}:{1:00}", seconds / 60, seconds % 60);
 
-    public static void Initialize()
-    {
-        Probe();
-    }
+    public static void Initialize() => Probe();
 
     #region Browsing and Searching
     /// <summary>
@@ -694,10 +688,7 @@ public static class Spotify
     /// Get the collection of recently searched artists
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<SpotifyData.Artist> GetHistoryArtists()
-    {
-        return ArtistHistory.All.Select(h => MakeArtist(h));
-    }
+    public static IEnumerable<SpotifyData.Artist> GetHistoryArtists() => ArtistHistory.All.Select(h => MakeArtist(h));
 
     /// <summary>
     /// Get the collection of tracks for an identified album
@@ -1418,10 +1409,7 @@ public static class Spotify
     /// Remove the specified queued track from the queue
     /// </summary>
     public static SpotifyData.Track RemoveQueuedTrack(
-        string id)
-    {
-        return GetCurrentTrack();
-    }
+        string id) => GetCurrentTrack();
     #endregion
 
     #region Player currently playing track operations
@@ -1622,10 +1610,7 @@ public static class Spotify
         return -1;
     }
 
-    public static void ExitPlayer()
-    {
-        Stop();
-    }
+    public static void ExitPlayer() => Stop();
     #endregion
 
     #region Constructors of SpotifyData from Web API model
@@ -1648,42 +1633,33 @@ public static class Spotify
     /// </summary>
     /// <param name="artist"></param>
     /// <returns></returns>
-    static SpotifyData.Artist MakeArtist(SimpleArtist artist)
+    static SpotifyData.Artist MakeArtist(SimpleArtist artist) => artist == null ? null : new SpotifyData.Artist
     {
-        return artist == null ? null : new SpotifyData.Artist
-        {
-            Id = artist.Uri,
-            Name = artist.Name
-        };
-    }
+        Id = artist.Uri,
+        Name = artist.Name
+    };
 
     /// <summary>
     /// Make an external Artist structure from that returned by the Web API
     /// </summary>
     /// <param name="artist"></param>
     /// <returns></returns>
-    static SpotifyData.Artist MakeArtist(FullArtist artist)
+    static SpotifyData.Artist MakeArtist(FullArtist artist) => new SpotifyData.Artist
     {
-        return new SpotifyData.Artist
-        {
-            Id = artist.Uri,
-            Name = artist.Name
-        };
-    }
+        Id = artist.Uri,
+        Name = artist.Name
+    };
 
     /// <summary>
     /// Make an external Artist structure from that int the Artists History
     /// </summary>
     /// <param name="artist"></param>
     /// <returns></returns>
-    static SpotifyData.Artist MakeArtist(ArtistHistory artist)
+    static SpotifyData.Artist MakeArtist(ArtistHistory artist) => new SpotifyData.Artist
     {
-        return new SpotifyData.Artist
-        {
-            Id = artist.Id,
-            Name = artist.Name
-        };
-    }
+        Id = artist.Id,
+        Name = artist.Name
+    };
 
     /// <summary>
     /// Make a collection of external Artist structures from Paging data returned by the Web API
@@ -1692,10 +1668,7 @@ public static class Spotify
     /// <param name="ReadNext"></param>
     /// <returns></returns>
     static IEnumerable<SpotifyData.Artist> MakeArtists(
-        IAsyncEnumerable<FullArtist> col)
-    {
-        return col.Take(200).ToEnumerable().Select(MakeArtist);
-    }
+        IAsyncEnumerable<FullArtist> col) => col.Take(200).ToBlockingEnumerable().Select(MakeArtist);
 
     /// <summary>
     /// Get the year of release for an album
@@ -1717,18 +1690,15 @@ public static class Spotify
     /// </summary>
     /// <param name="album"></param>
     /// <returns></returns>
-    static SpotifyData.Album MakeAlbum(FullAlbum album)
+    static SpotifyData.Album MakeAlbum(FullAlbum album) => new SpotifyData.Album
     {
-        return new SpotifyData.Album
-        {
-            Id = album.Uri,
-            Name = album.Name,
-            ArtistId = album.Artists[0].Uri,
-            ArtistName = album.Artists[0].Name,
-            Year = ReleaseYear(album),
-            TrackCount = album.TotalTracks
-        };
-    }
+        Id = album.Uri,
+        Name = album.Name,
+        ArtistId = album.Artists[0].Uri,
+        ArtistName = album.Artists[0].Name,
+        Year = ReleaseYear(album),
+        TrackCount = album.TotalTracks
+    };
 
     /// <summary>
     /// Make a collection of external Album structures from Paging<SimpleAlbum> data returned by the Web API
@@ -1758,7 +1728,7 @@ public static class Spotify
         IAsyncEnumerable<T> col,
         Func<T, string> GetAlbumId)
     {
-        var albumIds = col.Take(200).Select(GetAlbumId).ToEnumerable();
+        var albumIds = col.Take(200).Select(GetAlbumId).ToBlockingEnumerable();
         var count = albumIds.Count();
         foreach (var batch in albumIds.Batch(20))
         {
@@ -1814,10 +1784,7 @@ public static class Spotify
     /// <returns></returns>
     static IEnumerable<SpotifyData.Track> MakeTracks(
         IAsyncEnumerable<FullTrack> col,
-        FullAlbum album = null)
-    {
-        return col.Take(200).ToEnumerable().Select(t => MakeTrack(t, album));
-    }
+        FullAlbum album = null) => col.Take(200).ToBlockingEnumerable().Select(t => MakeTrack(t, album));
 
     /// <summary>
     /// Make a collection of external Track structures from Paging data returned by the Web API
@@ -1826,10 +1793,7 @@ public static class Spotify
     /// <param name="album"></param>
     /// <returns></returns>
     static IEnumerable<SpotifyData.Track> MakeTracks(
-        IAsyncEnumerable<FullTrack> col)
-    {
-        return MakeTracks(col.Select(t => GetFullTrack(t.Id)), null);
-    }
+        IAsyncEnumerable<FullTrack> col) => MakeTracks(col.Select(t => GetFullTrack(t.Id)), null);
 
     /// <summary>
     /// Make a collection of external Track structures from Paging data returned by the Web API
@@ -1839,10 +1803,7 @@ public static class Spotify
     /// <returns></returns>
     static IEnumerable<SpotifyData.Track> MakeTracks(
         IAsyncEnumerable<SimpleTrack> col,
-        FullAlbum album)
-    {
-        return MakeTracks(col.Select(t => GetFullTrack(t.Id)), album);
-    }
+        FullAlbum album) => MakeTracks(col.Select(t => GetFullTrack(t.Id)), album);
 
     /// <summary>
     /// Make a collection of external Track structures from Paging data returned by the Web API as a Playlist
@@ -1850,24 +1811,18 @@ public static class Spotify
     /// <param name="col"></param>
     /// <returns></returns>
     static IEnumerable<SpotifyData.Track> MakeTracks(
-        IAsyncEnumerable<PlaylistTrack<FullTrack>> col)
-    {
-        return MakeTracks(col.Select(p => p.Track));
-    }
+        IAsyncEnumerable<PlaylistTrack<FullTrack>> col) => MakeTracks(col.Select(p => p.Track));
 
     /// <summary>
     /// Make an external Playlist structure from that returned by the Web API
     /// </summary>
     /// <param name="playlist"></param>
     /// <returns></returns>
-    static SpotifyData.Playlist MakePlaylist(SimplePlaylist playlist)
+    static SpotifyData.Playlist MakePlaylist(SimplePlaylist playlist) => new SpotifyData.Playlist
     {
-        return new SpotifyData.Playlist
-        {
-            Id = playlist.Uri,
-            Name = playlist.Name,
-        };
-    }
+        Id = playlist.Uri,
+        Name = playlist.Name,
+    };
 
     /// <summary>
     /// Make a collection of external Playlist structures from Paging data returned by the Web API
@@ -1876,10 +1831,7 @@ public static class Spotify
     /// <param name="ReadNext"></param>
     /// <returns></returns>
     static IEnumerable<SpotifyData.Playlist> MakePlaylists(
-        IAsyncEnumerable<SimplePlaylist> col)
-    {
-        return col.Take(200).ToEnumerable().Select(MakePlaylist);
-    }
+        IAsyncEnumerable<SimplePlaylist> col) => col.Take(200).ToBlockingEnumerable().Select(MakePlaylist);
 
 
     /// <summary>
