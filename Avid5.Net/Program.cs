@@ -15,7 +15,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     // options.KnownProxies.Add(IPAddress.Parse("192.168.1.50"));
 
     // Option B: For homelab/internal setups, clear the defaults to trust the reverse proxy hop:
-    options.KnownNetworks.Clear();
+    options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
 
