@@ -1,15 +1,31 @@
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 using NLog.Web;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // Option A: If NPM is on a known static LAN IP (e.g., 192.168.1.50), trust it explicitly:
+    // options.KnownProxies.Add(IPAddress.Parse("192.168.1.50"));
+
+    // Option B: For homelab/internal setups, clear the defaults to trust the reverse proxy hop:
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// MUST be placed at the very top of the pipeline, before any routing, auth, or IP checks
+app.UseForwardedHeaders();
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
