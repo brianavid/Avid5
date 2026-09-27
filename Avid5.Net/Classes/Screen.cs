@@ -229,6 +229,8 @@ static string RunCECControlProcess(string command, bool wait = false)
 
 #if USE_HOME_ASST
         PostHaAction("services/media_player/turn_off", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
+        System.Threading.Thread.Sleep(1000);
+        PostHaAction("services/media_player/turn_off", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
 #endif
         isOn = false;
     }
