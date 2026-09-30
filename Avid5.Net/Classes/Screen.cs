@@ -223,16 +223,20 @@ static string RunCECControlProcess(string command, bool wait = false)
             WaitForScreenOn();
         }
 
+        isOn = false;
+
 #if USE_CEC
        RunCECControlProcess("standby 0");
 #endif
 
 #if USE_HOME_ASST
         PostHaAction("services/media_player/turn_off", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
-        System.Threading.Thread.Sleep(1000);
-        PostHaAction("services/media_player/turn_off", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
+        System.Threading.Thread.Sleep(2000);
+        if (!isOn)
+        {
+            PostHaAction("services/media_player/turn_off", "{ \"entity_id\": \"" + Config.HaTvEntityId + "\"}");
+        }
 #endif
-        isOn = false;
     }
 
     /// <summary>
