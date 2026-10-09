@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <!-- Concentric 90-degree arcs (Center: 96, 150) -->
+    <!-- Radii: 83.5, 59.0, 34.5 (Uniform 24.5px pitch = 12.5px white gap between all tiers) -->
+    <path id="outer-arc" d="M 37.0 91.0 A 83.5 83.5 0 0 1 155.0 91.0" />
+    <path id="mid-arc"   d="M 54.3 108.3 A 59.0 59.0 0 0 1 137.7 108.3" />
+    <path id="inner-arc" d="M 71.6 125.6 A 34.5 34.5 0 0 1 120.4 125.6" />
+  </defs>
+
+  <!-- 1. Black Outline Pass (Stroke: 18px) -->
+  <g fill="none" stroke="#000000" stroke-width="18" stroke-linecap="round">
+    <use href="#outer-arc" />
+    <use href="#mid-arc" />
+    <use href="#inner-arc" />
+  </g>
+  <circle cx="96" cy="150" r="13" fill="#000000" />
+
+  <!-- 2. Blue Fill Pass (Stroke: 14px) -->
+  <g fill="none" stroke="#3235FF" stroke-width="14" stroke-linecap="round">
+    <use href="#outer-arc" />
+    <use href="#mid-arc" />
+    <use href="#inner-arc" />
+  </g>
+  <circle cx="96" cy="150" r="11" fill="#3235FF" />
+</svg>

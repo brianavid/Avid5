@@ -2,17 +2,25 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name = 'viewport' content = 'width=device-width, initial-scale=1, user-scalable=0'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=0'>
     <meta name='apple-mobile-web-app-capable' content='yes' />
     <meta name='apple-mobile-web-app-status-bar-style' content='black' />
     <meta name="google" content="notranslate">
-    <title>Avid5</title>
+    <title>@(ViewBag.Title ?? "Avid5")</title>
+
     @Html.Raw(Render.Stylesheet("Site"))
     <link rel="stylesheet" href="~/css/nouislider.fox.css" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="SHORTCUT ICON" href="@Url.Content("~/favicon.ico")" />
-    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
-    <link rel="icon" href="~/Avid5-192.png" sizes="192x192" />
+
+    @* Dynamically switch manifest *@
+    <link rel="manifest" href="@(ViewBag.ManifestUrl ?? "/manifest.json")" />
+
+    @* Standard desktop favicon *@
+    <link rel="shortcut icon" href="~/favicon.ico" />
+
+    @* Dynamic mobile & touch icons (falls back to root defaults) *@
+    <link rel="apple-touch-icon" href="@(ViewBag.IconUrl ?? "/apple-touch-icon.png")" />
+    <link rel="icon" type="image/png" sizes="192x192" href="@(ViewBag.IconUrl ?? "/main-192.png")" />
+
     @Html.Raw(Button.FontReference)
 </head>
 <body>

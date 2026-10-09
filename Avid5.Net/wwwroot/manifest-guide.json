@@ -1,0 +1,22 @@
+{
+  "id": "/guide/browser",
+  "name": "Avid5 Record",
+  "short_name": "Avid Rec",
+  "start_url": "/guide/browser",
+  "scope": "/guide/browser",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#4285f4",
+  "icons": [
+    {
+      "src": "/images/icons/epg-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icons/epg-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

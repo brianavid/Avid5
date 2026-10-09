@@ -9,6 +9,8 @@ namespace Avid5.Net.Controllers
             string mode)
         {
             ViewBag.Mode = mode;
+            ViewBag.ManifestUrl = "/manifest-guide.json?v=2";
+            ViewBag.IconUrl = "/images/icons/epg-192.pn";
             return View("Browser");
         }
 
@@ -17,6 +19,8 @@ namespace Avid5.Net.Controllers
             string mode)
         {
             ViewBag.Mode = mode;
+            ViewBag.ManifestUrl = "/manifest-guide.json?v=2";
+            ViewBag.IconUrl = "/images/icons/epg-192.pn";
             return View("BrowserWide");
         }
 

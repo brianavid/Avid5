@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <!-- Concentric 90-degree arcs (Center: 96, 150) -->
+    <path id="outer-arc" d="M 37.0 91.0 A 83.5 83.5 0 0 1 155.0 91.0" />
+    <path id="mid-arc"   d="M 54.3 108.3 A 59.0 59.0 0 0 1 137.7 108.3" />
+    <path id="inner-arc" d="M 71.6 125.6 A 34.5 34.5 0 0 1 120.4 125.6" />
+  </defs>
+
+  <!-- 1. Black Outline Pass -->
+  <g fill="none" stroke="#000000" stroke-width="18" stroke-linecap="round">
+    <use href="#outer-arc" />
+    <use href="#mid-arc" />
+    <use href="#inner-arc" />
+  </g>
+  <circle cx="96" cy="150" r="13" fill="#000000" />
+
+  <!-- 2. Blue Fill Pass -->
+  <g fill="none" stroke="#3235FF" stroke-width="14" stroke-linecap="round">
+    <use href="#outer-arc" />
+    <use href="#mid-arc" />
+    <use href="#inner-arc" />
+  </g>
+  <circle cx="96" cy="150" r="11" fill="#3235FF" />
+
+  <!-- 3. Scheduling Overlay Badge (Top-Right) -->
+  <g>
+    <!-- White Shield Rim -->
+    <circle cx="148" cy="44" r="28" fill="#FFFFFF" />
+    
+    <!-- Clock Rim & Dark Face -->
+    <circle cx="148" cy="44" r="24" fill="#0D1B2A" stroke="#000000" stroke-width="3" />
+    
+    <!-- Hour Indices -->
+    <circle cx="148" cy="25" r="1.8" fill="#FFFFFF" />
+    <circle cx="167" cy="44" r="1.8" fill="#FFFFFF" />
+    <circle cx="148" cy="63" r="1.8" fill="#FFFFFF" />
+    <circle cx="129" cy="44" r="1.8" fill="#FFFFFF" />
+
+    <!-- Clock Hands (~ 3:00) -->
+    <line x1="148" y1="44" x2="148" y2="29" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" />
+    <line x1="148" y1="44" x2="162" y2="44" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Center Pivot Pin -->
+    <circle cx="148" cy="44" r="2.5" fill="#FFFFFF" />
+  </g>
+</svg>
