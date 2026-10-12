@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using static Avid.Spotify.SpotifyData;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices.Marshalling;
 
 /// <summary>
 /// Class of static methods to access the Spotify player through its WebAPI interface
@@ -318,22 +319,14 @@ public static class Spotify
             }
 
             List<SpotifyData.Artist> savedArtistList = new List<SpotifyData.Artist>();
-            foreach (var batch in artistIds.Batch(20))
+            foreach (var artistId in artistIds)
             {
                 try
                 {
-                    var batchOfIds = batch.Select(id => SimplifyId(id)).ToList();
-                    IEnumerable<FullArtist> batchOfArtists;
-                    lock (spotifyServiceLock)
+                    var artist = SpotifyService.Artists.Get(SimplifyId(artistId)).Result ;
+                    if (artist != null)
                     {
-                        batchOfArtists = SpotifyService.Artists.GetSeveral(new ArtistsRequest(batchOfIds)).Result.Artists;
-                    }
-                    if (batchOfArtists != null)
-                    {
-                        foreach (var artist in batchOfArtists)
-                        {
-                            savedArtistList.Add(MakeArtist(artist));
-                        }
+                        savedArtistList.Add(MakeArtist(artist));
                     }
                     logger.Info("LoadAndIndexAllSavedTracks {0}/{1} artists", savedArtistList.Count, artistIds.Count);
 
@@ -766,11 +759,11 @@ public static class Spotify
         {
             try
             {
-                IAsyncEnumerable<SimplePlaylist> pagingPlaylist;
+                IAsyncEnumerable<FullPlaylist> pagingPlaylist;
 
                 lock (spotifyServiceLock)
                 {
-                    pagingPlaylist = SpotifyService.Paginate(SpotifyService.Playlists.GetUsers(spotifyCurrentUserId).Result);
+                    pagingPlaylist = SpotifyService.Paginate(SpotifyService.Playlists.CurrentUsers().Result);
                 }
                 var playlists = MakePlaylists(pagingPlaylist);
                 CurrentPlaylistsByName = playlists.ToDictionary(p => p.Name);
@@ -801,7 +794,7 @@ public static class Spotify
                 IAsyncEnumerable<PlaylistTrack<IPlayableItem>> tracks;
                 lock (spotifyServiceLock)
                 {
-                    tracks = SpotifyService.Paginate(SpotifyService.Playlists.GetItems(SimplifyId(id)).Result);
+                    tracks = SpotifyService.Paginate(SpotifyService.Playlists.GetPlaylistItems(SimplifyId(id)).Result);
                 }
                 return MakeTracks(tracks.Where(t=>t.Track.Type == ItemType.Track).Select(t=>t.Track as FullTrack), null);
             }
@@ -860,7 +853,7 @@ public static class Spotify
             {
                 try
                 {
-                    return SpotifyService.Playlists.Create(spotifyCurrentUserId, new PlaylistCreateRequest(name)).Result.Uri;
+                    return SpotifyService.Playlists.Create(new PlaylistCreateRequest(name)).Result.Uri;
                 }
                 catch (System.Exception ex)
                 {
@@ -886,7 +879,8 @@ public static class Spotify
                 try
                 {
 
-                    var ok = SpotifyService.Follow.UnfollowPlaylist(SimplifyId(id)).Result;
+                    var request = new LibraryRemoveItemsRequest(new List<string> { SimplifyId(id) });
+                    var ok = SpotifyService.Library.RemoveItems(request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -939,7 +933,7 @@ public static class Spotify
                 try
                 {
                     var request = new PlaylistAddItemsRequest(new List<string> { GetFullTrack(trackId).Uri });
-                    var ok = SpotifyService.Playlists.AddItems( SimplifyId(playlistId), request).Result;
+                    var ok = SpotifyService.Playlists.AddPlaylistItems( SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -966,7 +960,7 @@ public static class Spotify
                 {
                     var tracks = GetTracksForAlbum(SimplifyId(albumId));
                     var request = new PlaylistAddItemsRequest(tracks.Select(t => t.Id).ToList());
-                    var ok = SpotifyService.Playlists.AddItems(SimplifyId(playlistId), request).Result;
+                    var ok = SpotifyService.Playlists.AddPlaylistItems(SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -991,10 +985,10 @@ public static class Spotify
             {
                 try
                 {
-                    var request = new PlaylistRemoveItemsRequest();
-                    request.Tracks = new PlaylistRemoveItemsRequest.Item[1];
-                    request.Tracks[0].Uri = trackId;
-                    var ok = SpotifyService.Playlists.RemoveItems( SimplifyId(playlistId), request).Result;
+                    var request = new PlaylistRemoveItemsRequestV2();
+                    request.Items = new PlaylistRemoveItemsRequestV2.Item[1];
+                    request.Items[0].Uri = trackId;
+                    var ok = SpotifyService.Playlists.RemovePlaylistItems( SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -1020,9 +1014,9 @@ public static class Spotify
                 try
                 {
                     var tracks = GetTracksForAlbum(SimplifyId(albumId));
-                    var request = new PlaylistRemoveItemsRequest();
-                    request.Tracks = tracks.Select(t => new PlaylistRemoveItemsRequest.Item { Uri = t.Id } ).ToList();;
-                    var ok = SpotifyService.Playlists.RemoveItems(SimplifyId(playlistId), request).Result;
+                    var request = new PlaylistRemoveItemsRequestV2();
+                    request.Items = tracks.Select(t => new PlaylistRemoveItemsRequestV2.Item { Uri = t.Id } ).ToList();;
+                    var ok = SpotifyService.Playlists.RemovePlaylistItems(SimplifyId(playlistId), request).Result;
                 }
                 catch (System.Exception ex)
                 {
@@ -1067,8 +1061,8 @@ public static class Spotify
             {
                 try
                 {
-                    var request = new LibrarySaveAlbumsRequest(new List<string> { SimplifyId(albumId) });
-                    var ok = SpotifyService.Library.SaveAlbums(request).Result;
+                    var request = new LibrarySaveItemsRequest(new List<string> { SimplifyId(albumId) });
+                    var ok = SpotifyService.Library.SaveItems(request).Result;
                     AllSavedAlbumList = null;
                 }
                 catch (System.Exception ex)
@@ -1092,8 +1086,8 @@ public static class Spotify
             {
                 try
                 {
-                    var request = new LibraryRemoveAlbumsRequest(new List<string> { SimplifyId(albumId) });
-                    var ok = SpotifyService.Library.RemoveAlbums(request).Result;
+                    var request = new LibraryRemoveItemsRequest(new List<string> { SimplifyId(albumId) });
+                    var ok = SpotifyService.Library.RemoveItems(request).Result;
                     AllSavedAlbumList = null;
                 }
                 catch (System.Exception ex)
@@ -1117,8 +1111,8 @@ public static class Spotify
             {
                 try
                 {
-                    var request = new LibraryCheckAlbumsRequest(new List<string> { SimplifyId(albumId) });
-                    var saveIndications = SpotifyService.Library.CheckAlbums(request).Result;
+                    var request = new LibraryCheckItemsRequest(new List<string> { SimplifyId(albumId) });
+                    var saveIndications = SpotifyService.Library.CheckItems(request).Result;
                     return saveIndications.First();
                 }
                 catch (System.Exception ex)
@@ -1730,13 +1724,10 @@ public static class Spotify
     {
         var albumIds = col.Take(200).Select(GetAlbumId).ToBlockingEnumerable();
         var count = albumIds.Count();
-        foreach (var batch in albumIds.Batch(20))
+        foreach (var albumId  in albumIds)
         {
-            var albumBatch = SpotifyService.Albums.GetSeveral(new AlbumsRequest(batch.ToList())).Result.Albums.Select(MakeAlbum);
-            foreach (var album in albumBatch)
-            {
-                yield return album;
-            }
+            var album = MakeAlbum(SpotifyService.Albums.Get(SimplifyId(albumId)).Result);
+            yield return album;
         }
     }
 
@@ -1818,7 +1809,7 @@ public static class Spotify
     /// </summary>
     /// <param name="playlist"></param>
     /// <returns></returns>
-    static SpotifyData.Playlist MakePlaylist(SimplePlaylist playlist) => new SpotifyData.Playlist
+    static SpotifyData.Playlist MakePlaylist(FullPlaylist playlist) => new SpotifyData.Playlist
     {
         Id = playlist.Uri,
         Name = playlist.Name,
@@ -1831,7 +1822,7 @@ public static class Spotify
     /// <param name="ReadNext"></param>
     /// <returns></returns>
     static IEnumerable<SpotifyData.Playlist> MakePlaylists(
-        IAsyncEnumerable<SimplePlaylist> col) => col.Take(200).ToBlockingEnumerable().Select(MakePlaylist);
+        IAsyncEnumerable<FullPlaylist> col) => col.Take(200).ToBlockingEnumerable().Select(MakePlaylist);
 
 
     /// <summary>
