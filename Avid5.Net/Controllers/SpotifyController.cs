@@ -9,7 +9,7 @@ namespace Avid5.Net.Controllers
     public class SpotifyController : Controller
     {
         // GET: /Spotify/All
-        public ActionResult All()
+        public async Task<ActionResult> All()
         {
             ViewBag.Mode = "Library";
 
@@ -17,25 +17,25 @@ namespace Avid5.Net.Controllers
         }
 
         // GET: /Spotify/Playing
-        public ActionResult Playing()
+        public async Task<ActionResult> Playing()
         {
             return View();
         }
 
         // GET: /Spotify/Queue
-        public ActionResult Queue()
+        public async Task<ActionResult> Queue()
         {
             return View();
         }
 
         // GET: /Spotify/QueuePane
-        public ActionResult QueuePane()
+        public async Task<ActionResult> QueuePane()
         {
             return PartialView();
         }
 
         // GET: /Spotify/Browser
-        public ActionResult Browser(
+        public async Task<ActionResult> Browser(
             string mode,
             string id,
             string name,
@@ -59,7 +59,7 @@ namespace Avid5.Net.Controllers
         }
 
         // GET: /Spotify/BrowserPane
-        public ActionResult BrowserPane(
+        public async Task<ActionResult> BrowserPane(
             string mode,
             string id,
             string playlistId,
@@ -108,9 +108,9 @@ namespace Avid5.Net.Controllers
         }
 
         // GET: /Spotify/GetPlayingInfo
-        public ContentResult GetPlayingInfo()
+        public async Task<ContentResult> GetPlayingInfo()
         {
-            SpotifyData.Track currentTrack = Spotify.GetCurrentTrack();
+            SpotifyData.Track currentTrack = await Spotify.GetCurrentTrackAsync();
 
             if (currentTrack == null)
             {
@@ -130,10 +130,10 @@ namespace Avid5.Net.Controllers
                 return this.Content(stoppedInfo.ToString(), @"text/xml", Encoding.UTF8);
             }
 
-            int pos = Spotify.GetPosition();
-            int playStatus = Spotify.GetPlaying();
+            int pos = await Spotify.GetPositionAsync();
+            int playStatus = await Spotify.GetPlayingAsync();
 
-            var queuedTracks = Spotify.GetQueuedTracks();
+            var queuedTracks = await Spotify.GetQueuedTracksAsync();
             var queuedTracksArray = queuedTracks == null ? new SpotifyData.Track[0] : queuedTracks.ToArray();
             int foundIndexInQueue = Array.FindIndex(queuedTracksArray, t => t.Id == currentTrack.Id);
             string indexDisplay = (foundIndexInQueue >= 0) ?
@@ -157,106 +157,106 @@ namespace Avid5.Net.Controllers
         }
 
         // GET: /Spotify/PlayAlbum
-        public ContentResult PlayAlbum(
+        public async Task<ContentResult> PlayAlbum(
             string id,
             bool append = false)
         {
-            Spotify.PlayAlbum(id, append);
+            await Spotify.PlayAlbumAsync(id, append);
             return this.Content("");
         }
 
         // GET: /Spotify/PlayTrack
-        public ContentResult PlayTrack(
+        public async Task<ContentResult> PlayTrack(
             string id,
             bool append = false)
         {
-            Spotify.PlayTrack(id, append);
+            await Spotify.PlayTrackAsync(id, append);
             return this.Content("");
         }
 
         // GET: /Spotify/PlayPlaylist
-        public ContentResult PlayPlaylist(
+        public async Task<ContentResult> PlayPlaylist(
             string id,
             bool append = false)
         {
-            Spotify.PlayPlaylist(id, append);
+            await Spotify.PlayPlaylistAsync(id, append);
             return this.Content("");
         }
 
         // GET: /Spotify/SkipToQueuedTrack
-        public ContentResult SkipToQueuedTrack(
+        public async Task<ContentResult> SkipToQueuedTrack(
             string id)
         {
-            Spotify.SkipToQueuedTrack(id);
+            await Spotify.SkipToQueuedTrackAsync(id);
             return this.Content("");
         }
 
         // GET: /Spotify/RemoveQueuedTrack
-        public ContentResult RemoveQueuedTrack(
+        public async Task<ContentResult> RemoveQueuedTrack(
             string id)
         {
-            Spotify.RemoveQueuedTrack(id);
+            await Spotify.RemoveQueuedTrack(id);
             return this.Content("");
         }
 
         // GET: /Spotify/PlayPause
-        public ContentResult PlayPause()
+        public async Task<ContentResult> PlayPause()
         {
-            if (Spotify.GetPlaying() <= 0)
+            if (await Spotify.GetPlayingAsync() <= 0)
             {
-                Spotify.Play();
+                await Spotify.PlayAsync();
             }
             else
             {
-                Spotify.Pause();
+                await Spotify.PauseAsync();
             }
             return this.Content("");
         }
 
         // GET: /Spotify/Skip
-        public ContentResult Skip()
+        public async Task<ContentResult> Skip()
         {
-            Spotify.Skip();
+            await Spotify.SkipAsync();
             return this.Content("");
         }
 
         // GET: /Spotify/Back
-        public ContentResult Back()
+        public async Task<ContentResult> Back()
         {
-            Spotify.Back();
+            await Spotify.BackAsync();
             return this.Content("");
         }
 
         // GET: /Spotify/Plus10
-        public ContentResult Plus10()
+        public async Task<ContentResult> Plus10()
         {
-            Spotify.SetPosition(Spotify.GetPosition() + 10);
+            await Spotify.SetPositionAsync(await Spotify.GetPositionAsync() + 10);
             return this.Content("");
         }
 
         // GET: /Spotify/Minus10
-        public ContentResult Minus10()
+        public async Task<ContentResult> Minus10()
         {
-            int pos = Spotify.GetPosition();
-            Spotify.SetPosition(pos < 10 ? 0 : pos - 10);
+            int pos = await Spotify.GetPositionAsync();
+            await Spotify.SetPositionAsync(pos < 10 ? 0 : pos - 10);
             return this.Content("");
         }
 
         // GET: /Spotify/SetPosition
-        public ContentResult SetPosition(
+        public async Task<ContentResult> SetPosition(
             int pos)
         {
-            Spotify.SetPosition(pos);
+            await Spotify.SetPositionAsync(pos);
             return this.Content("");
         }
 
         // GET: /Spotify/GetAlbumImage
-        public ActionResult GetAlbumImage(
+        public async Task<ActionResult> GetAlbumImage(
             string id)
         {
             try
             {
-                var requestUri = Spotify.GetAlbumImageUrl(id);
+                var requestUri = await Spotify.GetAlbumImageUrlAsync(id);
                 //make the sync GET request
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
                 {
@@ -274,7 +274,7 @@ namespace Avid5.Net.Controllers
         }
 
         // GET: /Spotify/AddTrackToPlayList
-        public ContentResult AddTrackToPlaylist(
+        public async Task<ContentResult> AddTrackToPlaylist(
             string id,
             string playlistId,
             string playlistName)
@@ -285,14 +285,14 @@ namespace Avid5.Net.Controllers
             }
             if (playlistId == null)
             {
-                playlistId = Spotify.AddPlayList(playlistName);
+                playlistId = await Spotify.AddPlayListAsync(playlistName);
             }
-            Spotify.AddTrackToPlayList(playlistId, id);
+            await Spotify.AddTrackToPlayListAsync(playlistId, id);
             return this.Content("");
         }
 
         // GET: /Spotify/AddAlbumToPlayList
-        public ContentResult AddAlbumToPlayList(
+        public async Task<ContentResult> AddAlbumToPlayList(
             string id,
             string playlistId,
             string playlistName)
@@ -303,77 +303,77 @@ namespace Avid5.Net.Controllers
             }
             if (playlistId == null && !string.IsNullOrEmpty(playlistName))
             {
-                playlistId = Spotify.AddPlayList(playlistName);
+                playlistId = await Spotify.AddPlayListAsync(playlistName);
             }
             if (playlistId != null)
             {
-                Spotify.AddAlbumToPlayList(playlistId, id);
+                await Spotify.AddAlbumToPlayListAsync(playlistId, id);
             }
             return this.Content("");
         }
 
 
         // GET: /Spotify/RemoveTrackFromPlayList
-        public ContentResult RemoveTrackFromPlayList(
+        public async Task<ContentResult> RemoveTrackFromPlayList(
             string id,
             string playlistId)
         {
-            Spotify.RemoveTrackFromPlayList(playlistId, id);
+            await Spotify.RemoveTrackFromPlayListAsync(playlistId, id);
             return this.Content("");
         }
 
         // GET: /Spotify/RemoveAlbumFromPlayList
-        public ContentResult RemoveAlbumFromPlayList(
+        public async Task<ContentResult> RemoveAlbumFromPlayList(
             string id,
             string playlistId)
         {
-            Spotify.RemoveAlbumFromPlayList(playlistId, id);
+            await Spotify.RemoveAlbumFromPlayListAsync(playlistId, id);
             return this.Content("");
         }
 
         // GET: /Spotify/DeletePlaylist
-        public ContentResult DeletePlaylist(
+        public async Task<ContentResult> DeletePlaylist(
             string playlistId)
         {
-            Spotify.DeletePlayList(playlistId);
+            await Spotify.DeletePlayListAsync(playlistId);
             return this.Content("");
         }
 
         // GET: /Spotify/RenamePlaylist
-        public ContentResult RenamePlaylist(
+        public async Task<ContentResult> RenamePlaylist(
             string playlistId,
             string name)
         {
-            Spotify.RenamePlayList(playlistId, name);
+            await Spotify.RenamePlayListAsync(playlistId, name);
             return this.Content("");
         }
 
         // GET: /Spotify/SaveAlbum
-        public ContentResult AddSavedAlbum(
+        public async Task<ContentResult> AddSavedAlbum(
             string id)
         {
-            Spotify.AddSavedAlbum(id);
+            await Spotify.AddSavedAlbumAsync(id);
             return this.Content("");
         }
 
         // GET: /Spotify/RemoveSavedAlbum
-        public ContentResult RemoveSavedAlbum(
+        public async Task<ContentResult> RemoveSavedAlbum(
             string id)
         {
-            Spotify.RemoveSavedAlbum(id);
+            await Spotify.RemoveSavedAlbumAsync(id);
             return this.Content("");
         }
 
         // GET: /Spotify/GetAuthenticationUrl
-        public ContentResult GetAuthenticationUrl()
+        public async Task<ContentResult> GetAuthenticationUrl()
         {
             return this.Content(Spotify.GetAuthenticationUrl());
         }
 
         // GET: /Spotify/WaitForAuthentication
-        public ContentResult WaitForAuthentication()
+        public async Task<ContentResult> WaitForAuthentication()
         {
-            Spotify.WaitForAuthentication();
+            await Spotify.WaitForAuthenticationAsync();
             return this.Content("");
         }
     }

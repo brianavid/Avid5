@@ -226,7 +226,7 @@ namespace Avid5.Net.Controllers
         public ActionResult RebuildMediaDb()
         {
             JRMC.LoadAndIndexAllAlbums(new string[] { "1", "2" }, true);
-            Spotify.LoadAndIndexAllSavedTracks();
+            Spotify.ClearSavedAlbums();
             return Content("");
         }
 
@@ -241,7 +241,7 @@ namespace Avid5.Net.Controllers
         // GET: /Action/Exit
         public ActionResult Exit()
 		{
-			Spotify.ExitPlayer();
+			Spotify.ExitPlayer().Wait();
 
 			Config.StopApplication(false);
 			return Content("");

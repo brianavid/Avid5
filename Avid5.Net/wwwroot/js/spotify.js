@@ -43,7 +43,7 @@ function UpdateSpotifyDisplayPlayingInformation() {
     $.ajax({
         type: "GET",
         url: "/Spotify/GetPlayingInfo",
-        timeout: 1600,
+        timeout: 800,
         cache: false,
         success: function (xml) {
             if (xml != null && xml !="") {

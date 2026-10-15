@@ -1,5 +1,5 @@
 ﻿@{
-    IEnumerable<Avid.Spotify.SpotifyData.Track> queue = Spotify.GetQueuedTracks();
+    IEnumerable<Avid.Spotify.SpotifyData.Track> queue = await Spotify.GetQueuedTracksAsync();
 
     if (queue != null)
     {

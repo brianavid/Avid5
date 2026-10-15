@@ -240,7 +240,7 @@ public static class Running
 	{
 		if (RunningProgram == "Spotify")
 		{
-			Spotify.Stop();
+			Spotify.StopAsync().Wait();
 		}
 	}
 
@@ -294,7 +294,7 @@ public static class Running
             case "Radio":
                 return JRMC.IsActivelyPlaying();
             case "Spotify":
-                return Spotify.GetPlaying() > 0;
+                return Spotify.GetPlayingAsync().Result > 0;
             case "Roku":
                 return Roku.IsActivelyPlaying();
         }
