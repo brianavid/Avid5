@@ -1377,7 +1377,10 @@ public static class Spotify
         {
             try
             {
-                return await SpotifyService.Player.PausePlayback() ? 0 : -1;
+                if (await GetPlayingAsync() > 0)
+                {
+                    return await SpotifyService.Player.PausePlayback() ? 0 : -1;
+                }
             }
             catch (System.Exception ex)
             {
