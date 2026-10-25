@@ -2,9 +2,9 @@
   "name": "Avid5",
   "short_name": "Avid5",
   "start_url": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#000000",
-  "theme_color": "#4285f4",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/images/icons/main-192.png",
